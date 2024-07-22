@@ -1,10 +1,11 @@
 import { RemovalPolicy } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { join } from 'path';
-import { isProduction } from '../helpers/utilities';
+import { awsResourcesNamingConvention, isProduction } from '../helpers/utilities';
 import { BlockPublicAccess, Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 
+const resourceName = awsResourcesNamingConvention.replace('$', 'bucket').toLowerCase();
 const defaultTestFileLocation = 'data/test';
 /**
  * Defines S3 folders structure and location of test data files.
@@ -36,10 +37,10 @@ const s3Structure = [
  * @param bucketName 
  * @returns
  */
-export function configureResources(scope: Construct, bucketName: string) {
+export function configureResources(scope: Construct) {
     // Creates S3 bucket
-    const s3Bucket = new Bucket(scope, bucketName, {
-        bucketName: bucketName,
+    const s3Bucket = new Bucket(scope, resourceName, {
+        bucketName: resourceName,
         encryption: BucketEncryption.S3_MANAGED,
         versioned: true,
         removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,

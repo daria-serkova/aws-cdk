@@ -2,7 +2,9 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
-import { isProduction } from '../helpers/utilities';
+import { awsResourcesNamingConvention, isProduction } from '../helpers/utilities';
+
+const resourceName = awsResourcesNamingConvention.replace('$', 'log-group');
 /**
  * Pattern for Log Group ARN string to pass it to IAM policies.
  */
@@ -13,10 +15,10 @@ const arnLogsPattern = `arn:aws:logs:${process.env.AWS_REGION}:${process.env.AWS
  * @param groupName 
  * @returns cloudWatchLogGroup and iamPolicyAllowCreateCloudWatchLogsInGroup that can be attached to other resources in stack
  */
-export function configureResources(scope: Construct, groupName: string) {
+export function configureResources(scope: Construct) {
     /* Log Group where all business process related logs will be sent */
-    const cloudWatchLogGroup = new LogGroup(scope, groupName, {
-      logGroupName: groupName,
+    const cloudWatchLogGroup = new LogGroup(scope, resourceName, {
+      logGroupName: resourceName,
       removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
       retention: isProduction ? RetentionDays.SIX_MONTHS : RetentionDays.ONE_DAY,
     });
@@ -27,7 +29,7 @@ export function configureResources(scope: Construct, groupName: string) {
             'logs:CreateLogStream',
             'logs:PutLogEvents',
         ],
-        resources: [`${arnLogsPattern.replace('$', groupName)}`],
+        resources: [`${arnLogsPattern.replace('$', resourceName)}`],
     });
     return {
         group: cloudWatchLogGroup,
