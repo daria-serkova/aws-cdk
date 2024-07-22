@@ -4,7 +4,7 @@ Document Management Solutions are commonly needed for the business to manage and
 
 Here are several common business scenarios where clients can benefit from an AWS serverless Document Management Solution:
 
-## 1. Healthcare Providers Onboarding
+## [1. Healthcare Providers Onboarding](https://github.com/daria-serkova/aws-cdk/tree/main/documents-management-services/healthcare-providers-documents-management)
 
 Hospitals and clinics need to manage a large number of documents for onboarding healthcare providers, including credentials, certifications, and background checks. Benefits:
 
