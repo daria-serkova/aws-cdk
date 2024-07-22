@@ -1,1 +1,2 @@
-# aws-cdk
+# Overview
+A collection of handy AWS CDK code snippets for quick reuse. This repository offers various examples and templates to speed up cloud development and infrastructure provisioning using AWS Cloud Development Kit (CDK).
