@@ -1,0 +1,20 @@
+@startmindmap API Gateway Endpoints
+skinparam node {
+    BackgroundColor #00C4B5
+    FontColor #FFFFFF
+    BorderColor #00C4B5
+    BorderThickness 1
+    FontStyle bold
+}
+* DMS-API Endpoints
+** documents
+*** Upload Document (POST /documents/upload)
+*** Retrieve Document Metadata (GET /documents/{document_id}/metadata)
+*** Retrieve Document (GET /documents/{document_id})
+*** List Documents for Provider (GET /documents/provider/{provider_id})
+*** Update Document Metadata (PATCH /documents/{document_id}/metadata)
+*** Delete Document (DELETE /documents/{document_id})
+*** Submit Document for Verification (POST /documents/{document_id}/submit)
+*** Verify Document (POST /documents/{document_id}/verify)
+*** List Documents by Status (GET /documents/status/{status})
+@endmindmap
