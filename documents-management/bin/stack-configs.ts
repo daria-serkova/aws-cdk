@@ -1,15 +1,15 @@
 
-import * as cdk from 'aws-cdk-lib';
-import * as dotenv from 'dotenv';
-dotenv.config(); 
+import { StackProps } from 'aws-cdk-lib';
+import { config } from 'dotenv';
+config(); 
 const undefinedValue = "undefined";
-const environmentConfig: cdk.StackProps = {
+const environmentConfig: StackProps = {
     env: {
         account: process.env.AWS_ACCOUNT,
         region: process.env.AWS_REGION,
     },
     stackName: process.env.AWS_RESOURCES_NAME_PREFIX,
-    description: "AWS Glue infrastructure setup for Healthcare Data Management business scenario",  
+    description: "AWS Template for Documents Management Solution. Template is based on Healthcare Providers Registration business scenario",  
     tags: { // Required tags for all stack resources
         Environment: process.env.TAG_ENVIRONMENT ? process.env.TAG_ENVIRONMENT : undefinedValue,
         Region: process.env.AWS_REGION ? process.env.AWS_REGION : undefinedValue,
