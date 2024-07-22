@@ -16,5 +16,6 @@ This repository contains an AWS serverless solution for managing healthcare prov
 
 ## Key Aspects
 
-- All stack resources have set of required tags attached 
+- All stack resources have set of required tags attached
 - All stack resources send logs into specified CloudWatch group
+- All architecture diagrams (PlantUML and Draw.io formats) are located inside `architecture` folder. Install corresponding extensions to see them inside VSC.
