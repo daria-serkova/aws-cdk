@@ -1,4 +1,4 @@
-# AWS Serverless Audit Solution
+# AWS Serverless Audit Solutions
 
 ## Overview
 
@@ -123,8 +123,8 @@ The AWS Serverless Audit Solution is built using a variety of AWS services and s
 2. **Deployment**
    - Clone the repository:
      ```sh
-     git clone https://github.com/your-username/audit-solution.git
-     cd audit-solution
+     git clone https://github.com/daria-serkova/aws-cdk.git
+     cd audit-services/<business-scenario>
      ```
    - Install dependencies:
      ```sh
