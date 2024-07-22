@@ -1,8 +1,8 @@
 {
-  "name": "documents-management",
+  "name": "healthcare-providers-documents-management",
   "version": "0.1.0",
   "bin": {
-    "documents-management": "bin/documents-management.js"
+    "healthcare-providers-documents-management": "bin/healthcare-providers-documents-management.js"
   },
   "scripts": {
     "build": "tsc",
