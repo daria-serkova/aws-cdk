@@ -50,7 +50,7 @@ export function configureResources(scope: Construct, bucketName: string) {
     s3Structure.forEach(folder => {
         const sourceDir = join(__dirname, `../${folder.dataFolder}`);
         new BucketDeployment(scope, `${folder.path}`, {
-            sources: [ Source.asset(sourceDir)],
+            sources: [Source.asset(sourceDir)],
             destinationBucket: s3Bucket,
             destinationKeyPrefix: folder.path,
         });
