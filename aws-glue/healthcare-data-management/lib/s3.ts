@@ -69,14 +69,14 @@ export function configureResources(scope: Construct, bucketName: string) {
     });
     // Creates folders structure
     const sourceDir = path.join(__dirname, '../data');
-        folders.forEach(folder => {
-            new BucketDeployment(scope, `Deploy-${folder}`, {
-                sources: [Source.asset(sourceDir)], // Source directory containing the file to copy
-                destinationBucket: s3Bucket,
-                destinationKeyPrefix: folder,
-                prune: false // Do not delete files from the destination bucket that are not in the source
-            });
-      });
+    folders.forEach(folder => {
+        new BucketDeployment(scope, `Deploy-${folder}`, {
+            sources: [Source.asset(sourceDir)], // Source directory containing the file to copy
+            destinationBucket: s3Bucket,
+            destinationKeyPrefix: folder,
+            //prune: false
+        });
+    });
      
      
    
