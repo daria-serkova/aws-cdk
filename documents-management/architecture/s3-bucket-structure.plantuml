@@ -1,0 +1,29 @@
+@startmindmap S3 Bucket Structure
+skinparam node {
+    BackgroundColor #00C4B5
+    FontColor #FFFFFF
+    BorderColor #00C4B5
+    BorderThickness 1
+    FontStyle bold
+}
+* providers
+** {provider_id}
+*** credentials
+**** submitted
+***** license.pdf
+***** board_certification.pdf
+***** malpractice_insurance.pdf
+**** verified
+**** rejected
+*** background_check
+**** submitted
+**** verified
+**** rejected
+*** additional_documents
+**** submitted
+**** verified
+**** rejected
+*** profile
+**** photo.jpg
+**** resume.pdf
+@endmindmap
