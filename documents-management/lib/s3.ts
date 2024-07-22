@@ -5,7 +5,7 @@ import { BlockPublicAccess, Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3'
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 import * as path from 'path';
 /**
- * Defines S3 folders structure and location of test data files
+ * Defines S3 folders structure and location of test data files. If `null` - empty test.txt file will be added
  * NOTE: S3 skips folder creation if no files are added to it.
  */
 const s3Structure = [
