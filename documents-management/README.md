@@ -14,8 +14,24 @@ This repository contains an AWS serverless solution for managing healthcare prov
 8. **Infrastructure as Code:** Uses AWS CloudFormation and AWS CDK for infrastructure deployment and management.
 9. **Scalability and Flexibility:** Designed to be easily scalable and adaptable for various document management use cases.
 
+## Technology Stack
+
+- **AWS CloudFormation / AWS CDK:** Infrastructure as Code (IaC) for deploying the solution.
+- **TypeScript:** Programming language.
+- **S3:** Documents storage.
+- **Lambda:** Process document uploads and handle verification.
+- **API Gateway:** Expose APIs for document upload and retrieval.
+- **DynamoDB:** Store metadata about the documents, including verification status.
+- **CloudWatch:** Logs management.
+- **AWS KMS (Key Management Service):** Encrypt documents and metadata.
+- **Amazon SNS (Simple Notification Service):** Send notifications.
+- **AWS IAM:** Manage permissions and roles.
+- **Amazon Cognito:** Manage user authentication and authorization.
+
+
 ## Key Aspects
 
-- All stack resources have set of required tags attached
-- All stack resources send logs into specified CloudWatch group
+- All stack resources have set of required tags attached.
+- All stack resources send logs into specified CloudWatch group.
 - All architecture diagrams (PlantUML and Draw.io formats) are located inside `architecture` folder. Install corresponding extensions to see them inside VSC.
+- All API endpoints are located inside `postman-collection` folder. Import environment and collection from it into local Postman for testing purposes.
