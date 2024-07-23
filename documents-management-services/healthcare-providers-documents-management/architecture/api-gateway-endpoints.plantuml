@@ -13,9 +13,10 @@ skinparam node {
 *** Retrieve Document (GET /documents/{document_id})
 *** List Documents for Provider (GET /documents/provider/{provider_id})
 *** Update Document Metadata (PATCH /documents/{document_id}/metadata)
+*** List Documents by Status (GET /documents/status/{status})
 *** Delete Document (DELETE /documents/{document_id})
 *** Submit Document for Verification (POST /documents/verify-submit)
 *** Verify Document (POST /documents/verify-confirm)
 *** Reject Document Verification (POST /documents/verify-reject)
-*** List Documents by Status (GET /documents/status/{status})
+
 @endmindmap
