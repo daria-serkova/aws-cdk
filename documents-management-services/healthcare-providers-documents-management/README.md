@@ -35,3 +35,4 @@ This repository contains an AWS serverless solution for managing healthcare prov
 - All stack resources send logs into specified CloudWatch group.
 - All architecture diagrams (PlantUML and Draw.io formats) are located inside `architecture` folder. Install corresponding extensions to see them inside VSC.
 - All API endpoints are located inside `postman-collection` folder. Import environment and collection from it into local Postman for testing purposes.
+- Since as per requirements, each API request must be tracked in the audit framework, all API requests (including data retrieval) are sent as POST methods with required audit details included inside request body object. 
