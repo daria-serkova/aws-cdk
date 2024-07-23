@@ -3,6 +3,7 @@ import uploadDocumentAction from './upload';
 import getDocumentAction from './get-document';
 import getDocumentMetadataAction from './get-metadata';
 import getListByUserAction from './get-list-by-user';
+import updateDocumentMetadataAction from './update-metadata';
 import { ApiResources, LogsResources } from '../../helpers/types';
 
 const lambdasFolder = '../../functions/documents-api';
@@ -20,5 +21,6 @@ export default function configureDocumentsApiResources(
         getDocumentAction(scope, lambdasFolder, logs, api, apiNode);
         getDocumentMetadataAction(scope, lambdasFolder, logs, api, apiNode);
         getListByUserAction(scope, lambdasFolder, logs, api, apiNode);
+        updateDocumentMetadataAction(scope, lambdasFolder, logs, api, apiNode);
     }
 }
