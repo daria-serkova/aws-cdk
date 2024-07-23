@@ -12,6 +12,8 @@ import {
     VALIDATION_RULES 
 } from '../../helpers/utilities';
 
+import { getUploadLambda } from './../lambda-functions/documents/lambda-instances';
+
 const resourcesNames = {
     lambda:  AWS_RESOURCES_NAMING_CONVENTION.replace('$', 'upload-document'),
     iamRole: AWS_RESOURCES_NAMING_CONVENTION.replace('$', 'upload-document-role'),
@@ -36,19 +38,7 @@ export default function uploadDocumentAction(
             statements: [logs.policy],
         })
     );
-    const lambda = new NodejsFunction(scope, resourcesNames.lambda, {
-        functionName: resourcesNames.lambda,
-        description: 'Lambda function to handle document uploads',
-        entry: resolve(dirname(__filename), `${lambdasFolder}/${resourcesNames.apiEndpoint}.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
-        logGroup: logs.group,
-        role: iamRole,
-        environment: {
-            REGION: REGION,
-        },
-    });
+    const lambda = getUploadLambda(scope, lambdasFolder);
     const requestModel = {
         contentType: "application/json",
         description: `Validates parameters for Upload Document API endpoint`,

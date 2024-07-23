@@ -11,6 +11,7 @@ import {
     REGION, 
     VALIDATION_RULES 
 } from '../../helpers/utilities';
+import { updateMetadataLambda } from '../lambda-functions/documents/lambda-instances';
 
 const resourcesNames = {
     lambda:  AWS_RESOURCES_NAMING_CONVENTION.replace('$', 'update-metadata'),
@@ -36,19 +37,7 @@ export default function updateDocumentMetadataAction(
             statements: [logs.policy],
         })
     );
-    const lambda = new NodejsFunction(scope, resourcesNames.lambda, {
-        functionName: resourcesNames.lambda,
-        description: 'Lambda function to handle document metadata update',
-        entry: resolve(dirname(__filename), `${lambdasFolder}/${resourcesNames.apiEndpoint}.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
-        logGroup: logs.group,
-        role: iamRole,
-        environment: {
-            REGION: REGION,
-        },
-    });
+    const lambda = updateMetadataLambda(scope, lambdasFolder);
     const requestModel = {
         contentType: "application/json",
         description: `Validates parameters for Update Document Metadata API endpoint`,

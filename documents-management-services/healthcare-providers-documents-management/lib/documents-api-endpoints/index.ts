@@ -10,7 +10,7 @@ import verifySubmitAction from './verify-submit';
 import verifyConfirmAction from './verify-confirm';
 import verifyRejectAction from './verify-reject';
 
-const lambdasFolder = '../../functions/documents-api';
+const lambdasFolder = '../../../functions/documents-api';
 const apiNodeName = 'documents';
 
 export default function configureDocumentsApiResources(

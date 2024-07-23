@@ -6,7 +6,11 @@ export const REGION = process.env.AWS_REGION || '';
 /**
  * Pattern for resources names to keep consistency across all application resources.
  */
- export const AWS_RESOURCES_NAMING_CONVENTION = `${process.env.AWS_RESOURCES_NAME_PREFIX}-$-${process.env.TAG_ENVIRONMENT}`;
+export const AWS_RESOURCES_NAMING_CONVENTION = `${process.env.AWS_RESOURCES_NAME_PREFIX}-$-${process.env.TAG_ENVIRONMENT}`;
+
+export function resourceName(value: string) {
+  return AWS_RESOURCES_NAMING_CONVENTION.replace('$', value)
+}
 
 /**
  * Pattern for API Gateway Request models.
