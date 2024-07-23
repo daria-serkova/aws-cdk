@@ -1,18 +1,31 @@
-import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
-import { Construct } from "constructs";
-import { awsResourcesNamingConvention, region } from "../../helpers/utilities";
-import { resolve, dirname} from 'path';
-import { Duration } from "aws-cdk-lib";
-import { LogGroup } from "aws-cdk-lib/aws-logs";
-import { Policy, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { Construct } from 'constructs';
+import { Duration } from 'aws-cdk-lib';
+import { Policy, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
+import { JsonSchemaType, LambdaIntegration, Resource } from 'aws-cdk-lib/aws-apigateway';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { resolve, dirname } from 'path';
+import { ApiResources, LogsResources } from '../../helpers/types';
+import { 
+    AWS_REQUETS_MODELS_NAMING_CONVENTION, 
+    AWS_RESOURCES_NAMING_CONVENTION, 
+    REGION, 
+    VALIDATION_RULES 
+} from '../../helpers/utilities';
+
 const resourcesNames = {
-    lambda:  awsResourcesNamingConvention.replace('$', 'upload-document'),
-    iamRole: awsResourcesNamingConvention.replace('$', 'upload-document-role'),
-    iamPolicy: awsResourcesNamingConvention.replace('$', 'upload-document-policy'),
+    lambda:  AWS_RESOURCES_NAMING_CONVENTION.replace('$', 'upload-document'),
+    iamRole: AWS_RESOURCES_NAMING_CONVENTION.replace('$', 'upload-document-role'),
+    iamPolicy: AWS_RESOURCES_NAMING_CONVENTION.replace('$', 'upload-document-policy'),
+    apiEndpoint: 'upload',
+    apiRequestModel: `${AWS_REQUETS_MODELS_NAMING_CONVENTION}UploadDocument`
 };
-export default function uploadDocumentAction(scope: Construct, 
+export default function uploadDocumentAction(
+    scope: Construct, 
     lambdasFolder: string, 
-    logs: { group?: LogGroup; policy: any }) {
+    logs: LogsResources,
+    api: ApiResources,
+    apiNode: Resource
+) {
     const iamRole = new Role(scope, resourcesNames.iamRole, {
         assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
         roleName: resourcesNames.iamRole,
@@ -26,14 +39,37 @@ export default function uploadDocumentAction(scope: Construct,
     const lambda = new NodejsFunction(scope, resourcesNames.lambda, {
         functionName: resourcesNames.lambda,
         description: 'Lambda function to handle document uploads',
-        entry: resolve(dirname(__filename), `${lambdasFolder}/upload.ts`),
+        entry: resolve(dirname(__filename), `${lambdasFolder}/${resourcesNames.apiEndpoint}.ts`),
         memorySize: 256,
         timeout: Duration.minutes(3),
         handler: 'handler',
         logGroup: logs.group,
         role: iamRole,
         environment: {
-            REGION: region,
+            REGION: REGION,
         },
+    });
+    const requestModel = {
+        contentType: "application/json",
+        description: `Validates parameters for Upload Document API endpoint`,
+        modelName: resourcesNames.apiRequestModel,
+        modelId: resourcesNames.apiRequestModel,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                ip: {
+                    type: JsonSchemaType.STRING,
+                    pattern: VALIDATION_RULES.PATTERN_IP,
+                },
+            },
+            required: ["ip"],
+        },
+    };
+    api.apiGateway.addModel(requestModel.modelName, requestModel);
+    const action = apiNode.addResource(resourcesNames.apiEndpoint);
+    action.addMethod("POST", new LambdaIntegration(lambda), {
+        apiKeyRequired: true,
+        requestModels: { "application/json": requestModel },
+        requestValidator: api.requestValidator,
     });
 }

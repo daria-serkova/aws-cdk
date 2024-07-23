@@ -2,7 +2,7 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { PolicyStatement } from 'aws-cdk-lib/aws-iam';
-import { isProduction } from '../helpers/utilities';
+import { IS_PRODUCTION } from '../helpers/utilities';
 /**
  * Pattern for Log Group ARN string to pass it to IAM policies.
  */
@@ -17,8 +17,8 @@ export function configureResources(scope: Construct, groupName: string) {
     /* Log Group where all business process related logs will be sent */
     const cloudWatchLogGroup = new LogGroup(scope, groupName, {
       logGroupName: groupName,
-      removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
-      retention: isProduction ? RetentionDays.SIX_MONTHS : RetentionDays.ONE_DAY,
+      removalPolicy: IS_PRODUCTION ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
+      retention: IS_PRODUCTION ? RetentionDays.SIX_MONTHS : RetentionDays.ONE_DAY,
     });
     /* IAM Policy, that allows AWS resources to create logs in specified log group */
     const iamPolicyAllowCreateCloudWatchLogsInGroup = new PolicyStatement({

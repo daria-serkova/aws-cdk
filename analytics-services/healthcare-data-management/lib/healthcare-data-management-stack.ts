@@ -2,14 +2,14 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as cloudWatch from './cloud-watch';
 import * as s3 from './s3';
-import { awsResourcesNamingConvention } from '../helpers/utilities';
+import { AWS_RESOURCES_NAMING_CONVENTION } from '../helpers/utilities';
 
 /**
  * AWS Resources names
  */
 const resourcesNames = {
-  logGroup: awsResourcesNamingConvention.replace('$', 'log-group'),
-  s3: awsResourcesNamingConvention.replace('$', 'bucket').toLowerCase(),
+  logGroup: AWS_RESOURCES_NAMING_CONVENTION.replace('$', 'log-group'),
+  s3: AWS_RESOURCES_NAMING_CONVENTION.replace('$', 'bucket').toLowerCase(),
 }
 export class HealthcareDataManagementStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
