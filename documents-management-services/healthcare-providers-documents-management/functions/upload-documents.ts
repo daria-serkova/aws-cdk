@@ -4,7 +4,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: 'Action executed: Verify Confirm',
+      message: 'Action executed: Upload Documents',
     }),
   };
 };

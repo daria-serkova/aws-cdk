@@ -3,13 +3,24 @@ import { Construct } from 'constructs';
 import * as cloudWatch from './cloud-watch';
 import * as s3 from './s3';
 import * as apiGateway from './api-gateway';
-import configureDocumentsApiResources from './documents-api-endpoints';
+import { configureDatabases } from './databases';
+import { configureLambdas } from './lambdas';
+import { configureUploadDocumentsWorkflowStateMachine } from './state-machines';
 export class HealthcareProvidersDocumentsManagementStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     const logs = cloudWatch.configureResources(this);
     const documentsStorage = s3.configureResources(this);
+    configureDatabases(this);
+    configureLambdas(this, '../functions');
+    configureUploadDocumentsWorkflowStateMachine(this);
+
+
+
+
+
+
     const api = apiGateway.configureResources(this);
-    configureDocumentsApiResources(this, logs, api);
+    //configureDocumentsApiResources(this, logs, api);
   }
 }

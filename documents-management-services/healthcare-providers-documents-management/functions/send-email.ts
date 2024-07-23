@@ -4,7 +4,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: 'Action executed: Get Document Metadata',
+      message: 'Action executed: Send Email',
     }),
   };
 };
