@@ -4,6 +4,10 @@ import * as lambdas from "./lambdas";
 import { Fail, Pass, StateMachine, Choice, Condition } from "aws-cdk-lib/aws-stepfunctions";
 import { resourceName } from "../helpers/utilities";
 
+/**
+ * Configuration of State Machine for 'Upload Documents' workflow
+ * @param scope 
+ */
 export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
     const uploadDocumentTask = new LambdaInvoke(scope, 'Upload document to S3 bucket', {
         lambdaFunction: lambdas.uploadLambda(),

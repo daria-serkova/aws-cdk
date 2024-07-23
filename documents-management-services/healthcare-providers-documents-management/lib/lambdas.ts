@@ -4,16 +4,20 @@ import { Construct } from 'constructs';
 import { Duration } from 'aws-cdk-lib';
 import { resolve, dirname } from 'path';
 import { REGION, resourceName } from '../helpers/utilities';
-import { getAuditTable, getFilesMetadataTable } from './databases';
+import * as databases from './databases';
 
 let uploadLambdaInstance: NodejsFunction;
 let sendAuditEventLambdaInstance: NodejsFunction;
 let sendEmailLambdaInstance: NodejsFunction;
 let validateDocumentLambdaInstance: NodejsFunction;
 let updateMetadataLambdaInstance: NodejsFunction;
-let filesMetadataTable = getFilesMetadataTable();
-let auditTable = getAuditTable();
+let filesMetadataTable = databases.filesMetadataTable();
+let auditTable = databases.auditTable();
 
+/**
+ * Configuration of Lambda functions
+ * @param scope 
+ */
 export function configureLambdas(scope: Construct, lambdaFolder: string) {
     uploadLambdaInstance = new NodejsFunction(scope, resourceName('upload-documents'), {
         functionName: resourceName('upload-documents'),
