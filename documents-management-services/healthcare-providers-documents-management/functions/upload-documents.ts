@@ -6,7 +6,7 @@ import { Buffer } from 'buffer';
 import { documentContentType, DocumentsStatuses, DocumentsStoragePaths } from './helpers/configs';
 import { generateDocumentUUID } from './helpers/utils';
 
-const s3 = new S3();
+const s3Client = new S3({ region: process.env.REGION });
 const dynamoDbClient = new DynamoDBClient({ region: process.env.REGION });
 /**
  * Lambda function handler for uploading a document to an S3 bucket.
@@ -29,7 +29,7 @@ export const handler = async (event: any): Promise<any> => {
             Body: buffer,
             ContentType: documentContentType(document.type),
         };
-        await s3.upload(params).promise();
+        await s3Client.upload(params).promise();
         const metadata = {
             id: generateDocumentUUID(),
             providerId: document.providerId,
