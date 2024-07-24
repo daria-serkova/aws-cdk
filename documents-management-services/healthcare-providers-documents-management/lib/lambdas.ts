@@ -40,7 +40,7 @@ export function configureLambdas(scope: Construct, lambdaFolder: string) {
     }));
     uploadLambdaInstance = new NodejsFunction(scope, resourceName('upload-documents'), {
         functionName: resourceName('upload-documents'),
-        description: 'Upload documents into S3 bucket',
+        description: 'Upload documents into S3 bucket and metadata into DynamoDB',
         entry: resolve(dirname(__filename), `${lambdaFolder}/upload-documents.ts`),
         memorySize: 256,
         timeout: Duration.minutes(3),
