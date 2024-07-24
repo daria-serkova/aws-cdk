@@ -14,8 +14,6 @@ let sendEmailLambdaInstance: NodejsFunction;
 let validateDocumentLambdaInstance: NodejsFunction;
 let updateMetadataLambdaInstance: NodejsFunction;
 
-let filesMetadataTable = databases.filesMetadataTable();
-let auditTable = databases.auditTable();
 let bucket = s3.documentsBucket();
 /**
  * Configuration of Lambda functions
@@ -31,11 +29,14 @@ export function configureLambdas(scope: Construct, lambdaFolder: string) {
             's3:PutObject',
             's3:PutObjectAcl',
             's3:GetObject',
-            's3:ListBucket', // Allows listing the objects in the bucket
+            's3:ListBucket',
+            'dynamodb:PutItem'
         ],
         resources: [
             `arn:aws:s3:::${bucket}`, 
             `arn:aws:s3:::${bucket}/*`, 
+            `arn:aws:dynamodb:${process.env.AWS_REGION}:${process.env.AWS_ACCOUNT}:table/${databases.DatabasesNames.DOCUMENTS_METADATA}`
+            
         ],
     }));
     uploadLambdaInstance = new NodejsFunction(scope, resourceName('upload-documents'), {
@@ -49,7 +50,8 @@ export function configureLambdas(scope: Construct, lambdaFolder: string) {
         role: iamRole,
         environment: {
             REGION: REGION,
-            BUCKET_NAME: bucket
+            BUCKET_NAME: bucket,
+            METADATA_TABLE: databases.DatabasesNames.DOCUMENTS_METADATA
         },
     });
     updateMetadataLambdaInstance = new NodejsFunction(scope, resourceName('update-metadata'), {
@@ -61,7 +63,7 @@ export function configureLambdas(scope: Construct, lambdaFolder: string) {
         handler: 'handler',
         environment: {
             REGION: REGION,
-            DB_METADATA_TABLE: filesMetadataTable?.tableName || ''
+            DB_METADATA_TABLE: databases.DatabasesNames.DOCUMENTS_METADATA
         },
     });
     sendAuditEventLambdaInstance = new NodejsFunction(scope, resourceName('send-audit-event'), {
@@ -73,7 +75,7 @@ export function configureLambdas(scope: Construct, lambdaFolder: string) {
         handler: 'handler',
         environment: {
             REGION: REGION,
-            DB_AUDIT_TABLE: auditTable?.tableName || ''
+            DB_AUDIT_TABLE: databases.DatabasesNames.DOCUMENTS_METADATA
         },
     });
     sendEmailLambdaInstance = new NodejsFunction(scope, resourceName('send-email'), {

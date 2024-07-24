@@ -13,8 +13,7 @@
  * @property {string} content - The Base64 encoded content of the document.
  * @property {string} uploadedAt - The timestamp when the document was uploaded, in ISO 8601 format.
  * @property {Object} metadata - Additional metadata related to the document.
- * @property {string} metadata.providerName - The name of the healthcare provider associated with the document.
- * @property {string} metadata.licenseNumber - The license number provided in the document, if applicable.
+ * @property {string} metadata.documentNumber - The license number provided in the document, if applicable.
  * @property {string} metadata.issueDate - The date when the document or license was issued.
  * @property {string} metadata.expiryDate - The date when the document or license expires.
  * @property {string} metadata.issuedBy - The authority or organization that issued the document.
@@ -28,8 +27,7 @@
     content: string;
     uploadedAt: string;
     metadata: {
-        providerName: string;
-        licenseNumber: string,
+        documentNumber: string,
         issueDate: string,
         expiryDate: string,
         issuedBy: string

@@ -3,24 +3,26 @@ import { Construct } from "constructs";
 import { IS_PRODUCTION, resourceName } from "../helpers/utilities";
 import { RemovalPolicy } from "aws-cdk-lib";
 
-let filesMetadataTableInstance: Table | undefined;
-let auditTableInstance: Table | undefined;
-
+export const DatabasesNames = {
+    DOCUMENTS_METADATA: resourceName('files-metadata'),
+    AUDIT: resourceName('audit')
+}
 /**
  * Configuration of DynamoDB tables
  * @param scope 
  */
 export function configureDatabases(scope: Construct ) {
-    filesMetadataTableInstance = new Table(scope, resourceName('files-metadata'), {
-        tableName: resourceName('files-metadata'),
+    new Table(scope, DatabasesNames.DOCUMENTS_METADATA, {
+        tableName: DatabasesNames.DOCUMENTS_METADATA,
         partitionKey: { name: "id", type: AttributeType.STRING },
         billingMode: BillingMode.PAY_PER_REQUEST,
         tableClass: TableClass.STANDARD,
         encryption: TableEncryption.DEFAULT,
         removalPolicy: IS_PRODUCTION ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
     });
-    auditTableInstance = new Table(scope, resourceName('audit'), {
-        tableName: resourceName('audit'),
+    
+    new Table(scope, DatabasesNames.AUDIT, {
+        tableName: DatabasesNames.AUDIT,
         partitionKey: { name: "id", type: AttributeType.STRING },
         billingMode: BillingMode.PAY_PER_REQUEST,
         tableClass: TableClass.STANDARD,
@@ -28,6 +30,3 @@ export function configureDatabases(scope: Construct ) {
         removalPolicy: IS_PRODUCTION ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
     });
 }
-
-export const filesMetadataTable = () => filesMetadataTableInstance;
-export const auditTable = () => auditTableInstance;
