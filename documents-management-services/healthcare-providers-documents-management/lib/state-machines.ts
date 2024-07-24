@@ -4,6 +4,7 @@ import * as lambdas from "./lambdas";
 import { Fail, Pass, StateMachine, Choice, Condition } from "aws-cdk-lib/aws-stepfunctions";
 import { resourceName } from "../helpers/utilities";
 import { AwsIntegration } from "aws-cdk-lib/aws-apigateway";
+import { PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 
 let uploadDocumentsStateMachineIntegrationInstance: AwsIntegration;
 /**
@@ -61,6 +62,14 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
     const success = new Pass(scope, 'Success');
     const failure = new Fail(scope, 'Failure');
 
+    const iamRole = new Role(scope, resourceName('upload-document-sm-role'), {
+        roleName: resourceName('upload-document-sm-role'),
+        assumedBy: new ServicePrincipal('apigateway.amazonaws.com'),
+      });
+      iamRole.addToPolicy(new PolicyStatement({
+        actions: ['states:StartExecution'],
+        resources: ['*'], // Specify more restrictive ARNs as needed
+    }));
     // Define the state machine
     const definition = validateDocumentTask
         .next(new Choice(scope, 'Is Document Valid?')
@@ -74,14 +83,14 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
         const stateMachine = new StateMachine(scope, resourceName('upload-state-machine'), {
             stateMachineName: resourceName('upload-state-machine'),
             definition,
-            //role: role,
+            role: iamRole,
         });
         uploadDocumentsStateMachineIntegrationInstance = new AwsIntegration({
             
             service: 'states',
             action: 'StartExecution',
             options: {
-                //credentialsRole: role,
+                credentialsRole: iamRole,
                 integrationResponses: [{ statusCode: '200' }],
                 requestTemplates: {
                     'application/json': JSON.stringify({
@@ -89,7 +98,7 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
                         stateMachineArn: stateMachine.stateMachineArn
                     })
                 },
-                
+
             },
         });
 
