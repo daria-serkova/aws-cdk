@@ -26,7 +26,8 @@ She selects each file from her local computer. Each document is verified for for
 - **AWS CloudFormation / AWS CDK:** Infrastructure as Code (IaC) for deploying the solution.
 - **TypeScript:** Programming language.
 - **S3:** Documents storage.
-- **Lambda:** Process document uploads and handle verification.
+- **Step Function:**: Workflow orchestration.
+- **Lambda:** Process document validation, upload, email sending.
 - **API Gateway:** Expose APIs for document upload and retrieval.
 - **DynamoDB:** Store metadata about the documents, including verification status.
 - **CloudWatch:** Logs management.
