@@ -28,14 +28,6 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
         errors: ['States.ALL'],
         resultPath: '$.error',
     });
-    const updateMetadataTask = new LambdaInvoke(scope, 'Save document metadata in DynamoDB', {
-        lambdaFunction: lambdas.updateMetadataLambda(),
-        inputPath: '$.document',
-        outputPath: '$.Payload',
-    }).addCatch(new Fail(scope, 'Metadata Update Failed'), {
-        errors: ['States.ALL'],
-        resultPath: '$.error',
-    });
     const recordAuditEventTask = new LambdaInvoke(scope, 'Add Audit Record', {
         lambdaFunction: lambdas.sendAuditEventLambda(),
         inputPath: '$.auditEvent',
@@ -62,10 +54,8 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
         actions: ['states:StartExecution', ],
         resources: ['*'], // Specify more restrictive ARNs as needed
     }));
-    // Define the state machine
     const definition = validateDocumentTask
         .next(uploadDocumentTask)
-        .next(updateMetadataTask)
         .next(recordAuditEventTask)
         .next(sendEmailTask)
         .next(success);
@@ -74,25 +64,19 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
         definition,
         role: iamRole,
     });
-
-        uploadDocumentsStateMachineIntegrationInstance = new AwsIntegration({
-            
-            service: 'states',
-            action: 'StartExecution',
-            options: {
-                credentialsRole: iamRole,
-                integrationResponses: [{ statusCode: '200' }],
-                requestTemplates: {
-                    'application/json': JSON.stringify({
-                        input: '$input.json("$")',
-                        stateMachineArn: stateMachine.stateMachineArn
-                    })
-                },
-
+    uploadDocumentsStateMachineIntegrationInstance = new AwsIntegration({
+        service: 'states',
+        action: 'StartExecution',
+        options: {
+            credentialsRole: iamRole,
+            integrationResponses: [{ statusCode: '200' }],
+            requestTemplates: {
+                'application/json': JSON.stringify({
+                    input: '$input.json("$")',
+                    stateMachineArn: stateMachine.stateMachineArn
+                })
             },
-        });
-
-    
+        },
+    });
 }
-
 export const uploadDocumentsStateMachineIntegration = () => uploadDocumentsStateMachineIntegrationInstance;

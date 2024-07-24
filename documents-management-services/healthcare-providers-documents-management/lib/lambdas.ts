@@ -8,11 +8,10 @@ import * as databases from './databases';
 import * as s3 from './s3';
 import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 
+let validateDocumentLambdaInstance: NodejsFunction;
 let uploadLambdaInstance: NodejsFunction;
 let sendAuditEventLambdaInstance: NodejsFunction;
 let sendEmailLambdaInstance: NodejsFunction;
-let validateDocumentLambdaInstance: NodejsFunction;
-let updateMetadataLambdaInstance: NodejsFunction;
 
 let bucket = s3.documentsBucket();
 /**
@@ -54,18 +53,6 @@ export function configureLambdas(scope: Construct, lambdaFolder: string) {
             METADATA_TABLE: databases.DatabasesNames.DOCUMENTS_METADATA
         },
     });
-    updateMetadataLambdaInstance = new NodejsFunction(scope, resourceName('update-metadata'), {
-        functionName: resourceName('update-metadata'),
-        description: 'Updates record in DynamoDB that contains metadata about uploaded document',
-        entry: resolve(dirname(__filename), `${lambdaFolder}/update-metadata.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
-        environment: {
-            REGION: REGION,
-            DB_METADATA_TABLE: databases.DatabasesNames.DOCUMENTS_METADATA
-        },
-    });
     sendAuditEventLambdaInstance = new NodejsFunction(scope, resourceName('send-audit-event'), {
         functionName: resourceName('send-audit-event'),
         description: 'Saves record about activty in the audit event',
@@ -102,7 +89,6 @@ export function configureLambdas(scope: Construct, lambdaFolder: string) {
     });
 }
 export const uploadLambda = () => uploadLambdaInstance;
-export const updateMetadataLambda = () => updateMetadataLambdaInstance;
 export const sendAuditEventLambda = () => sendAuditEventLambdaInstance;
 export const sendEmailLambda = () => sendEmailLambdaInstance;
 export const validateDocumentLambda = () => validateDocumentLambdaInstance;
