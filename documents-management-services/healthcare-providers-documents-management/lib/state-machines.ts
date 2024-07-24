@@ -46,14 +46,15 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
     });
     const success = new Pass(scope, 'Success');
 
-    const iamRole = new Role(scope, resourceName('upload-document-sm-role'), {
-        roleName: resourceName('upload-document-sm-role'),
-        assumedBy: new ServicePrincipal('states.amazonaws.com'),
-      });
-      iamRole.addToPolicy(new PolicyStatement({
-        actions: ['states:StartExecution', ],
-        resources: ['*'], // Specify more restrictive ARNs as needed
-    }));
+   // Create IAM Role for Step Functions
+   const stateMachineRole = new Role(scope, resourceName('upload-document-sm-role'), {
+    roleName: resourceName('upload-document-sm-role'),
+    assumedBy: new ServicePrincipal('states.amazonaws.com'),
+  });
+  stateMachineRole.addToPolicy(new PolicyStatement({
+    actions: ['states:StartExecution'],
+    resources: ['*'], // Specify more restrictive ARNs as needed
+  }));
     const definition = validateDocumentTask
         .next(uploadDocumentTask)
         .next(recordAuditEventTask)
@@ -62,19 +63,29 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
     const stateMachine = new StateMachine(scope, resourceName('upload-document-workflow'), {
         stateMachineName: resourceName('upload-document-workflow'),
         definition,
-        role: iamRole,
+        role: stateMachineRole,
     });
+
+    // Create IAM Role for API Gateway to invoke Step Functions
+    const apiGatewayRole = new Role(scope, resourceName('api-gateway-role'), {
+        roleName: resourceName('api-gateway-role'),
+        assumedBy: new ServicePrincipal('apigateway.amazonaws.com'),
+      });
+      apiGatewayRole.addToPolicy(new PolicyStatement({
+        actions: ['states:StartExecution'],
+        resources: [stateMachine.stateMachineArn],
+      }));
     uploadDocumentsStateMachineIntegrationInstance = new AwsIntegration({
         service: 'states',
         action: 'StartExecution',
         options: {
-            credentialsRole: iamRole,
+            credentialsRole: apiGatewayRole,
             integrationResponses: [{ statusCode: '200' }],
             requestTemplates: {
                 'application/json': JSON.stringify({
-                    input: '$input.json("$")',
-                    stateMachineArn: stateMachine.stateMachineArn
-                })
+                  input: "$util.escapeJavaScript($input.body).replace('\"', '\"')",
+                  stateMachineArn: stateMachine.stateMachineArn
+                }),
             },
         },
     });
