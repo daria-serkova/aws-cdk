@@ -3,7 +3,9 @@ import { Construct } from "constructs";
 import * as lambdas from "./lambdas";
 import { Fail, Pass, StateMachine, Choice, Condition } from "aws-cdk-lib/aws-stepfunctions";
 import { resourceName } from "../helpers/utilities";
+import { AwsIntegration } from "aws-cdk-lib/aws-apigateway";
 
+let uploadDocumentsStateMachineIntegrationInstance: AwsIntegration;
 /**
  * Configuration of State Machine for 'Upload Documents' workflow
  * @param scope 
@@ -69,10 +71,29 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
                 .next(success))
             .otherwise(failure)
         );
+        const stateMachine = new StateMachine(scope, resourceName('upload-state-machine'), {
+            stateMachineName: resourceName('upload-state-machine'),
+            definition,
+            //role: role,
+        });
+        uploadDocumentsStateMachineIntegrationInstance = new AwsIntegration({
+            
+            service: 'states',
+            action: 'StartExecution',
+            options: {
+                //credentialsRole: role,
+                integrationResponses: [{ statusCode: '200' }],
+                requestTemplates: {
+                    'application/json': JSON.stringify({
+                        input: '$input.json("$")',
+                        stateMachineArn: stateMachine.stateMachineArn
+                    })
+                },
+                
+            },
+        });
 
-    new StateMachine(scope, resourceName('upload-state-machine'), {
-        stateMachineName: resourceName('upload-state-machine'),
-        definition,
-        //role: role,
-    });
+    
 }
+
+export const uploadDocumentsStateMachineIntegration = () => uploadDocumentsStateMachineIntegrationInstance;

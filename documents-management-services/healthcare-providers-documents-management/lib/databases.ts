@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 import { IS_PRODUCTION, resourceName } from "../helpers/utilities";
 import { RemovalPolicy } from "aws-cdk-lib";
 
-let filesMetadataTableInstnce: Table | undefined;
+let filesMetadataTableInstance: Table | undefined;
 let auditTableInstance: Table | undefined;
 
 /**
@@ -11,7 +11,7 @@ let auditTableInstance: Table | undefined;
  * @param scope 
  */
 export function configureDatabases(scope: Construct ) {
-    filesMetadataTableInstnce = new Table(scope, resourceName('files-metadata'), {
+    filesMetadataTableInstance = new Table(scope, resourceName('files-metadata'), {
         tableName: resourceName('files-metadata'),
         partitionKey: { name: "id", type: AttributeType.STRING },
         billingMode: BillingMode.PAY_PER_REQUEST,
@@ -29,5 +29,5 @@ export function configureDatabases(scope: Construct ) {
     });
 }
 
-export const filesMetadataTable = () => filesMetadataTableInstnce;
+export const filesMetadataTable = () => filesMetadataTableInstance;
 export const auditTable = () => auditTableInstance;

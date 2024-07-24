@@ -55,10 +55,5 @@
 //         },
 //     };
 //     api.apiGateway.addModel(requestModel.modelName, requestModel);
-//     const action = apiNode.addResource(resourcesNames.apiEndpoint);
-//     action.addMethod("POST", new LambdaIntegration(lambda), {
-//         apiKeyRequired: true,
-//         requestModels: { "application/json": requestModel },
-//         requestValidator: api.requestValidator,
-//     });
+//     v
 // }
