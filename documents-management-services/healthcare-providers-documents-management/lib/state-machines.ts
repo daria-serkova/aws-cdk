@@ -5,7 +5,6 @@ import { Fail, Pass, StateMachine, Choice, Condition } from "aws-cdk-lib/aws-ste
 import { resourceName } from "../helpers/utilities";
 import { AwsIntegration } from "aws-cdk-lib/aws-apigateway";
 import { PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
-import { addStepFunctionExecutionPolicy, addStepFunctionExecutionPolicyForAllResources, createApiGatewayRole, createLambdaRole, createStepFunctionRole } from "./iam";
 
 let uploadDocumentsStateMachineIntegrationInstance: AwsIntegration;
 /**
@@ -47,14 +46,20 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
     });
     const success = new Pass(scope, 'Success');
 
-   const stateMachineRole = createStepFunctionRole(scope, 'upload-document-sm-role');
-   addStepFunctionExecutionPolicyForAllResources(stateMachineRole);
+   // Create IAM Role for Step Functions
+   const stateMachineRole = new Role(scope, resourceName('upload-document-sm-role'), {
+    roleName: resourceName('upload-document-sm-role'),
+    assumedBy: new ServicePrincipal('states.amazonaws.com'),
+  });
+  stateMachineRole.addToPolicy(new PolicyStatement({
+    actions: ['states:StartExecution'],
+    resources: ['*'], // Specify more restrictive ARNs as needed
+  }));
     const definition = validateDocumentTask
         .next(uploadDocumentTask)
         .next(recordAuditEventTask)
         //.next(sendEmailTask)
         .next(success);
-
     const stateMachine = new StateMachine(scope, resourceName('upload-document-workflow'), {
         stateMachineName: resourceName('upload-document-workflow'),
         definition,
@@ -62,8 +67,14 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
     });
 
     // Create IAM Role for API Gateway to invoke Step Functions
-    const apiGatewayRole = createApiGatewayRole(scope, 'upload-document-ag-role');
-    addStepFunctionExecutionPolicy(stateMachineRole, stateMachine);
+    const apiGatewayRole = new Role(scope, resourceName('api-gateway-role'), {
+        roleName: resourceName('api-gateway-role'),
+        assumedBy: new ServicePrincipal('apigateway.amazonaws.com'),
+      });
+      apiGatewayRole.addToPolicy(new PolicyStatement({
+        actions: ['states:StartExecution'],
+        resources: [stateMachine.stateMachineArn],
+      }));
     uploadDocumentsStateMachineIntegrationInstance = new AwsIntegration({
         service: 'states',
         action: 'StartExecution',

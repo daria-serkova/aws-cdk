@@ -43,16 +43,9 @@ export const addS3PutPolicy = (role: Role, bucketName: string) => {
         ],
     }));
 }
-export const addStepFunctionExecutionPolicy = (role: Role, stateMachine: StateMachine) => {
+export const addStepFunctionExecutionPolicy = (role: Role, stateMachineName: string) => {
     role.addToPolicy(new PolicyStatement({
         actions: ['states:StartExecution'],
-        resources: [ stateMachine.stateMachineArn ],
-    }));
-}
-
-export const addStepFunctionExecutionPolicyForAllResources = (role: Role) => {
-    role.addToPolicy(new PolicyStatement({
-        actions: ['states:StartExecution'],
-        resources: [ '*' ],
+        resources: [ `arn:aws:states:${process.env.AWS_REGION}:${process.env.AWS_ACCOUNT}:stateMachine:${stateMachineName}` ],
     }));
 }
