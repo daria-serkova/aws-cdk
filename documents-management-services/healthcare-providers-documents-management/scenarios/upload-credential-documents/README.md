@@ -1,0 +1,33 @@
+# Healthcare Provider Uploads Credential Documents
+
+## Background
+Dr. Emily Johnson, a newly credentialed orthopedic surgeon, has recently joined a large medical practice group. As part of the onboarding process, she needs to submit various credentialing documents to the practice’s central credentialing system. This ensures that her qualifications, licenses, and certifications are verified and compliant with both internal and regulatory standards.
+
+The system prompts her to upload several documents, including:
+
+1. Medical License
+2. Board Certification
+3. DEA Registration
+4. Curriculum Vitae (CV)
+5. Malpractice Insurance
+
+She selects each file from her local computer. Each document is verified for format and size constraints to ensure compatibility with the system. The system supports various file formats such as PDF (currently), JPG, and DOCX (future state).
+
+## Workflow
+
+1. Upon successful submission system validates each document for correct format, size, document category, integrity.
+2. Upon successful validation system saves document in the S3 bucket and document's metadata inside DynamoDB table.
+3. Upon successful storage, Dr. Johnson receives a confirmation message and a unique submission reference number. This reference number allows her to track the status of her documents within the portal.
+4. Also system sends an automated email confirmation to Dr. Johnson, acknowledging receipt of the documents and providing an estimated timeline for review. 
+5. Document submission event is stored inside Audit DynamoDB table 
+
+## Technology Stack
+
+- **AWS CloudFormation / AWS CDK:** Infrastructure as Code (IaC) for deploying the solution.
+- **TypeScript:** Programming language.
+- **S3:** Documents storage.
+- **Lambda:** Process document uploads and handle verification.
+- **API Gateway:** Expose APIs for document upload and retrieval.
+- **DynamoDB:** Store metadata about the documents, including verification status.
+- **CloudWatch:** Logs management.
+- **AWS IAM:** Manage permissions and roles.
