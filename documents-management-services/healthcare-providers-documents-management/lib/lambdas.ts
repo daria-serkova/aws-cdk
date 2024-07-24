@@ -5,20 +5,39 @@ import { Duration } from 'aws-cdk-lib';
 import { resolve, dirname } from 'path';
 import { REGION, resourceName } from '../helpers/utilities';
 import * as databases from './databases';
+import * as s3 from './s3';
+import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 
 let uploadLambdaInstance: NodejsFunction;
 let sendAuditEventLambdaInstance: NodejsFunction;
 let sendEmailLambdaInstance: NodejsFunction;
 let validateDocumentLambdaInstance: NodejsFunction;
 let updateMetadataLambdaInstance: NodejsFunction;
+
 let filesMetadataTable = databases.filesMetadataTable();
 let auditTable = databases.auditTable();
-
+let bucket = s3.documentsBucket();
 /**
  * Configuration of Lambda functions
  * @param scope 
  */
 export function configureLambdas(scope: Construct, lambdaFolder: string) {
+    const iamRole = new Role(scope, resourceName('upload-lambda-role'), {
+        roleName: resourceName('upload-lambda-role'),
+        assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+      });
+      iamRole.addToPolicy(new PolicyStatement({
+        actions: [
+            's3:PutObject',
+            's3:PutObjectAcl',
+            's3:GetObject',
+            's3:ListBucket', // Allows listing the objects in the bucket
+        ],
+        resources: [
+            `arn:aws:s3:::${bucket}`, 
+            `arn:aws:s3:::${bucket}/*`, 
+        ],
+    }));
     uploadLambdaInstance = new NodejsFunction(scope, resourceName('upload-documents'), {
         functionName: resourceName('upload-documents'),
         description: 'Upload documents into S3 bucket',
@@ -27,9 +46,10 @@ export function configureLambdas(scope: Construct, lambdaFolder: string) {
         timeout: Duration.minutes(3),
         handler: 'handler',
         //logGroup: logs.group,
-        //role: iamRole,
+        role: iamRole,
         environment: {
             REGION: REGION,
+            BUCKET_NAME: bucket
         },
     });
     updateMetadataLambdaInstance = new NodejsFunction(scope, resourceName('update-metadata'), {

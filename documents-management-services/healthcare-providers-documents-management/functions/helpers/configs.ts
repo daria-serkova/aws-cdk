@@ -31,3 +31,25 @@ export const AllowedDocumentCategories: Array<string> = [
  * This is used to restrict the size of uploaded documents to ensure they are manageable.
  */
 export const AllowedDocumentSize: number = 5 * 1024 * 1024; // 5 MB
+
+export const DocumentsStoragePaths = {
+    CREDENTIALS: {
+        SUBMITTED: 'providers/$/credentials/submitted',
+        VERIFIED: 'providers/$/credentials/verified',
+        REJECTED: 'providers/$/credentials/rejected',
+    }
+}
+export const DocumentsStatuses = {
+    VERIFICATION: {
+        PENDING: 'VERIFICATION_PENDING',
+        VERIFIED: 'VERIFIED',
+        REJECTED: 'REJECTED',
+    }
+}
+export const documentContentType = (format: string) => {
+    switch (format) {
+        case 'pdf': case 'PDF':
+            return 'application/pdf'
+    }
+    return '';
+}

@@ -23,7 +23,7 @@ import * as validation from './helpers/validation';
           && validation.isValidDocumentSize(document.size)
           && validation.isValidPdf(document.content)
         return {
-            isValid,
+            statusCode: 200,
             document
         };
     } catch (error) {

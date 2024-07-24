@@ -11,18 +11,10 @@ export class HealthcareProvidersDocumentsManagementStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     const logs = cloudWatch.configureResources(this);
-    const documentsStorage = s3.configureResources(this);
+    s3.configureResources(this);
     configureDatabases(this);
     configureLambdas(this, '../functions');
     configureUploadDocumentsWorkflowStateMachine(this);
     configureApiGateway(this);
-
-
-
-
-
-
-    //const api = apiGateway.configureResources(this);
-    //configureDocumentsApiResources(this, logs, api);
   }
 }

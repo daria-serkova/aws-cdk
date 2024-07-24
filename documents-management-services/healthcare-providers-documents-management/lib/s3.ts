@@ -5,6 +5,8 @@ import { AWS_RESOURCES_NAMING_CONVENTION, IS_PRODUCTION } from '../helpers/utili
 import { BlockPublicAccess, Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
 
+let documentsBucketInstance: Bucket;
+
 const resourceName = AWS_RESOURCES_NAMING_CONVENTION.replace('$', 'bucket').toLowerCase();
 const defaultTestFileLocation = 'data/test';
 /**
@@ -38,8 +40,7 @@ const s3Structure = [
  * @returns
  */
 export function configureResources(scope: Construct) {
-    // Creates S3 bucket
-    const s3Bucket = new Bucket(scope, resourceName, {
+    documentsBucketInstance = new Bucket(scope, resourceName, {
         bucketName: resourceName,
         encryption: BucketEncryption.S3_MANAGED,
         versioned: true,
@@ -47,13 +48,5 @@ export function configureResources(scope: Construct) {
         autoDeleteObjects: true,
         blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
     });
-    // Creates folders structure and uploads test files into it.
-    s3Structure.forEach(folder => {
-        const sourceDir = join(__dirname, `../${folder.dataFolder}`);
-        new BucketDeployment(scope, `${folder.path}`, {
-            sources: [Source.asset(sourceDir)],
-            destinationBucket: s3Bucket,
-            destinationKeyPrefix: folder.path,
-        });
-    });
 }
+export const documentsBucket = () => resourceName;
