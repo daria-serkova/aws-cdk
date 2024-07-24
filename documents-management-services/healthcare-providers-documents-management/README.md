@@ -25,7 +25,7 @@ She selects each file from her local computer. Each document is verified for for
 2. Upon successful validation system saves document in the S3 bucket and document's metadata inside DynamoDB table.
 3. Upon successful storage, Dr. Johnson receives a confirmation message and a unique submission reference number. This reference number allows her to track the status of her documents within the portal.
 4. Also system sends an automated email confirmation to Dr. Johnson, acknowledging receipt of the documents and providing an estimated timeline for review. 
-5. Document submission event is stored inside Audit DtnamoDB table 
+5. Document submission event is stored inside Audit DynamoDB table 
 
 ## Features
 

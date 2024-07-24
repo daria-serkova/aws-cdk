@@ -1,0 +1,32 @@
+{
+    "id": {
+      "S": "62c39147-a9ad-4c67-b98c-2c5bb3595e99"
+    },
+    "documentNumber": {
+      "S": "123456789"
+    },
+    "expiryDate": {
+      "S": "2025-01-01"
+    },
+    "issueDate": {
+      "S": "2020-01-01"
+    },
+    "issuedBy": {
+      "S": "Medical Board of State XYZ"
+    },
+    "providerId": {
+      "S": "provider-abcde-12345"
+    },
+    "type": {
+      "S": "MEDICAL_LICENSE"
+    },
+    "uploadTimestamp": {
+      "S": "1721846708873"
+    },
+    "url": {
+      "S": "s3://dvs-dms-hcp-bucket-development/providers/provider-abcde-12345/credentials/submitted/MEDICAL_LICENSE-provider-abcde-12345-8c71f3ef-8434-4365-9f6d-eb83154a096d.pdf"
+    },
+    "verificationStatus": {
+      "S": "VERIFICATION_PENDING"
+    }
+  }
