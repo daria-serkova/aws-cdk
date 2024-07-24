@@ -48,7 +48,9 @@ export const handler = async (event: any): Promise<any> => {
         }));
         return {
             statusCode: 200,
-            metadata
+            auditData: {
+                metadata
+            }
         };
     } catch (error) {
         throw new Error((error as Error).message || 'Internal Server Error');

@@ -33,3 +33,50 @@
         issuedBy: string
     }
 }
+export interface DocumentMetadata {
+    id: string;
+    providerId: string;
+    type: string;
+    url: string;
+    documentNumber: string;
+    issueDate: string;
+    expiryDate: string;
+    issuedBy: string;
+    verificationStatus: string;
+    uploadTimestamp: string;
+};
+export interface AuditEvent {
+    id: string;
+    eventType: string;
+    timestamp: string;
+    actor: {
+      userId: string;
+      userType: string;
+    },
+    sourceIP: string;
+    device: {
+      deviceType: string;
+      deviceModel: string;
+      deviceVendor: string;
+      osName: string;
+      osVersion: string;
+      browserName: string;
+      browserVersion: string;
+    };
+  };
+  export interface AuditEventDocumentUpload extends AuditEvent {
+    actionDetails: {
+        id: string,
+        providerId: string,
+        type: string,
+        url: string,
+        documentNumber: string,
+        issueDate: string,
+        expiryDate: string,
+        issuedBy: string,
+        verificationStatus: string,
+        uploadTimestamp: string
+    }
+  };
+
+ 

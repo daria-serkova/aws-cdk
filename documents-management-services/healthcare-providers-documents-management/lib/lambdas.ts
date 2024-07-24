@@ -7,6 +7,7 @@ import { REGION, resourceName } from '../helpers/utilities';
 import * as databases from './databases';
 import * as s3 from './s3';
 import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
+import { addDynamoDbPutPolicy, addS3PutPolicy, createLambdaRole } from './iam';
 
 let validateDocumentLambdaInstance: NodejsFunction;
 let uploadLambdaInstance: NodejsFunction;
@@ -19,25 +20,9 @@ let bucket = s3.documentsBucket();
  * @param scope 
  */
 export function configureLambdas(scope: Construct, lambdaFolder: string) {
-    const iamRole = new Role(scope, resourceName('upload-lambda-role'), {
-        roleName: resourceName('upload-lambda-role'),
-        assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
-      });
-      iamRole.addToPolicy(new PolicyStatement({
-        actions: [
-            's3:PutObject',
-            's3:PutObjectAcl',
-            's3:GetObject',
-            's3:ListBucket',
-            'dynamodb:PutItem'
-        ],
-        resources: [
-            `arn:aws:s3:::${bucket}`, 
-            `arn:aws:s3:::${bucket}/*`, 
-            `arn:aws:dynamodb:${process.env.AWS_REGION}:${process.env.AWS_ACCOUNT}:table/${databases.DatabasesNames.DOCUMENTS_METADATA}`
-            
-        ],
-    }));
+    const uploadLambdaIamRole = createLambdaRole(scope, 'upload-documents-lbd-role');
+    addDynamoDbPutPolicy(uploadLambdaIamRole, databases.DatabasesNames.DOCUMENTS_METADATA);
+    addS3PutPolicy(uploadLambdaIamRole, bucket);
     uploadLambdaInstance = new NodejsFunction(scope, resourceName('upload-documents'), {
         functionName: resourceName('upload-documents'),
         description: 'Upload documents into S3 bucket and metadata into DynamoDB',
@@ -46,13 +31,15 @@ export function configureLambdas(scope: Construct, lambdaFolder: string) {
         timeout: Duration.minutes(3),
         handler: 'handler',
         //logGroup: logs.group,
-        role: iamRole,
+        role: uploadLambdaIamRole,
         environment: {
             REGION: REGION,
             BUCKET_NAME: bucket,
             METADATA_TABLE: databases.DatabasesNames.DOCUMENTS_METADATA
         },
     });
+    const auditLambdaIamRole = createLambdaRole(scope, 'send-audit-event-lbd-role');
+    addDynamoDbPutPolicy(auditLambdaIamRole, databases.DatabasesNames.AUDIT);
     sendAuditEventLambdaInstance = new NodejsFunction(scope, resourceName('send-audit-event'), {
         functionName: resourceName('send-audit-event'),
         description: 'Saves record about activty in the audit event',
@@ -60,9 +47,10 @@ export function configureLambdas(scope: Construct, lambdaFolder: string) {
         memorySize: 256,
         timeout: Duration.minutes(3),
         handler: 'handler',
+        role: auditLambdaIamRole,
         environment: {
             REGION: REGION,
-            DB_AUDIT_TABLE: databases.DatabasesNames.DOCUMENTS_METADATA
+            AUDIT_TABLE: databases.DatabasesNames.AUDIT
         },
     });
     sendEmailLambdaInstance = new NodejsFunction(scope, resourceName('send-email'), {

@@ -53,3 +53,11 @@ export const documentContentType = (format: string) => {
     }
     return '';
 }
+
+export const AuditEventTypes = {
+    DOCUMENT_UPLOAD: 'DOCUMENT_UPLOAD'
+}
+
+export const UserTypes = {
+    HEALTHCARE_PROVIDER: 'HealthcareProvider'
+}
