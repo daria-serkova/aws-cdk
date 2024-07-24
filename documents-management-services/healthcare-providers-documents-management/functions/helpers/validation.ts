@@ -12,8 +12,7 @@ import { AllowedDocumentCategories, AllowedDocumentFormats, AllowedDocumentSize,
  */
  export const isValidDocumentFormat = (documentType: string): boolean => {
     if (!AllowedDocumentFormats.includes(documentType.toUpperCase())) {
-        console.error(`Validation failed: document format (${documentType}) is not supported`);
-        return false;
+        throw new Error(`Validation failed: document format (${documentType}) is not supported`);
     }
     return true;
 };
@@ -27,8 +26,7 @@ import { AllowedDocumentCategories, AllowedDocumentFormats, AllowedDocumentSize,
  */
  export const isValidDocumentCategory = (documentCategory: string): boolean => {
     if (!AllowedDocumentCategories.includes(documentCategory.toUpperCase())) {
-        console.error(`Validation failed: document category (${documentCategory}) is not supported`);
-        return false;
+        throw new Error(`Validation failed: document category (${documentCategory}) is not supported`);
     }
     return true;
 };
@@ -42,8 +40,7 @@ import { AllowedDocumentCategories, AllowedDocumentFormats, AllowedDocumentSize,
  */
  export const isValidDocumentSize = (documentSize: number): boolean => {
     if (documentSize > AllowedDocumentSize) {
-        console.error(`Validation failed: document larger than ${AllowedDocumentSize} bytes`);
-        return false;
+        throw new Error(`Validation failed: document larger than ${AllowedDocumentSize} bytes`);
     }
     return true;
 };
@@ -58,8 +55,7 @@ import { AllowedDocumentCategories, AllowedDocumentFormats, AllowedDocumentSize,
  */
  export const isValidPdf = (base64Content: string): boolean => {
     if (!base64Content) {
-        console.error(`Validation failed: content is not provided`);
-        return false;
+        throw new Error(`Validation failed: content is not provided`);
     }
     // Decode Base64 content
     const binaryContent = Buffer.from(base64Content, 'base64');
@@ -69,8 +65,7 @@ import { AllowedDocumentCategories, AllowedDocumentFormats, AllowedDocumentSize,
     const startValid = binaryContent.slice(0, pdfHeader.length).toString('ascii') === pdfHeader;
     const endValid = binaryContent.slice(-pdfFooter.length).toString('ascii') === pdfFooter;
     if (!startValid || !endValid) {
-        console.error(`Validation failed: invalid PDF structure`);
-        return false;
+        throw new Error(`Validation failed: invalid PDF structure`);
     }
     return true;
 };
@@ -84,8 +79,7 @@ export const areRequiredFieldsValid = (document: Document): boolean => {
     for (const field of RequiredDocumentFields) {
         const value = document[field as keyof Document];
         if (!value || value.toString().trim() === '') {
-            console.error(`Validation failed: required field is missing (${field})`);
-            return false;
+            throw new Error(`Validation failed: required field is missing (${field})`);
         }
     }
     return true;

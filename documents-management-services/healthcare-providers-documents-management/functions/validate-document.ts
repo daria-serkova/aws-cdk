@@ -1,4 +1,3 @@
-import { Context, Callback } from 'aws-lambda';
 import { Document } from './helpers/types';
 import * as validation from './helpers/validation';
 
@@ -15,7 +14,7 @@ import * as validation from './helpers/validation';
  * @param context 
  * @returns 
  */
-  export const handler = async (event: any, context: Context, callback: Callback): Promise<any> => {
+  export const handler = async (event: any): Promise<any> => {
     try {
         const document: Document = event;
         const isValid = validation.areRequiredFieldsValid(document)
@@ -28,10 +27,6 @@ import * as validation from './helpers/validation';
             document
         };
     } catch (error) {
-        console.error('Validation error:', error);
-        callback(null, {
-            statusCode: 500,
-            error: 'Internal Server Error'
-        });
+        throw new Error((error as Error).message || 'Internal Server Error');
     }
 };

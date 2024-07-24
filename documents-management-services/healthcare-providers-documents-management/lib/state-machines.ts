@@ -12,14 +12,13 @@ let uploadDocumentsStateMachineIntegrationInstance: AwsIntegration;
  * @param scope 
  */
 export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
-    // Add document validation task
     const validateDocumentTask = new LambdaInvoke(scope, 'Validate Document', {
         lambdaFunction: lambdas.validateDocumentLambda(),
         inputPath: '$',
         outputPath: '$.Payload',
     }).addCatch(new Fail(scope, 'Validation Failed'), {
         errors: ['States.ALL'],
-        resultPath: '$.error-info',
+        resultPath: '$.error',
     });
     const uploadDocumentTask = new LambdaInvoke(scope, 'Upload document to S3 bucket', {
         lambdaFunction: lambdas.uploadLambda(),
@@ -27,7 +26,7 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
         outputPath: '$.Payload',
     }).addCatch(new Fail(scope, 'Upload Failed'), {
         errors: ['States.ALL'],
-        resultPath: '$.error-info',
+        resultPath: '$.error',
     });
     const updateMetadataTask = new LambdaInvoke(scope, 'Save document metadata in DynamoDB', {
         lambdaFunction: lambdas.updateMetadataLambda(),
@@ -35,7 +34,7 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
         outputPath: '$.Payload',
     }).addCatch(new Fail(scope, 'Metadata Update Failed'), {
         errors: ['States.ALL'],
-        resultPath: '$.error-info',
+        resultPath: '$.error',
     });
     const recordAuditEventTask = new LambdaInvoke(scope, 'Add Audit Record', {
         lambdaFunction: lambdas.sendAuditEventLambda(),
@@ -43,7 +42,7 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
         outputPath: '$.Payload',
     }).addCatch(new Fail(scope, 'Audit Event Failed'), {
         errors: ['States.ALL'],
-        resultPath: '$.error-info',
+        resultPath: '$.error',
     });
     const sendEmailTask = new LambdaInvoke(scope, 'Send Email to administrator', {
         lambdaFunction: lambdas.sendEmailLambda(),
@@ -51,11 +50,9 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
         outputPath: '$.Payload',
     }).addCatch(new Fail(scope, 'Email Send Failed'), {
         errors: ['States.ALL'],
-        resultPath: '$.error-info',
+        resultPath: '$.error',
     });
-    // Success and failure states
     const success = new Pass(scope, 'Success');
-    const failure = new Fail(scope, 'Failure');
 
     const iamRole = new Role(scope, resourceName('upload-document-sm-role'), {
         roleName: resourceName('upload-document-sm-role'),
@@ -67,19 +64,17 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
     }));
     // Define the state machine
     const definition = validateDocumentTask
-        .next(new Choice(scope, 'Is Document Valid?')
-            .when(Condition.booleanEquals('$.isValid', true), uploadDocumentTask
-                .next(updateMetadataTask)
-                .next(recordAuditEventTask)
-                .next(sendEmailTask)
-                .next(success))
-            .otherwise(failure)
-        );
-        const stateMachine = new StateMachine(scope, resourceName('upload-document-workflow'), {
-            stateMachineName: resourceName('upload-document-workflow'),
-            definition,
-            role: iamRole,
-        });
+        .next(uploadDocumentTask)
+        .next(updateMetadataTask)
+        .next(recordAuditEventTask)
+        .next(sendEmailTask)
+        .next(success);
+    const stateMachine = new StateMachine(scope, resourceName('upload-document-workflow'), {
+        stateMachineName: resourceName('upload-document-workflow'),
+        definition,
+        role: iamRole,
+    });
+
         uploadDocumentsStateMachineIntegrationInstance = new AwsIntegration({
             
             service: 'states',
