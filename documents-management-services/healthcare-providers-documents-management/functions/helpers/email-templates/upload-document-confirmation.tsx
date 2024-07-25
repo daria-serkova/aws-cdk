@@ -69,7 +69,7 @@ import {
                 />
               </Section>
               <Section className="mx-auto text-center">
-                <Text className="text-white text-[28px] font-bold leading-[38.14px] text-center">
+                <Text className="text-black text-[28px] font-bold leading-[38.14px] text-center">
                   Confirmation of Document Submission
                 </Text>
                 <Text className="text-black text-[14px] leading-[24px] text-center">
