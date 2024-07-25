@@ -1,7 +1,8 @@
-import { PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { AnyPrincipal, Effect, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Construct } from "constructs";
 import { resourceName } from "../helpers/utilities";
 import { StateMachine } from "aws-cdk-lib/aws-stepfunctions";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 
 export const createLambdaRole = (scope: Construct, name: string) => {
     return new Role(scope, resourceName(name), {
@@ -47,5 +48,24 @@ export const addStepFunctionExecutionPolicy = (role: Role, stateMachineName: str
     role.addToPolicy(new PolicyStatement({
         actions: ['states:StartExecution'],
         resources: [ `arn:aws:states:${process.env.AWS_REGION}:${process.env.AWS_ACCOUNT}:stateMachine:${stateMachineName}` ],
+    }));
+}
+
+export const addPublicAccessPermissionsToS3Bucket = (bucket: Bucket) => {
+    // Add a bucket policy to allow public read access
+    bucket.addToResourcePolicy(new PolicyStatement({
+        actions: ['s3:GetObject'],
+        resources: [`${bucket.bucketArn}/*`],
+        effect: Effect.ALLOW,
+        principals: [
+            new AnyPrincipal()
+        ],
+    }));
+    // Add a bucket policy to restrict upload access
+    bucket.addToResourcePolicy(new PolicyStatement({
+        actions: ['s3:PutObject'],
+        resources: [`${bucket.bucketArn}/*`],
+        effect: Effect.DENY,
+        principals: [new AnyPrincipal()],
     }));
 }

@@ -1,9 +1,9 @@
 import { S3 } from 'aws-sdk';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { Document } from './helpers/types';
+import { UploadedDocument } from './helpers/types';
 import { Buffer } from 'buffer';
-import { documentContentType, DocumentsStatuses, DocumentsStoragePaths } from './helpers/configs';
+import { documentContentType, DocumentsStatuses, DocumentsStoragePaths, EmailTypes } from './helpers/configs';
 import { generateDocumentUUID } from './helpers/utils';
 
 const s3Client = new S3({ region: process.env.REGION });
@@ -18,7 +18,7 @@ const dynamoDbClient = new DynamoDBClient({ region: process.env.REGION });
  */
 export const handler = async (event: any): Promise<any> => {
     try {
-        const document: Document = event;
+        const document: UploadedDocument = event;
         const buffer = Buffer.from(document.content, 'base64');
         const bucketName = process.env.BUCKET_NAME || '';
         const documentId = generateDocumentUUID()
@@ -31,7 +31,7 @@ export const handler = async (event: any): Promise<any> => {
         };
         await s3Client.upload(params).promise();
         const metadata = {
-            id: generateDocumentUUID(),
+            id: documentId,
             providerId: document.providerId,
             type: document.category,
             url: `s3://${bucketName}/${key}`,
@@ -47,7 +47,13 @@ export const handler = async (event: any): Promise<any> => {
             Item: marshall(metadata)
         }));
         return {
-            statusCode: 200,
+            emailAction: {
+                type: EmailTypes.DOCUMENT_UPLOADED,
+                email: document.providerEmail,
+                name: document.providerName,
+                documentName: document.category.replace(/_/g, ' '),
+                confirmationNumber: documentId
+            },
             auditData: {
                 metadata
             }

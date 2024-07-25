@@ -31,6 +31,7 @@ This repository contains an AWS serverless solution for managing healthcare prov
 - **Amazon SNS (Simple Notification Service):** Send notifications.
 - **AWS IAM:** Manage permissions and roles.
 - **Amazon Cognito:** Manage user authentication and authorization.
+- **ReactJS**: Templated emails UI (including libraries @react-email/components and @react-email/tailwind)
 
 
 ## Key Aspects

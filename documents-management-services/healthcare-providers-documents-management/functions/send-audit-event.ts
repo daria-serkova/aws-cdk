@@ -44,7 +44,7 @@ export const handler = async (event: any): Promise<any> => {
             Item: marshall(auditEvent)
         }));
         return {
-            statusCode: 200,
+            
         };
     } catch (error) {
         throw new Error((error as Error).message || 'Internal Server Error');

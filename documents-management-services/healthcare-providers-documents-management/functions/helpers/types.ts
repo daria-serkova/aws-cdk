@@ -18,8 +18,10 @@
  * @property {string} metadata.expiryDate - The date when the document or license expires.
  * @property {string} metadata.issuedBy - The authority or organization that issued the document.
  */
- export interface Document {
+ export interface UploadedDocument {
     providerId: string;
+    providerEmail: string;
+    providerName: string;
     name: string;
     type: string;
     category: string;
@@ -79,4 +81,13 @@ export interface AuditEvent {
     }
   };
 
+export interface EmailParams {
+    type: string;
+    email: string;
+    name: string;
+}
+export interface UploadDocumentEmailParams extends EmailParams {
+  documentName: string;
+  confirmationNumber: string
+}
  

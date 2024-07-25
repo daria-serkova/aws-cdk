@@ -38,7 +38,7 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
     });
     const sendEmailTask = new LambdaInvoke(scope, 'Send Email to administrator', {
         lambdaFunction: lambdas.sendEmailLambda(),
-        inputPath: '$.email',
+        inputPath: '$.emailAction',
         outputPath: '$.Payload',
     }).addCatch(new Fail(scope, 'Email Send Failed'), {
         errors: ['States.ALL'],
@@ -57,8 +57,8 @@ export function configureUploadDocumentsWorkflowStateMachine(scope: Construct) {
   }));
     const definition = validateDocumentTask
         .next(uploadDocumentTask)
-        .next(recordAuditEventTask)
-        //.next(sendEmailTask)
+        //.next(recordAuditEventTask)
+        .next(sendEmailTask)
         .next(success);
     const stateMachine = new StateMachine(scope, resourceName('upload-document-workflow'), {
         stateMachineName: resourceName('upload-document-workflow'),

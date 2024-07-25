@@ -20,6 +20,7 @@
     "inlineSources": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
+    "jsx": "react",
     "typeRoots": [
       "./node_modules/@types"
     ]

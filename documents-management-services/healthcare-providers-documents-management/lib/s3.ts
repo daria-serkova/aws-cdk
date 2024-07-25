@@ -1,52 +1,49 @@
 import { RemovalPolicy } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { join } from 'path';
-import { AWS_RESOURCES_NAMING_CONVENTION, IS_PRODUCTION } from '../helpers/utilities';
+import { IS_PRODUCTION, MEDIA_FILES_LOCATIONS } from '../helpers/utilities';
 import { BlockPublicAccess, Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
+import { resourceName } from '../helpers/utilities';
 import { BucketDeployment, Source } from 'aws-cdk-lib/aws-s3-deployment';
+import { join } from 'path';
+import { addPublicAccessPermissionsToS3Bucket } from './iam';
 
-let documentsBucketInstance: Bucket;
-
-const resourceName = AWS_RESOURCES_NAMING_CONVENTION.replace('$', 'bucket').toLowerCase();
-const defaultTestFileLocation = 'data/test';
-/**
- * Defines S3 folders structure and location of test data files.
- * NOTE: S3 skips folder creation if no files are added to it. If no specific files are configured - empty test.txt file is uploaded.
- */
-const s3Structure = [
-    /* Folder for storing credential-related documents */
-    { path: 'providers/provider_id/credentials/submitted', dataFolder: defaultTestFileLocation }, 
-    { path: 'providers/provider_id/credentials/verified', dataFolder: defaultTestFileLocation }, 
-    { path: 'providers/provider_id/credentials/rejected', dataFolder: defaultTestFileLocation }, 
-
-    /* Folder for background check documents */
-    { path: 'providers/provider_id/background_check/submitted', dataFolder: defaultTestFileLocation }, 
-    { path: 'providers/provider_id/background_check/verified', dataFolder: defaultTestFileLocation }, 
-    { path: 'providers/provider_id/background_check/rejected', dataFolder: defaultTestFileLocation }, 
-
-    /*  Folder for any additional documents that the provider might need to submit */
-    { path: 'providers/provider_id/additional_documents/submitted', dataFolder: defaultTestFileLocation }, 
-    { path: 'providers/provider_id/additional_documents/verified', dataFolder: defaultTestFileLocation }, 
-    { path: 'providers/provider_id/additional_documents/rejected', dataFolder: defaultTestFileLocation }, 
- 
-    /* Folder for storing the provider's profile-related documents */
-    { path: 'providers/provider_id/profile', dataFolder: defaultTestFileLocation },    
-]
+export const BucketsNames = {
+   DOCUMENTS_BUCKET: resourceName('documents').toLowerCase(),
+   EMAILS_MEDIA_BUCKET: resourceName('emails-media').toLowerCase(),
+}
 
 /**
- * Function creates and configure S3 bucket.
+ * Function creates and configure S3 buckets.
  * @param scope 
  * @param bucketName 
  * @returns
  */
 export function configureResources(scope: Construct) {
-    documentsBucketInstance = new Bucket(scope, resourceName, {
-        bucketName: resourceName,
+
+    new Bucket(scope, BucketsNames.DOCUMENTS_BUCKET, {
+        bucketName: BucketsNames.DOCUMENTS_BUCKET,
         encryption: BucketEncryption.S3_MANAGED,
         versioned: true,
         removalPolicy: IS_PRODUCTION ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
-        autoDeleteObjects: true,
+        autoDeleteObjects: !IS_PRODUCTION,
         blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
     });
+
+    const emailsMediaFilesBucket = new Bucket(scope, BucketsNames.EMAILS_MEDIA_BUCKET, {
+        bucketName: BucketsNames.EMAILS_MEDIA_BUCKET,
+        encryption: BucketEncryption.S3_MANAGED,
+        versioned: true,
+        removalPolicy: IS_PRODUCTION ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
+        autoDeleteObjects: !IS_PRODUCTION,
+        blockPublicAccess: BlockPublicAccess.BLOCK_ACLS, 
+    });
+    const emailsMediaFilesSourceDir = join(__dirname, '../media-files/email-templates');
+    const deployment = new BucketDeployment(scope, resourceName('upload-emails-media-files'), {
+        sources: [
+            Source.asset(emailsMediaFilesSourceDir)
+        ],
+        destinationBucket: emailsMediaFilesBucket,
+        destinationKeyPrefix: MEDIA_FILES_LOCATIONS.EMAILS_MEDIA_FILES,
+    });
+    addPublicAccessPermissionsToS3Bucket(emailsMediaFilesBucket);
 }
-export const documentsBucket = () => resourceName;

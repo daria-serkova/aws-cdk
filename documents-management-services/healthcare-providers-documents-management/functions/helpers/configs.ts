@@ -1,9 +1,9 @@
-import { Document } from './types';
+import { UploadedDocument } from './types';
 /**
  * List of required fields for a Document type.
  * These fields must be present and non-empty in a valid Document.
  */
-export const RequiredDocumentFields: Array<keyof Document> = [
+export const RequiredDocumentFields: Array<keyof UploadedDocument> = [
     'providerId',      // Unique identifier for the provider
     'name',            // Name of the document
     'type',            // Format of the document
@@ -61,3 +61,34 @@ export const AuditEventTypes = {
 export const UserTypes = {
     HEALTHCARE_PROVIDER: 'HealthcareProvider'
 }
+
+export const EmailTypes = {
+    DOCUMENT_UPLOADED: 'DOCUMENT_UPLOADED'
+}
+export const EmailAttachments = [
+    {
+      filename: "logo.png",
+      path: `${process.env.EMAILS_MEDIA_PATH}/logo.png`,
+      cid: "logoImage", //same cid value as in the html img src
+    },
+    {
+      filename: "x.png",
+      path: `${process.env.EMAILS_MEDIA_PATH}/x.png`,
+      cid: "xIcon", //same cid value as in the html img src
+    },
+    {
+      filename: "youtube.png",
+      path: `${process.env.EMAILS_MEDIA_PATH}/youtube.png`,
+      cid: "youtubeIcon", //same cid value as in the html img src
+    },
+    {
+      filename: "linkedinIcon.png",
+      path: `${process.env.EMAILS_MEDIA_PATH}/linkdin.png`,
+      cid: "linkedinIcon", //same cid value as in the html img src
+    },
+    {
+      filename: "instagram.png",
+      path: `${process.env.EMAILS_MEDIA_PATH}/instagram.png`,
+      cid: "instagramIcon", //same cid value as in the html img src
+    },
+  ]

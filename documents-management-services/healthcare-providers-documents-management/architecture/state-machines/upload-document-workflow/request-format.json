@@ -1,5 +1,7 @@
 {
     "providerId": "provider-abcde-12345",
+    "providerEmail": "john.lawson@company.com",
+    "providerName": "Dr. John Lawson",
     "name": "medical-license.pdf",
     "type": "pdf",
     "size": 1048576,
