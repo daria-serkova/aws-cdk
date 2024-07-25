@@ -22,7 +22,7 @@ This repository contains an AWS serverless solution for managing healthcare prov
 
 - **AWS CloudFormation / AWS CDK:** Infrastructure as Code (IaC) for deploying the solution.
 - **TypeScript:** Programming language.
-- **S3:** Documents storage.
+- **S3:** Documents storage. Storage of media files for styled emails.
 - **Lambda:** Process document uploads and handle verification.
 - **API Gateway:** Expose APIs for document upload and retrieval.
 - **DynamoDB:** Store metadata about the documents, including verification status.
