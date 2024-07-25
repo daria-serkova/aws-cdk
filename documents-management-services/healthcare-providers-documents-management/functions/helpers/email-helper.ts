@@ -2,6 +2,7 @@ import * as nodemailer from 'nodemailer';
 import { render } from "@react-email/render";
 import UploadDocumentConfirmationEmailTemplate from './email-templates/upload-document-confirmation';
 import { EmailAttachments, EmailTypes } from './configs';
+import UploadDocumentNotificationEmailTemplate from './email-templates/upload-document-notification';
 
 // Configuration settings for the email transporter
 const transporterSettings = {
@@ -53,6 +54,16 @@ const generateEmailHtml = (emailType: string, emailDetails: any): string => {
           name: emailDetails.emailDetails
         })
       );
+    case EmailTypes.DOCUMENT_UPLOADED_NOTIFICATION:
+      return render(
+        UploadDocumentNotificationEmailTemplate({
+          ...companyDetails,
+          year: copyrightYear,
+          documentName: emailDetails.documentName,
+          confirmationNumber: emailDetails.confirmationNumber,
+          name: emailDetails.emailDetails
+        })
+      );
     default:
       return '';
   }
@@ -62,11 +73,13 @@ const generateEmailHtml = (emailType: string, emailDetails: any): string => {
  * @param emailType - Type of the email to be sent.
  * @returns Subject line for the email.
  */
-const getSubject = (emailType: string): string => {
+const getSubject = (emailType: string, dynamicData: string): string => {
   switch (emailType) {
     case EmailTypes.DOCUMENT_UPLOADED_CONFIRMATION:
-      return "Document Management Solutions: Confirmation of Document Submission";
-    default:
+      return 'Confirmation of Document Submission';
+    case EmailTypes.DOCUMENT_UPLOADED_NOTIFICATION:
+      return `New Document Submitted by ${dynamicData}`
+      default:
       return '';
   }
 };
@@ -80,11 +93,12 @@ const getSubject = (emailType: string): string => {
 export async function sendEmail(
   emailTo: string,
   emailType: string,
-  emailDetails: any
+  emailDetails: any,
+  subjectDynamicData: string,
 ) {
   // Generate the email HTML content and subject based on the email type
   const emailHtml = generateEmailHtml(emailType, emailDetails);
-  const subject = getSubject(emailType);
+  const subject = getSubject(emailType, subjectDynamicData);
 
   // Send the email using the Nodemailer transporter
   await transporter.sendMail({

@@ -61,13 +61,14 @@ export function configureLambdas(scope: Construct, lambdaFolder: string) {
         handler: 'handler',
         environment: {
             REGION: REGION,
-            EMAIL_FROM: process.env.EMAIL_FROM || "",
-            EMAIL_REPLY_TO: process.env.EMAIL_REPLY_TO || "",
-            EMAIL_SMTP_HOST: process.env.EMAIL_SMTP_HOST || "",
-            EMAIL_SMTP_PORT: process.env.EMAIL_SMTP_PORT || "",
-            EMAIL_SMTP_USERNAME: process.env.EMAIL_SMTP_USERNAME || "",
-            EMAIL_SMTP_PASSWORD: process.env.EMAIL_SMTP_PASSWORD || "",
-            EMAIL_SMTP_IS_SECURE: process.env.EMAIL_SMTP_IS_SECURE || "",
+            NOTIFICATION_EMAIL: process.env.NOTIFICATION_EMAIL || '',
+            EMAIL_FROM: process.env.EMAIL_FROM || '',
+            EMAIL_REPLY_TO: process.env.EMAIL_REPLY_TO || '',
+            EMAIL_SMTP_HOST: process.env.EMAIL_SMTP_HOST || '',
+            EMAIL_SMTP_PORT: process.env.EMAIL_SMTP_PORT || '',
+            EMAIL_SMTP_USERNAME: process.env.EMAIL_SMTP_USERNAME || '',
+            EMAIL_SMTP_PASSWORD: process.env.EMAIL_SMTP_PASSWORD || '',
+            EMAIL_SMTP_IS_SECURE: process.env.EMAIL_SMTP_IS_SECURE || '',
             EMAILS_MEDIA_PATH: `https://${s3.BucketsNames.EMAILS_MEDIA_BUCKET}.s3.${REGION}.amazonaws.com/${MEDIA_FILES_LOCATIONS.EMAILS_MEDIA_FILES}`
         },
     });
