@@ -63,7 +63,7 @@ export const UserTypes = {
 }
 
 export const EmailTypes = {
-    DOCUMENT_UPLOADED: 'DOCUMENT_UPLOADED'
+    DOCUMENT_UPLOADED_CONFIRMATION: 'DOCUMENT_UPLOADED_CONFIRMATION'
 }
 export const EmailAttachments = [
     {

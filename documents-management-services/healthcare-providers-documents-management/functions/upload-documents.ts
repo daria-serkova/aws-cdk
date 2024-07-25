@@ -48,7 +48,6 @@ export const handler = async (event: any): Promise<any> => {
         }));
         return {
             emailAction: {
-                type: EmailTypes.DOCUMENT_UPLOADED,
                 email: document.providerEmail,
                 name: document.providerName,
                 documentName: document.category.replace(/_/g, ' '),

@@ -3,6 +3,7 @@ import { render } from "@react-email/render";
 import UploadDocumentConfirmationEmailTemplate from './email-templates/upload-document-confirmation';
 import { EmailAttachments, EmailTypes } from './configs';
 
+// Configuration settings for the email transporter
 const transporterSettings = {
   host: process.env.EMAIL_SMTP_HOST,
   port: parseInt(process.env.EMAIL_SMTP_PORT || "465", 10),
@@ -12,61 +13,85 @@ const transporterSettings = {
     pass: process.env.EMAIL_SMTP_PASSWORD,
   },
 };
+
 const transporter = nodemailer.createTransport(transporterSettings);
 
+// Company details used in the email templates
 const companyDetails = {
   companyName: "Documents Management Solutions",
-  platformHelpCenterUrl: "https://www.dariaserkova.com/help",
-  supportEmail: "support@dariaserkova.com",
+  platformHelpCenterUrl: "https://www.company.com/help",
+  supportEmail: "support@company.com",
   startYear: 2024,
-  address: "Address 123, City, State - 123456",
+  address: "123 Address, City, State, USA - 123456",
   facebookUrl: "https://www.facebook.com/yourpage",
   twitterUrl: "https://twitter.com/yourpage",
   linkedinUrl: "https://www.linkedin.com/yourpage",
   instagramUrl: "https://instagram.com/yourpage",
 };
-const currentYear = new Date().getFullYear();
-const copyrightYear =
-  currentYear === companyDetails.startYear
-    ? `${companyDetails.startYear}`
-    : `${companyDetails.startYear} - ${currentYear}`;
 
-export async function getEmailTemplate(
+// Calculate the copyright year string
+const currentYear = new Date().getFullYear();
+const copyrightYear = currentYear === companyDetails.startYear
+  ? `${companyDetails.startYear}`
+  : `${companyDetails.startYear} - ${currentYear}`;
+
+/**
+ * Generate email HTML content based on the email type and details.
+ * @param emailType - Type of the email to be sent.
+ * @param emailDetails - Additional details required for the email template.
+ * @returns HTML content for the email.
+ */
+const generateEmailHtml = (emailType: string, emailDetails: any): string => {
+  switch (emailType) {
+    case EmailTypes.DOCUMENT_UPLOADED_CONFIRMATION:
+      return render(
+        UploadDocumentConfirmationEmailTemplate({
+          ...companyDetails,
+          year: copyrightYear,
+          documentName: emailDetails.documentName,
+          confirmationNumber: emailDetails.confirmationNumber,
+          name: emailDetails.emailDetails
+        })
+      );
+    default:
+      return '';
+  }
+};
+/**
+ * Get the subject line for the email based on the email type.
+ * @param emailType - Type of the email to be sent.
+ * @returns Subject line for the email.
+ */
+const getSubject = (emailType: string): string => {
+  switch (emailType) {
+    case EmailTypes.DOCUMENT_UPLOADED_CONFIRMATION:
+      return "Document Management Solutions: Confirmation of Document Submission";
+    default:
+      return '';
+  }
+};
+/**
+ * Send an email to the specified recipient with the given email type and details.
+ * @param emailTo - Recipient's email address.
+ * @param name - Recipient's name.
+ * @param emailType - Type of the email to be sent.
+ * @param emailDetails - Additional details required for the email template.
+ */
+export async function sendEmail(
   emailTo: string,
-  name: string,
   emailType: string,
   emailDetails: any
 ) {
-  let emailHtml = '';
-  let subject = '';
-  switch (emailType) {
-    case EmailTypes.DOCUMENT_UPLOADED:
-      emailHtml = render(
-        UploadDocumentConfirmationEmailTemplate({
-          name: name,
-          companyName: companyDetails.companyName,
-          address: companyDetails.address,
-          supportEmail: companyDetails.supportEmail,
-          year: copyrightYear,
-          helpPageLink: companyDetails.platformHelpCenterUrl,
-          youtubeUrl: companyDetails.facebookUrl,
-          twitterUrl: companyDetails.twitterUrl,
-          linkedinUrl: companyDetails.linkedinUrl,
-          instagramUrl: companyDetails.instagramUrl,
-          documentName: emailDetails.documentName,
-          confirmationNumber: emailDetails.confirmationNumber,
-        })
-      );
-      subject = "Document Management Solutions: Document Uploaded";
-      break;
-    default:
-      break;
-  }
+  // Generate the email HTML content and subject based on the email type
+  const emailHtml = generateEmailHtml(emailType, emailDetails);
+  const subject = getSubject(emailType);
+
+  // Send the email using the Nodemailer transporter
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,
     to: emailTo,
     subject: subject,
     html: emailHtml,
-    attachments: EmailAttachments
+    attachments: EmailAttachments,
   });
 }

@@ -70,20 +70,23 @@ import {
               </Section>
               <Section className="mx-auto text-center">
                 <Text className="text-white text-[28px] font-bold leading-[38.14px] text-center">
-                  Document Upload Successful
+                  Confirmation of Document Submission
                 </Text>
                 <Text className="text-black text-[14px] leading-[24px] text-center">
-                  Hello, {name}
+                  Dear, {name}
                 </Text>
                 <Text className="text-black text-[14px] leading-[24px] text-center">
-                  Your document {documentName} has been uploaded successfully. Your unique submission reference number is {confirmationNumber}. You can use this reference number to track the status of your documents within the portal.
+                  Thank you for submitting your credentialing document <b>{documentName}</b>.
                 </Text>
                 <Text className="text-black text-[14px] leading-[24px] text-center">
-                  Please expect to receive an update regarding the review process within the next 3-5 business days.
+                  Your unique submission reference number is <b>{confirmationNumber}</b>. You can use this reference number to track the status of your documents within the portal.
                 </Text>
-              </Section>
-              <Section className="text-center mt-[20px] mb-[20px] bg-[#f3f8f8]">
-                <Text className="text-blue-900 text-[24px]">{email}</Text>
+                <Text className="text-black text-[14px] leading-[24px] text-center">
+                  Our team will begin reviewing your documents shortly. The review process typically takes 3-5 business days. If any additional information is required, we will reach out to you.
+                </Text>
+                <Text className="text-black text-[14px] leading-[24px] text-center">
+                Thank you for your cooperation.
+                </Text>
               </Section>
               <Section className="text-center">
                 <Text className="text-black text-[14px] leading-[24px]">
