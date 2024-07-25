@@ -2,7 +2,7 @@ import * as nodemailer from 'nodemailer';
 import { render } from "@react-email/render";
 import UploadDocumentConfirmationEmailTemplate from './email-templates/upload-document-confirmation';
 import { EmailAttachments, EmailTypes } from './configs';
-import UploadDocumentNotificationEmailTemplate from './email-templates/upload-document-notification';
+import UploadDocumentNotificationEmailTemplate from './email-templates/UploadDocumentNotificationEmailTemplate';
 
 // Configuration settings for the email transporter
 const transporterSettings = {
@@ -58,10 +58,7 @@ const generateEmailHtml = (emailType: string, emailDetails: any): string => {
       return render(
         UploadDocumentNotificationEmailTemplate({
           ...companyDetails,
-          year: copyrightYear,
-          documentName: emailDetails.documentName,
-          confirmationNumber: emailDetails.confirmationNumber,
-          name: emailDetails.emailDetails
+          year: copyrightYear
         })
       );
     default:
