@@ -38,6 +38,7 @@ import {
   export const  UploadDocumentConfirmationEmailTemplate = ({
     companyName,
     name,
+    address,
     email,
     subject,
     year,
