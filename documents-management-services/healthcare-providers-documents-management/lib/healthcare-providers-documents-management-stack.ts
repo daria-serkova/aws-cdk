@@ -2,7 +2,6 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as cloudWatch from './cloud-watch';
 import * as s3 from './s3';
-//import * as apiGateway from './api-gateway-old';
 import { configureDatabases } from './databases';
 import { configureLambdas } from './lambdas';
 import { configureUploadDocumentsWorkflowStateMachine } from './state-machines';

@@ -1,0 +1,69 @@
+# Deployment should be done to region, where end users are located to fullfill data residency requirements, since it will consist of data of the client's users.
+# * For client from USA use: us-east-1 (N. Virginia)
+AWS_REGION=us-east-1
+
+# Account where AWS resources deployment should be done.
+AWS_ACCOUNT=TBD
+
+# Client business name.
+TAG_CLIENT_NAME=Company Name
+
+# Client business code.
+TAG_CLIENT_CODE=COMPANY_CODE
+
+# Country where deployment is done. Possible values: 
+# * USA
+# * India
+# * etc.
+APP_COUNTRY_VERSION=USA
+
+# Industry
+TAG_INDUSTRY=Healthcare
+
+# Solution name
+TAG_SOLUTION=Emails Management Solution
+
+# Solution code
+TAG_SOLUTION_CODE=<CLIENT_CODE>-EMS
+
+# Module name within solution
+TAG_APPLICATION=Emails Managment Solution
+
+# Module code within solution.
+TAG_APPLICATION_CODE=EMS
+
+# Prefix, that will be added to names of all AWS Resources, created for this application.
+AWS_RESOURCES_NAME_PREFIX=DVS-EMS
+
+# Environment. Possible values: 
+# * development
+# * testing
+# * performance
+# * production
+TAG_ENVIRONMENT=development
+
+# Required Compliance rules. Possible values: 
+# * HIPPA - for healthcare data 
+# * PII - for applications with Personally Identifiable Information
+# * PCI-DSS - for applications with credit cards processing
+# * NONE - if no regulations are applicable
+TAG_COMPLIANCE=PII  # Email address and email body is stored inside DynamoDB and S3 
+TAG_SECURITY_LEVEL=Confidential
+TAG_LIFECYCLE=Active
+TAG_BACKUP_POLICY=No Backup
+TAG_BACKUP_RETENTION_POLICY=0 Days
+
+# Email integration settings
+EMAIL_FROM=TBD
+EMAIL_REPLY_TO=TBD
+EMAIL_SMTP_HOST=TBD
+EMAIL_SMTP_PORT=TBD
+EMAIL_SMTP_USERNAME=TBD
+EMAIL_SMTP_PASSWORD=TBD
+EMAIL_SMTP_IS_SECURE=TBD
+
+VERIFICATION_TEAM_EMAIL=documents.verification@company.com
+SUPPORT_TEAM_EMAIL=support@company.com
+ADMINISTRATORS_TEAM_EMAIL=administrators@company.com
+FINANCES_TEAM_EMAIL=finances@company.com
+MARKETING_TEAM_EMAIL=marketing@company.com

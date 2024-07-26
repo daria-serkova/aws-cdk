@@ -81,13 +81,6 @@ export interface AuditEvent {
     }
   };
 
-export interface EmailParams {
-    type: string;
-    email: string;
-    name: string;
-}
-export interface UploadDocumentEmailParams extends EmailParams {
-  documentName: string;
-  confirmationNumber: string
-}
- 
+
+
+

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   Body,
   Container,
@@ -12,40 +11,19 @@ import { Tailwind } from '@react-email/tailwind';
 import * as React from 'react';
 import EmailHeader from './EmailHeader';
 import EmailFooter from './EmailFooter';
-
-interface UploadDocumentConfirmationEmailPropTypes {
-  companyName?: string;
-  address?: string;
-  year?: string;
-  helpPageLink?: string;
-  youtubeUrl?: string;
-  twitterUrl?: string;
-  linkedinUrl?: string;
-  instagramUrl?: string;
-  subject?: string;
-  documentName?: string;
-  confirmationNumber?: string;
-  supportEmail?: string;
-}
+import { UploadDocumentNotificationEmailPropsType } from '../../types/email-types';
 
 export const UploadDocumentNotificationEmailTemplate = ({
-  companyName,
-  address,
-  email,
   subject,
-  year,
-  helpPageLink,
-  xLink,
-  youtubeLink,
-  instagramLink,
-  linkedInLink,
-  supportEmail,
-}: UploadDocumentConfirmationEmailPropTypes) => {
-  const previewText = subject;
+  userName,
+  documentType,
+  documentAccessPath,
+  companyDetails
+}: UploadDocumentNotificationEmailPropsType) => {
   return (
     <Html>
       <Head />
-      <Preview>{previewText}</Preview>
+      <Preview>{subject}</Preview>
       <Tailwind>
         <Body className="bg-white my-auto mx-auto font-sans px-2">
           <Container className="border my-[40px] mx-auto py-[20px] max-w-[465px] ">
@@ -59,28 +37,18 @@ export const UploadDocumentNotificationEmailTemplate = ({
                 Dear Documents Verification Team,
               </Text>
               <Text className="text-black text-[14px] leading-[24px] text-center">
-                Dr. Emily Johnson has submitted her credentialing documents for review. 
-                Below is a summary of the documents submitted:
+                {userName} has submitted <b>{documentType}</b> document for review. 
               </Text>
               <Text className="text-black text-[14px] leading-[24px] text-center">
-                Please begin the review process at your earliest convenience. You can access the submitted documents via the following link: [Document Management System Link]
+                Please begin the review process at your earliest convenience.
+                You can access the submitted documents via the following link: {documentAccessPath}
               </Text>
               <Text className="text-black text-[14px] leading-[24px] text-center">
                 Thank you for your cooperation.
               </Text>
             </Section>
             
-            <EmailFooter
-              companyName={companyName}
-              address={address}
-              year={year}
-              helpPageLink={helpPageLink}
-              supportEmail={supportEmail}
-              xLink={xLink}
-              youtubeLink={youtubeLink}
-              instagramLink={instagramLink}
-              linkedInLink={linkedInLink}
-            />
+            <EmailFooter companyDetails={companyDetails} />
           </Container>
         </Body>
       </Tailwind>
