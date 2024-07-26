@@ -1,5 +1,6 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import { S3 } from 'aws-sdk';
+import { renderMarkdownWithData } from "./helpers/emails";
 const s3 = new S3({ region: process.env.AWS_REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
 const BUCKET_TEMPLATES_LOCATION = process.env.BUCKET_TEMPLATES_LOCATION!;
@@ -22,8 +23,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
             };
         }
         const templateContent = templateObject?.Body?.toString('utf-8') || '';
-        
-        const template = JSON.parse(templateContent);
+        const templateJson = JSON.parse(templateContent);
+        const emailContentWithDynamicData = renderMarkdownWithData(templateJson.content, emailData);
 
 
       return {
@@ -33,7 +34,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           templateId: templateId,
           locale: locale,
           recipient: recipient,
-          template: template
+          template: emailContentWithDynamicData
         }),
       };
 }

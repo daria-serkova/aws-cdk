@@ -13,6 +13,18 @@ const transporterSettings = {
   
 const transporter = nodemailer.createTransport(transporterSettings);
 
+// Function to replace placeholders with actual data
+export const renderMarkdownWithData = (markdown: string, data: Record<string, any>): string => {
+    return markdown.replace(/\{\{(\w+)\}\}/g, (_, key) => {
+        return data[key] || '';
+    });
+};
+// Function to replace placeholders with actual data
+const renderHtmlWithData = (html: string, data: Record<string, any>): string => {
+    return html.replace(/\{\{(\w+)\}\}/g, (_, key) => {
+        return data[key] || '';
+    });
+};
 
 
 const generateEmailHtml = (template: any, data: any): string => {
