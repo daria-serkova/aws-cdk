@@ -4,7 +4,7 @@
     "locale": "en-IN",
     "templateData": {
         "subject": "Thank You for Contacting Us",
-        "salutation": "Dear [RECIPIENT_NAME]",
+        "salutation": "Dear [$1]",
         "contentTitle": "Thank you",
         "contentSubTitle": "",
         "content": "Thank you for reaching out to us through our contact form. We have received your message and appreciate you taking the time to connect with us.\n\nOur team is currently reviewing your inquiry and will get back to you as soon as possible. In the meantime, if you have any additional information or questions, please feel free to reply to this email.\n\nThank you for your patience, and we look forward to assisting you.\n\nBest regards,\n COMPANY Team"

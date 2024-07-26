@@ -7,11 +7,23 @@ export const createLambdaRole = (scope: Construct, name: string) => {
         assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
     });
 }
-export const addS3PutPolicy = (role: Role, bucketName: string) => {
+export const addS3WritePolicy = (role: Role, bucketName: string) => {
     role.addToPolicy(new PolicyStatement({
         actions: [
             's3:PutObject',
             's3:PutObjectAcl',
+        ],
+        resources: [
+            `arn:aws:s3:::${bucketName}`, 
+            `arn:aws:s3:::${bucketName}/*`,
+        ],
+    }));
+}
+export const addS3ReadPolicy = (role: Role, bucketName: string) => {
+    role.addToPolicy(new PolicyStatement({
+        actions: [
+            's3:GetObject',
+            's3:ListBucket'
         ],
         resources: [
             `arn:aws:s3:::${bucketName}`, 

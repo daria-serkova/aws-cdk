@@ -118,18 +118,21 @@ function configureDeliverySendEndpoint(apiGateway: RestApi, node: Resource, requ
                 templateId: {
                     type: JsonSchemaType.STRING,
                 },
+                locale: {
+                    type: JsonSchemaType.STRING,
+                },
                 recipient: {
                     type: JsonSchemaType.STRING,
                 },
                 emailData: {
                     type: JsonSchemaType.OBJECT
                 },
-                sentBy: {
+                initiatorSystemCode: {
                     type: JsonSchemaType.STRING
                 },
                 
             },
-            required: ["templateId", "recipient", "emailData", "sentBy"],
+            required: ["templateId", "locale", "recipient", "emailData", "initiatorSystemCode"],
         },
     };
     apiGateway.addModel(modelName, requestModel);

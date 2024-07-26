@@ -3,7 +3,7 @@ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 import { Duration } from 'aws-cdk-lib';
 import { resolve, dirname } from 'path';
-import { addCloudWatchPutPolicy, addDynamoDbPutPolicy, addS3PutPolicy, createLambdaRole } from './iam';
+import { addCloudWatchPutPolicy, addDynamoDbPutPolicy, addS3ReadPolicy, addS3WritePolicy, createLambdaRole } from './iam';
 import { ResourceName } from '../resource-reference';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import { s3BucketStructure } from '../../helpers/utilities';
@@ -24,7 +24,7 @@ export function configureLambdaResources(scope: Construct, logGroups: {
 }) {
     const templateUpdateLambdaIamRole = createLambdaRole(scope, ResourceName.iam.EMAIL_TEMPLATE_UPDATE_LAMBDA);
     addCloudWatchPutPolicy(templateUpdateLambdaIamRole, ResourceName.cloudWatch.TEMPLATES_MANAGEMENT_LOGS_GROUP);   
-    addS3PutPolicy(templateUpdateLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
+    addS3WritePolicy(templateUpdateLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
     addDynamoDbPutPolicy(templateUpdateLambdaIamRole, ResourceName.dynamoDbTables.EMAIL_TEMPLATES_LOGS);
     templateUpdateLambdaInstance = new NodejsFunction(scope, 
         ResourceName.lambdas.EMAIL_TEMPLATE_UPDATE, 
@@ -51,7 +51,8 @@ export function configureLambdaResources(scope: Construct, logGroups: {
     const deliverySendLambdaIamRole = createLambdaRole(scope, ResourceName.iam.EMAIL_DELIVERY_SEND_EMAIL_LAMBDA);
     addCloudWatchPutPolicy(deliverySendLambdaIamRole, ResourceName.cloudWatch.DELIVERY_LOGS_GROUP); 
     addDynamoDbPutPolicy(deliverySendLambdaIamRole, ResourceName.dynamoDbTables.EMAIL_LOGS);
-    addS3PutPolicy(deliverySendLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
+    addS3ReadPolicy(deliverySendLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
+    addS3WritePolicy(deliverySendLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
     deliverySendLambdaInstance = new NodejsFunction(scope, 
         ResourceName.lambdas.EMAIL_DELIVERY_SEND, 
         {
@@ -66,6 +67,7 @@ export function configureLambdaResources(scope: Construct, logGroups: {
             environment: {
                 REGION: process.env.AWS_REGION || '',
                 BUCKET_NAME: ResourceName.s3Buckets.EMAIL_BUCKET,
+                BUCKET_TEMPLATES_LOCATION: s3BucketStructure.EMAILS_TEMPLATES_LOCATION,
                 LOGS_TABLE_NAME: ResourceName.dynamoDbTables.EMAIL_LOGS,
             },
         }     
