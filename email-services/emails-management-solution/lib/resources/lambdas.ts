@@ -6,6 +6,7 @@ import { resolve, dirname } from 'path';
 import { addCloudWatchPutPolicy, addDynamoDbPutPolicy, addS3PutPolicy, createLambdaRole } from './iam';
 import { ResourceName } from '../resource-reference';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
+import { s3BucketStructure } from '../../helpers/utilities';
 
 const lambdaFilesLocation = '../../functions';
 
@@ -38,6 +39,7 @@ export function configureLambdaResources(scope: Construct, logGroups: {
             environment: {
                 REGION: process.env.AWS_REGION || '',
                 BUCKET_NAME: ResourceName.s3Buckets.EMAIL_BUCKET,
+                BUCKET_TEMPLATES_LOCATION: s3BucketStructure.EMAILS_TEMPLATES_LOCATION
             },
         }     
     );
