@@ -14,9 +14,9 @@ const BUCKET_TEMPLATES_URL_PREFIX = process.env.BUCKET_TEMPLATES_URL_PREFIX!;
 export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     const body = JSON.parse(event.body!);
-    const { templateId, updatedBy, templateData } = body;
-    const s3Key = `${BUCKET_TEMPLATES_LOCATION}/${templateData.locale}/${templateId}.json`;
-    const s3UrlPath = `${BUCKET_TEMPLATES_URL_PREFIX}/${templateData.locale}/${templateId}.json`;
+    const { templateId, locale, updatedBy, templateData } = body;
+    const s3Key = `${BUCKET_TEMPLATES_LOCATION}/${locale}/${templateId}.json`;
+    const s3UrlPath = `${BUCKET_TEMPLATES_URL_PREFIX}/${locale}/${templateId}.json`;
     // Save file
     await s3.putObject({
       Bucket: BUCKET_NAME,
@@ -30,6 +30,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       Item: marshall({
         changeId: generateUUID(),
         templateId,
+        locale,
         updatedAt: new Date().getTime().toString(),
         updatedBy,
         template: s3UrlPath

@@ -1,26 +1,12 @@
 {
     "templateId": "thank-you-email-for-contact-form",
-    "updatedBy": "cms-user-123456789", 
+    "updatedBy": "cms-user-123456789",
+    "locale": "en-IN",
     "templateData": {
-        "locale": "en-IN",
         "subject": "Thank You for Contacting Us",
         "salutation": "Dear [RECIPIENT_NAME]",
         "contentTitle": "Thank you",
         "contentSubTitle": "",
         "content": "Thank you for reaching out to us through our contact form. We have received your message and appreciate you taking the time to connect with us.\n\nOur team is currently reviewing your inquiry and will get back to you as soon as possible. In the meantime, if you have any additional information or questions, please feel free to reply to this email.\n\nThank you for your patience, and we look forward to assisting you.\n\nBest regards,\n COMPANY Team"
-        },
-        "companyDetails": {
-            "companyName": "ABS Solutions",
-            "logo": "https://cms.company.com/uploads/thumbnail_logo_b9e62ace38.png",
-            "siteUrl": "https://www.company.com/help",
-            "email": "support@company.com",
-            "copyright": "All rights reserved. Copyright @2024 Company",
-            "address": "123 Address, City, State, USA - 123456",
-            "socilalLinks": {
-                "facebookUrl": "https://www.facebook.com/yourpage",
-                "twitterUrl": "https://twitter.com/yourpage",
-                "linkedinUrl": "https://www.linkedin.com/yourpage",
-                "instagramUrl": "https://instagram.com/yourpage"
-            }
-        }
+    }   
 }
