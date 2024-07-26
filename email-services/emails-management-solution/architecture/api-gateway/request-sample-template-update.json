@@ -1,9 +1,8 @@
 {
     "templateId": "thank-you-email-for-contact-form",
-    "updatedAt": "1722012042", 
     "updatedBy": "cms-user-123456789", 
     "templateData": {
-        "locale": "en-in",
+        "locale": "en-IN",
         "subject": "Thank You for Contacting Us",
         "salutation": "Dear [RECIPIENT_NAME]",
         "contentTitle": "Thank you",

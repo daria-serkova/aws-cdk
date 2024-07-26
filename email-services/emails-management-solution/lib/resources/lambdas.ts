@@ -25,6 +25,7 @@ export function configureLambdaResources(scope: Construct, logGroups: {
     const templateUpdateLambdaIamRole = createLambdaRole(scope, ResourceName.iam.EMAIL_TEMPLATE_UPDATE_LAMBDA);
     addCloudWatchPutPolicy(templateUpdateLambdaIamRole, ResourceName.cloudWatch.TEMPLATES_MANAGEMENT_LOGS_GROUP);   
     addS3PutPolicy(templateUpdateLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
+    addDynamoDbPutPolicy(templateUpdateLambdaIamRole, ResourceName.dynamoDbTables.EMAIL_TEMPLATES_LOGS);
     templateUpdateLambdaInstance = new NodejsFunction(scope, 
         ResourceName.lambdas.EMAIL_TEMPLATE_UPDATE, 
         {
@@ -39,7 +40,9 @@ export function configureLambdaResources(scope: Construct, logGroups: {
             environment: {
                 REGION: process.env.AWS_REGION || '',
                 BUCKET_NAME: ResourceName.s3Buckets.EMAIL_BUCKET,
-                BUCKET_TEMPLATES_LOCATION: s3BucketStructure.EMAILS_TEMPLATES_LOCATION
+                BUCKET_TEMPLATES_LOCATION: `s3://${s3BucketStructure.EMAILS_TEMPLATES_LOCATION}`,
+                BUCKET_TEMPLATES_URL_PREFIX: `s3://${ResourceName.s3Buckets.EMAIL_BUCKET}/${s3BucketStructure.EMAILS_TEMPLATES_LOCATION}`,
+                TABLE_NAME: ResourceName.dynamoDbTables.EMAIL_TEMPLATES_LOGS
             },
         }     
     );

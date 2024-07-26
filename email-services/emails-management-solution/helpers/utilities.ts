@@ -5,7 +5,6 @@ config();
  */
 export const isProduction = process.env.TAG_ENVIRONMENT === 'production';
 
-
 export const s3BucketStructure = {
     EMAILS_MEDIA_FILES_LOCATION: 'media-files',
     EMAILS_TEMPLATES_LOCATION: 'templates',

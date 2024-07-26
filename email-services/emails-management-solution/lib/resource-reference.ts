@@ -24,6 +24,8 @@ export const ResourceName = {
     dynamoDbTables: {
         // Store detailed logs of each email sent, including metadata and status.
         EMAIL_LOGS: resourceName('emails-logs'),
+        // Store detailed logs of each event, when email template has been updated.
+        EMAIL_TEMPLATES_LOGS: resourceName('email-templates-logs'),
     },
     s3Buckets: {
         // Store email templates, media files and sent emails bodies for audit purposes.

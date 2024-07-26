@@ -85,9 +85,6 @@ function configureTemplateUpdateEndpoint(apiGateway: RestApi, node: Resource, re
                 templateId: {
                     type: JsonSchemaType.STRING,
                 },
-                updatedAt: {
-                    type: JsonSchemaType.STRING,
-                },
                 updatedBy: {
                     type: JsonSchemaType.STRING,
                 },
@@ -95,7 +92,7 @@ function configureTemplateUpdateEndpoint(apiGateway: RestApi, node: Resource, re
                     type: JsonSchemaType.OBJECT
                 }
             },
-            required: ["templateId", "updatedAt", "updatedBy", "templateData"],
+            required: ["templateId", "updatedBy", "templateData"],
         },
     };
     apiGateway.addModel(modelName, requestModel);
