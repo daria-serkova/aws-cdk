@@ -11,8 +11,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     const body = JSON.parse(event.body!);
     const { templateId, updatedAt, updatedBy, templateData } = body;
-    console.log("EVENT: " + event)
-    console.log("BODY: " + body)
+    console.log("BODY: " + JSON.stringify(body))
 
     // Save template data to S3
     /*

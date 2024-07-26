@@ -50,6 +50,8 @@ export const ResourceName = {
         EMAIL_DELIVERY_SEND_EMAIL_LAMBDA: resourceName('email-send-lbd-role'),
     },
     cloudWatch: {
-        TEMPLATES_MANAGEMENT_LOGS_GROUP: resourceName('email-templates-management'),
+        TEMPLATES_MANAGEMENT_LOGS_GROUP: resourceName('emails-templates-management'),
+        DELIVERY_LOGS_GROUP: resourceName('emails-delivery'),
+        REPORTS_LOGS_GROUP: resourceName('emails-reports'),
     }
 }
