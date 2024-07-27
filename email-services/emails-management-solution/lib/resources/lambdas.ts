@@ -69,6 +69,14 @@ export function configureLambdaResources(scope: Construct, logGroups: {
                 BUCKET_NAME: ResourceName.s3Buckets.EMAIL_BUCKET,
                 BUCKET_TEMPLATES_LOCATION: s3BucketStructure.EMAILS_TEMPLATES_LOCATION,
                 LOGS_TABLE_NAME: ResourceName.dynamoDbTables.EMAIL_LOGS,
+                EMAIL_FROM: process.env.EMAIL_FROM || '',
+                EMAIL_REPLY_TO: process.env.EMAIL_REPLY_TO || '',
+                EMAIL_SMTP_HOST: process.env.EMAIL_SMTP_HOST || '',
+                EMAIL_SMTP_PORT: process.env.EMAIL_SMTP_PORT || '',
+                EMAIL_SMTP_USERNAME: process.env.EMAIL_SMTP_USERNAME || '',
+                EMAIL_SMTP_PASSWORD: process.env.EMAIL_SMTP_PASSWORD || '',
+                EMAIL_SMTP_IS_SECURE: process.env.EMAIL_SMTP_IS_SECURE || '',
+                EMAILS_MEDIA_PATH: `https://${ResourceName.s3Buckets.EMAIL_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3BucketStructure.EMAILS_MEDIA_FILES_LOCATION}`
             },
         }     
     );

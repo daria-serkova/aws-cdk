@@ -3,6 +3,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 import { generateUUID } from './helpers/utilities';
+import { generateEmailHtml } from './helpers/emails';
 
 const s3 = new S3({ region: process.env.REGION });
 const dynamoDbClient = new DynamoDBClient({ region: process.env.REGION });
@@ -17,12 +18,22 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const { templateId, locale, updatedBy, templateData } = body;
     const s3Key = `${BUCKET_TEMPLATES_LOCATION}/${locale}/${templateId}.json`;
     const s3UrlPath = `${BUCKET_TEMPLATES_URL_PREFIX}/${locale}/${templateId}.json`;
+    const htmlTemlate = generateEmailHtml(templateData.subject, templateData.content, templateData.footerDetails);
+    const s3HtmlKey = `${BUCKET_TEMPLATES_LOCATION}/${locale}/${templateId}.html`;
+    //const s3HtmlUrlPath = `${BUCKET_TEMPLATES_URL_PREFIX}/${locale}/${templateId}.html`;
+    //const htmlTemplate = render 
     // Save file
     await s3.putObject({
       Bucket: BUCKET_NAME,
       Key: s3Key,
       Body: JSON.stringify(templateData),
       ContentType: 'application/json',
+    }).promise();
+    await s3.putObject({
+      Bucket: BUCKET_NAME,
+      Key: s3HtmlKey,
+      Body: htmlTemlate,
+      ContentType: 'text/html',
     }).promise();
     // Save change history
     await dynamoDbClient.send(new PutItemCommand({
