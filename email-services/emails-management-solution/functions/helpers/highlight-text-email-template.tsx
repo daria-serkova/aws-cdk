@@ -1,12 +1,10 @@
-// @ts-nocheck
 
+// @ts-nocheck
 import {
   Body,
-  Button,
   Container,
   Column,
   Head,
-  Heading,
   Hr,
   Html,
   Img,
@@ -19,6 +17,7 @@ import {
 } from '@react-email/components';
 import { Tailwind } from '@react-email/tailwind';
 import * as React from 'react';
+import EmailHeader from './EmailHeader';
 export const HighlightTextEmailTemplate = (subject: string, content: string, footerDetails: {
   helpText: string,
   companyName: string,
@@ -29,7 +28,8 @@ export const HighlightTextEmailTemplate = (subject: string, content: string, foo
     facebookUrl: string,
     twitterUrl: string,
     linkedinUrl: string,
-    instagramUrl: string
+    instagramUrl: string,
+    youtubeUrl: string
   }
 }) => {
   const otpCodeRegex = /{{highlight}}/;
@@ -41,15 +41,7 @@ export const HighlightTextEmailTemplate = (subject: string, content: string, foo
       <Tailwind>
         <Body className="bg-white my-auto mx-auto font-sans px-2">
           <Container className="border my-[40px] mx-auto py-[20px] ">
-            <Section className="bg-[#000000] py-[30px] px-[10px]">
-              <Img
-                src="cid:logoImage"
-                width="128"
-                // height="37"
-                alt="dhsLogo"
-                className="my-0 mx-auto text-center"
-              />
-            </Section>
+            <EmailHeader />
             <Section className="mx-auto text-center">
               <Text className="text-black text-[28px] font-bold leading-[38.14px] text-center">
                 {subject}
