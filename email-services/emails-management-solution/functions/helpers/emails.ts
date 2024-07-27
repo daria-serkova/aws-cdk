@@ -1,16 +1,10 @@
 import * as nodemailer from 'nodemailer';
-import EmailTemplate from './email-template';
+import SimpleTextEmailTemplate from './simple-text-email-template';
 import { render } from "@react-email/render"; 
 
 // Function to replace placeholders with actual data
-export const renderMarkdownWithData = (markdown: string, data: Record<string, any>): string => {
-    return markdown.replace(/\{\{(\w+)\}\}/g, (_, key) => {
-        return data[key] || '';
-    });
-};
-// Function to replace placeholders with actual data
-export const renderHtmlWithData = (html: string, data: Record<string, any>): string => {
-    return html.replace(/\{\{(\w+)\}\}/g, (_, key) => {
+export const renderStaticStringWithDynamicData = (text: string, data: Record<string, any>): string => {
+    return text.replace(/\{\{(\w+)\}\}/g, (_, key) => {
         return data[key] || '';
     });
 };
@@ -28,7 +22,7 @@ export const generateEmailHtml = (subject: string, content: string, footerDetail
     linkedinUrl: string,
     instagramUrl: string
   }
-}): string => render(EmailTemplate(subject, content, footerDetails));
+}): string => render(SimpleTextEmailTemplate(subject, content, footerDetails));
 
 export const EmailAttachments = [
     {
@@ -67,17 +61,17 @@ export async function sendEmail(emailTo: string, subject: string, emailHtml: str
           user: process.env.EMAIL_SMTP_USERNAME,
           pass: process.env.EMAIL_SMTP_PASSWORD,
         },
-        debug: true, // Enable debug output
-        logger: true // Log information to console
+        //debug: true, // Enable debug output
+        //logger: true // Log information to console
     };
     const transporter = nodemailer.createTransport(transporterSettings);
     // Setup email data with unicode symbols
     const mailOptions = {
-        from: process.env.EMAIL_FROM, // Sender address
-        to: emailTo, // List of receivers
-        subject: subject, // Subject line
-        html: emailHtml, // HTML body content
-        //attachments: EmailAttachments, // Attachments (optional)
+        from: process.env.EMAIL_FROM,
+        to: emailTo,
+        subject: subject,
+        html: emailHtml,
+        attachments: EmailAttachments,
     };
     try {
         const info = await transporter.sendMail(mailOptions);

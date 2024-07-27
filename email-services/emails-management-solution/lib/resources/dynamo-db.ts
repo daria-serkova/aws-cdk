@@ -17,13 +17,4 @@ export default function configureDynamoDbResources(scope: Construct ) {
         encryption: TableEncryption.DEFAULT,
         removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
     });
-    new Table(scope, ResourceName.dynamoDbTables.EMAIL_TEMPLATES_LOGS, {
-        tableName: ResourceName.dynamoDbTables.EMAIL_TEMPLATES_LOGS,
-        partitionKey: { name: 'changeId', type: AttributeType.STRING },
-        sortKey: { name: 'templateId', type: AttributeType.STRING },
-        billingMode: BillingMode.PAY_PER_REQUEST,
-        tableClass: TableClass.STANDARD,
-        encryption: TableEncryption.DEFAULT,
-        removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
-    });
 }

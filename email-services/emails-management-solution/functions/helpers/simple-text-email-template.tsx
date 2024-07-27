@@ -20,7 +20,7 @@ import {
 import { Tailwind } from '@react-email/tailwind';
 import * as React from 'react';
 
-export const EmailTemplate = (subject: string, content: string, footerDetails: {
+export const SimpleTextEmailTemplate = (subject: string, content: string, footerDetails: {
   helpText: string,
   companyName: string,
   logo: string,
@@ -128,4 +128,4 @@ export const EmailTemplate = (subject: string, content: string, footerDetails: {
   );
 };
 
-export default EmailTemplate;
+export default SimpleTextEmailTemplate;

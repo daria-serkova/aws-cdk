@@ -1,4 +1,6 @@
-import { PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { AnyPrincipal, Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { Bucket } from "aws-cdk-lib/aws-s3";
+import { BucketDeployment } from "aws-cdk-lib/aws-s3-deployment";
 import { Construct } from "constructs";
 
 export const createLambdaRole = (scope: Construct, name: string) => {
@@ -54,3 +56,32 @@ export const addCloudWatchPutPolicy = (role: Role, logGroupName: string) => {
         ]
     }))
 }
+export const addPublicAccessPermissionsToS3Bucket = (bucket: Bucket) => {
+    // Add a bucket policy to allow public read access
+    bucket.addToResourcePolicy(new PolicyStatement({
+      actions: ['s3:GetObject'],
+      resources: [`${bucket.bucketArn}/*`],
+      effect: Effect.ALLOW,
+      principals: [new AnyPrincipal()],
+    }));
+  
+    // Add a bucket policy to deny PutObject to everyone
+    bucket.addToResourcePolicy(new PolicyStatement({
+      actions: ['s3:PutObject'],
+      resources: [`${bucket.bucketArn}/*`],
+      effect: Effect.DENY,
+      principals: [new AnyPrincipal()],
+    }));
+  };
+
+  export const createS3DeploymentRole = (scope: Construct, name: string) => {
+    return new Role(scope, name, {
+        assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+        managedPolicies: [
+          ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
+          ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'),
+        ],
+    });
+}
+
+  

@@ -25,7 +25,6 @@ export function configureLambdaResources(scope: Construct, logGroups: {
     const templateUpdateLambdaIamRole = createLambdaRole(scope, ResourceName.iam.EMAIL_TEMPLATE_UPDATE_LAMBDA);
     addCloudWatchPutPolicy(templateUpdateLambdaIamRole, ResourceName.cloudWatch.TEMPLATES_MANAGEMENT_LOGS_GROUP);   
     addS3WritePolicy(templateUpdateLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
-    addDynamoDbPutPolicy(templateUpdateLambdaIamRole, ResourceName.dynamoDbTables.EMAIL_TEMPLATES_LOGS);
     templateUpdateLambdaInstance = new NodejsFunction(scope, 
         ResourceName.lambdas.EMAIL_TEMPLATE_UPDATE, 
         {
@@ -42,7 +41,6 @@ export function configureLambdaResources(scope: Construct, logGroups: {
                 BUCKET_NAME: ResourceName.s3Buckets.EMAIL_BUCKET,
                 BUCKET_TEMPLATES_LOCATION: s3BucketStructure.EMAILS_TEMPLATES_LOCATION,
                 BUCKET_TEMPLATES_URL_PREFIX: `s3://${ResourceName.s3Buckets.EMAIL_BUCKET}/${s3BucketStructure.EMAILS_TEMPLATES_LOCATION}`,
-                TABLE_NAME: ResourceName.dynamoDbTables.EMAIL_TEMPLATES_LOGS
             },
         }     
     );
@@ -52,7 +50,6 @@ export function configureLambdaResources(scope: Construct, logGroups: {
     addCloudWatchPutPolicy(deliverySendLambdaIamRole, ResourceName.cloudWatch.DELIVERY_LOGS_GROUP); 
     addDynamoDbPutPolicy(deliverySendLambdaIamRole, ResourceName.dynamoDbTables.EMAIL_LOGS);
     addS3ReadPolicy(deliverySendLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
-    addS3WritePolicy(deliverySendLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
     deliverySendLambdaInstance = new NodejsFunction(scope, 
         ResourceName.lambdas.EMAIL_DELIVERY_SEND, 
         {
@@ -76,7 +73,7 @@ export function configureLambdaResources(scope: Construct, logGroups: {
                 EMAIL_SMTP_USERNAME: process.env.EMAIL_SMTP_USERNAME || '',
                 EMAIL_SMTP_PASSWORD: process.env.EMAIL_SMTP_PASSWORD || '',
                 EMAIL_SMTP_IS_SECURE: process.env.EMAIL_SMTP_IS_SECURE || '',
-                EMAILS_MEDIA_PATH: `https://${ResourceName.s3Buckets.EMAIL_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3BucketStructure.EMAILS_MEDIA_FILES_LOCATION}`
+                EMAILS_MEDIA_PATH: `https://${ResourceName.s3Buckets.EMAIL_MEDIA_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3BucketStructure.EMAILS_MEDIA_FILES_LOCATION}`
             },
         }     
     );
