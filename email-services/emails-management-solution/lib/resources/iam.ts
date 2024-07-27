@@ -1,7 +1,8 @@
-import { AnyPrincipal, Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { AnyPrincipal, Effect, IRole, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { BucketDeployment } from "aws-cdk-lib/aws-s3-deployment";
 import { Construct } from "constructs";
+import { ResourceName } from "../resource-reference";
 
 export const createLambdaRole = (scope: Construct, name: string) => {
     return new Role(scope, name, {
@@ -56,7 +57,7 @@ export const addCloudWatchPutPolicy = (role: Role, logGroupName: string) => {
         ]
     }))
 }
-export const addPublicAccessPermissionsToS3Bucket = (bucket: Bucket) => {
+export const  addPublicAccessPermissionsToS3Bucket = (bucket: Bucket) => {
     // Add a bucket policy to allow public read access
     bucket.addToResourcePolicy(new PolicyStatement({
       actions: ['s3:GetObject'],
@@ -64,24 +65,19 @@ export const addPublicAccessPermissionsToS3Bucket = (bucket: Bucket) => {
       effect: Effect.ALLOW,
       principals: [new AnyPrincipal()],
     }));
-  
-    // Add a bucket policy to deny PutObject to everyone
-    bucket.addToResourcePolicy(new PolicyStatement({
-      actions: ['s3:PutObject'],
-      resources: [`${bucket.bucketArn}/*`],
-      effect: Effect.DENY,
-      principals: [new AnyPrincipal()],
-    }));
-  };
+  }
 
-  export const createS3DeploymentRole = (scope: Construct, name: string) => {
-    return new Role(scope, name, {
+  export const createDeploymentRole = (scope: Construct, name: string, bucket: Bucket) => {
+    const deploymentRole = new Role(scope, name, {
+        roleName: name,
         assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
-        managedPolicies: [
-          ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
-          ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'),
-        ],
-    });
-}
-
+      });
   
+      // Add a policy to the role that allows it to deploy files
+      deploymentRole.addToPolicy(new PolicyStatement({
+        actions: ['s3:PutObject', 's3:GetObject'],
+        resources: [`${bucket.bucketArn}/*`],
+        effect: Effect.ALLOW,
+      }));
+      return deploymentRole;
+  }

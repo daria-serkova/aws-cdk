@@ -19,8 +19,7 @@ import {
 } from '@react-email/components';
 import { Tailwind } from '@react-email/tailwind';
 import * as React from 'react';
-
-export const SimpleTextEmailTemplate = (subject: string, content: string, footerDetails: {
+export const HighlightTextEmailTemplate = (subject: string, content: string, footerDetails: {
   helpText: string,
   companyName: string,
   logo: string,
@@ -33,6 +32,8 @@ export const SimpleTextEmailTemplate = (subject: string, content: string, footer
     instagramUrl: string
   }
 }) => {
+  const otpCodeRegex = /{{highlight}}/;
+  const contentParts = content.split(otpCodeRegex);
   return (
     <Html>
       <Head />
@@ -56,7 +57,15 @@ export const SimpleTextEmailTemplate = (subject: string, content: string, footer
             </Section>
             <Section className="mt-[20px] mb-[20px] bg-[#FFFFFF]">
               <Markdown className="text-blue-900 text-[24px]">
-                {content}
+                {contentParts[0]}
+              </Markdown>
+              <Section className="text-center mt-[20px] mb-[20px] bg-[#f3f8f8]">
+                <Text className="text-blue-900 text-[32px] tracking-[10px] font-bold">
+                  {'{{highlight}}'}
+                </Text>
+              </Section>
+              <Markdown className="text-blue-900 text-[24px]">
+                {contentParts[1]}
               </Markdown>
             </Section>
             <Section className="text-center">
@@ -128,4 +137,4 @@ export const SimpleTextEmailTemplate = (subject: string, content: string, footer
   );
 };
 
-export default SimpleTextEmailTemplate;
+export default HighlightTextEmailTemplate;

@@ -9,8 +9,8 @@ const BUCKET_TEMPLATES_LOCATION = process.env.BUCKET_TEMPLATES_LOCATION!;
 export const handler: APIGatewayProxyHandler = async (event) => {
   try {
     const body = JSON.parse(event.body!);
-    const { templateId, locale, updatedBy, initiatorSystemCode, templateData } = body;
-    const htmlTemlate = generateEmailHtml(templateData.subject, templateData.content, templateData.footerDetails);
+    const { templateId, templateType, locale, updatedBy, initiatorSystemCode, templateData } = body;
+    const htmlTemlate = generateEmailHtml(templateType, templateData.subject, templateData.content, templateData.footerDetails);
     const s3HtmlKey = `${BUCKET_TEMPLATES_LOCATION}/${locale}/${templateId}.html`;
     await s3.putObject({
       Bucket: BUCKET_NAME,

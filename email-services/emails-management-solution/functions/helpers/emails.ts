@@ -1,6 +1,7 @@
 import * as nodemailer from 'nodemailer';
 import SimpleTextEmailTemplate from './simple-text-email-template';
 import { render } from "@react-email/render"; 
+import HighlightTextEmailTemplate from './highlight-text-email-template';
 
 // Function to replace placeholders with actual data
 export const renderStaticStringWithDynamicData = (text: string, data: Record<string, any>): string => {
@@ -9,8 +10,13 @@ export const renderStaticStringWithDynamicData = (text: string, data: Record<str
     });
 };
 
+const AllowedEmailTypes = {
+  SIMPLE_TEXT: "simple-text",
+  HIGHLIGHT_TEXT: "highlight-text"
+}
 
-export const generateEmailHtml = (subject: string, content: string, footerDetails: {
+
+export const generateEmailHtml = (templateType: string, subject: string, content: string, footerDetails: {
   helpText: string,
   companyName: string,
   logo: string,
@@ -22,7 +28,17 @@ export const generateEmailHtml = (subject: string, content: string, footerDetail
     linkedinUrl: string,
     instagramUrl: string
   }
-}): string => render(SimpleTextEmailTemplate(subject, content, footerDetails));
+}): string => {
+  switch (templateType) {
+    case AllowedEmailTypes.SIMPLE_TEXT:
+      return render(SimpleTextEmailTemplate(subject, content, footerDetails));
+    case AllowedEmailTypes.HIGHLIGHT_TEXT:
+      return render(HighlightTextEmailTemplate(subject, content, footerDetails));
+    default:
+      return ''
+  }
+}
+ 
 
 export const EmailAttachments = [
     {
