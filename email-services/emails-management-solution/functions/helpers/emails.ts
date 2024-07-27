@@ -14,21 +14,22 @@ const AllowedEmailTypes = {
   SIMPLE_TEXT: "simple-text",
   HIGHLIGHT_TEXT: "highlight-text"
 }
+export interface EmailFooterDetails {
+  helpText: string;
+  companyName: string;
+  logo: string;
+  copyright: string;
+  address: string;
+  socialLinks: {
+    facebookUrl: string;
+    twitterUrl: string;
+    linkedinUrl: string;
+    instagramUrl: string;
+    youtubeUrl: string;
+  };
+}
 
-
-export const generateEmailHtml = (templateType: string, subject: string, content: string, footerDetails: {
-  helpText: string,
-  companyName: string,
-  logo: string,
-  copyright: string,
-  address: string,
-  socilalLinks: {
-    facebookUrl: string,
-    twitterUrl: string,
-    linkedinUrl: string,
-    instagramUrl: string
-  }
-}): string => {
+export const generateEmailHtml = (templateType: string, subject: string, content: string, footerDetails: EmailFooterDetails): string => {
   switch (templateType) {
     case AllowedEmailTypes.SIMPLE_TEXT:
       return render(SimpleTextEmailTemplate(subject, content, footerDetails));

@@ -3,7 +3,7 @@ import {
     Section,
   } from '@react-email/components';
   import * as React from 'react';
-  export const EmailHeader = () => {
+const EmailHeader = () => {
     return (
         <Section className="bg-[#000000] py-[30px] px-[10px]">
             <Img

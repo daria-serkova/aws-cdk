@@ -1,15 +1,11 @@
+
 // @ts-nocheck
 import {
   Body,
   Container,
-  Column,
   Head,
-  Hr,
   Html,
-  Img,
-  Link,
   Preview,
-  Row,
   Section,
   Text,
   Markdown,
@@ -17,21 +13,10 @@ import {
 import { Tailwind } from '@react-email/tailwind';
 import * as React from 'react';
 import EmailHeader from './EmailHeader';
+import EmailFooter from './EmailFooter';
+import { EmailFooterDetails } from './emails';
 
-export const SimpleTextEmailTemplate = (subject: string, content: string, footerDetails: {
-  helpText: string,
-  companyName: string,
-  logo: string,
-  copyright: string,
-  address: string,
-  socilalLinks: {
-    facebookUrl: string,
-    twitterUrl: string,
-    linkedinUrl: string,
-    instagramUrl: string,
-    youtubeUrl: string
-  }
-}) => {
+export const SimpleTextEmailTemplate = (subject: string, content: string, footerDetails: EmailFooterDetails) => {
   return (
     <Html>
       <Head />
@@ -61,57 +46,7 @@ export const SimpleTextEmailTemplate = (subject: string, content: string, footer
                 {footerDetails.address}
               </Text>
             </Section>
-            <Row className="mx-auto px-[50px] mt-[20px]">
-              <Column className="mx-auto">
-                <Link href={footerDetails.socilalLinks.twitterUrl}>
-                  <Img
-                    src="cid:xIcon"
-                    width="32"
-                    height="32"
-                    alt="X icon"
-                    className="mx-auto"
-                  />
-                </Link>
-              </Column>
-              <Column>
-                <Link href={footerDetails.socilalLinks.youtubeUrl}>
-                  <Img
-                    src="cid:youtubeIcon"
-                    width="32"
-                    height="32"
-                    alt="youtube icon"
-                    className="mx-auto"
-                  />
-                </Link>
-              </Column>
-              <Column>
-                <Link href={footerDetails.socilalLinks.instagramUrl}>
-                  <Img
-                    src="cid:instagramIcon"
-                    width="32"
-                    height="32"
-                    alt="instagram icon"
-                    className="mx-auto"
-                  />
-                </Link>
-              </Column>
-              <Column>
-                <Link href={footerDetails.socilalLinks.linkedinUrl}>
-                  <Img
-                    src="cid:linkedinIcon"
-                    width="32"
-                    height="32"
-                    alt="linkedin icon"
-                    className="mx-auto"
-                  />
-                </Link>
-              </Column>
-            </Row>
-
-            <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
-            <Text className="text-[#666666] text-[12px] leading-[24px] text-center">
-              {footerDetails.copyright}
-            </Text>
+            <EmailFooter footerDetails={footerDetails} />
           </Container>
         </Body>
       </Tailwind>
