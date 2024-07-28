@@ -145,7 +145,13 @@ function configureDeliverySendEndpoint(apiGateway: RestApi, node: Resource, requ
                 },
                 
             },
-            required: ["templateId", "locale", "recipient", "emailData", "initiatorSystemCode"],
+            required: [
+                "templateId",
+                "locale",
+                "recipient",
+                "emailData", 
+                "initiatorSystemCode"
+            ],
         },
     };
     apiGateway.addModel(modelName, requestModel);

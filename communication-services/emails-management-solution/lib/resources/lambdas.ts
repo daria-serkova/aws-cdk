@@ -50,6 +50,7 @@ export function configureLambdaResources(scope: Construct, logGroups: {
     addCloudWatchPutPolicy(deliverySendLambdaIamRole, ResourceName.cloudWatch.DELIVERY_LOGS_GROUP); 
     addDynamoDbPutPolicy(deliverySendLambdaIamRole, ResourceName.dynamoDbTables.EMAIL_LOGS);
     addS3ReadPolicy(deliverySendLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
+    addS3WritePolicy(deliverySendLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
     deliverySendLambdaInstance = new NodejsFunction(scope, 
         ResourceName.lambdas.EMAIL_DELIVERY_SEND, 
         {
@@ -65,6 +66,7 @@ export function configureLambdaResources(scope: Construct, logGroups: {
                 REGION: process.env.AWS_REGION || '',
                 BUCKET_NAME: ResourceName.s3Buckets.EMAIL_BUCKET,
                 BUCKET_TEMPLATES_LOCATION: s3BucketStructure.EMAILS_TEMPLATES_LOCATION,
+                BUCKET_LOGS_LOCATION:  s3BucketStructure.EMAILS_LOGS_LOCATION,
                 LOGS_TABLE_NAME: ResourceName.dynamoDbTables.EMAIL_LOGS,
                 EMAIL_FROM: process.env.EMAIL_FROM || '',
                 EMAIL_REPLY_TO: process.env.EMAIL_REPLY_TO || '',
