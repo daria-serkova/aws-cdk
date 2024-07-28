@@ -70,3 +70,7 @@ The following technologies are used in this solution:
 - **AWS IAM:** Ensures secure access control and permissions for resources.
 - **Nodemailer:** Manages the sending, receiving, and delivery of emails.
 - **ReactJS and Tailwind**: Branded emails UI (including libraries @react-email/components and @react-email/tailwind)
+
+## Implemented Services
+
+1. [Emails Managment Solution](https://github.com/daria-serkova/aws-cdk/tree/main/communication-services/emails-management-solution)
