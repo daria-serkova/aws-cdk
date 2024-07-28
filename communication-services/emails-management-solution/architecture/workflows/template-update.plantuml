@@ -1,0 +1,26 @@
+@startuml Update Template Workflow
+
+actor Client
+
+participant "API Gateway" as APIGW
+participant "Lambda Function" as Lambda
+participant "ReactJS Renderer" as ReactJS
+participant "S3 Bucket" as S3
+
+Client -> APIGW: POST /templates/update
+
+APIGW -> Lambda: Invoke Lambda with request body
+
+Lambda -> ReactJS: Pass templateID and content data
+ReactJS -> ReactJS: Render HTML string
+
+ReactJS -> Lambda: Return rendered HTML string
+
+Lambda -> S3: Save HTML file to s3:///emails-bucket/templates/locale location
+Lambda -> S3: Save metadata
+
+Lambda -> APIGW: Return success response
+
+APIGW -> Client: Response 200 OK
+
+@enduml

@@ -12,13 +12,21 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     const { templateId, templateType, locale, updatedBy, initiatorSystemCode, templateData } = body;
     const htmlTemlate = generateEmailHtml(templateType, templateData.subject, templateData.content, templateData.footerDetails);
     const s3HtmlKey = `${BUCKET_TEMPLATES_LOCATION}/${locale}/${templateId}.html`;
+      // Encoding/decoding is required for localized emails storage
+    const encodedSubject = Buffer.from(templateData.subject).toString('base64');
+    if (encodedSubject.length > 2048) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: 'Encoded subject exceeds the S3 metadata size limit.' }),
+      };
+    }
     await s3.putObject({
       Bucket: BUCKET_NAME,
       Key: s3HtmlKey,
       Body: htmlTemlate,
       ContentType: 'text/html',
       Metadata: {
-        subject: templateData.subject,
+        subject: encodedSubject,
         locale,
         updatedAt: new Date().getTime().toString(),
         updatedBy,

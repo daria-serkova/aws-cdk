@@ -24,7 +24,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     };
   }
   const templateContent = templateObject?.Body?.toString('utf8') || '';
-  const templateSubject = renderStaticStringWithDynamicData(templateObject?.Metadata?.subject || '', emailData);
+  const metadataTemplateSubject = templateObject?.Metadata?.subject || '';
+   // Encoding/decoding is required for localized emails storage
+  const decodedSubject = Buffer.from(metadataTemplateSubject || '', 'base64').toString('utf-8');
+  const templateSubject = renderStaticStringWithDynamicData(decodedSubject || '', emailData);
   const emailContentWithDynamicData = renderStaticStringWithDynamicData(templateContent, emailData);
   await sendEmail(recipient, templateSubject, emailContentWithDynamicData);
   s3Key = `${BUCKET_LOGS_LOCATION}/${recipient}/${initiatorSystemCode}-${new Date().getTime()}-${templateId}.html`;
@@ -34,7 +37,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     Body: emailContentWithDynamicData,
     ContentType: 'text/html',
     Metadata: {
-      subject: templateSubject,
+      subject: metadataTemplateSubject,
       locale,
       sentAt: new Date().getTime().toString(),
       recipient,
