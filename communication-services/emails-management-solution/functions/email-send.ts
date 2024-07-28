@@ -27,7 +27,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const templateSubject = renderStaticStringWithDynamicData(templateObject?.Metadata?.subject || '', emailData);
   const emailContentWithDynamicData = renderStaticStringWithDynamicData(templateContent, emailData);
   await sendEmail(recipient, templateSubject, emailContentWithDynamicData);
-  s3Key = `${BUCKET_LOGS_LOCATION}/${recipient}/${new Date().getTime()}-${templateId}.html`;
+  s3Key = `${BUCKET_LOGS_LOCATION}/${recipient}/${initiatorSystemCode}-${new Date().getTime()}-${templateId}.html`;
   await s3.putObject({
     Bucket: BUCKET_NAME,
     Key: s3Key,
