@@ -9,9 +9,9 @@ import { ResourceName } from "../resource-reference";
  * @param scope 
  */
 export default function configureDynamoDbResources(scope: Construct ) {
-    new Table(scope, ResourceName.dynamoDbTables.EMAIL_LOGS, {
-        tableName: ResourceName.dynamoDbTables.EMAIL_LOGS,
-        partitionKey: { name: "emailId", type: AttributeType.STRING },
+    new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_METADATA, {
+        tableName: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+        partitionKey: { name: "documentId", type: AttributeType.STRING },
         billingMode: BillingMode.PAY_PER_REQUEST,
         tableClass: TableClass.STANDARD,
         encryption: TableEncryption.DEFAULT,

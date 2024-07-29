@@ -8,7 +8,7 @@ import { RemovalPolicy } from "aws-cdk-lib";
  * Function creates and configure S3 buckets.
  * @param scope 
  */
-export function configureS3Resources(scope: Construct) {
+export default function configureS3Resources(scope: Construct) {
     new Bucket(scope, ResourceName.s3Buckets.DOCUMENTS_BUCKET, {
         bucketName: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
         encryption: BucketEncryption.S3_MANAGED,

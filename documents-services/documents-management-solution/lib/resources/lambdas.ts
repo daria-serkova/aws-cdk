@@ -15,7 +15,7 @@ let documentUploadBase64LambdaInstance: NodejsFunction;
  * Configuration of Lambda functions
  * @param scope 
  */
-export function configureLambdaResources(scope: Construct, logGroups: {
+export default function configureLambdaResources(scope: Construct, logGroups: {
     documentOperations: LogGroup,
 }) {
     const documentUploadBase64LambdaIamRole = createLambdaRole(scope, 

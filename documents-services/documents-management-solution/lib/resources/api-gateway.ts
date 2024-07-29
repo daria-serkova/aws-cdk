@@ -15,7 +15,7 @@ let apiNodesInstance: ApiNodes;
  * Configuration of API Gateway
  * @param scope 
  */
-export function configureApiGatewayResources(scope: Construct ) {
+export default function configureApiGatewayResources(scope: Construct ) {
     const apiGatewayInstance = new RestApi(scope, ResourceName.apiGateway.DOCUMENTS_SERVCIE_GATEWAY, {
         restApiName: ResourceName.apiGateway.DOCUMENTS_SERVCIE_GATEWAY,
         description: 'Documents Management Solution API endpoints',

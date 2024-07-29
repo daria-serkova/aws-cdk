@@ -46,19 +46,8 @@ export const ResourceName = {
     lambdas: {
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64'),
     },
-    
-
-
-
-    
-
-
-    
-    
-    
     dynamoDbTables: {
-        // Store detailed logs of each email sent, including metadata and status.
-        EMAIL_LOGS: resourceName('emails-logs'),
+        DOCUMENTS_METADATA: resourceName('documents-metadata'),
     },
    
     
