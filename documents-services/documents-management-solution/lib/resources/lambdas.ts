@@ -6,80 +6,40 @@ import { resolve, dirname } from 'path';
 import { addCloudWatchPutPolicy, addDynamoDbPutPolicy, addS3ReadPolicy, addS3WritePolicy, createLambdaRole } from './iam';
 import { ResourceName } from '../resource-reference';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
-import { s3BucketStructure } from '../../helpers/utilities';
 
 const lambdaFilesLocation = '../../functions';
 
-let templateUpdateLambdaInstance: NodejsFunction;
-let deliverySendLambdaInstance: NodejsFunction;
+let documentUploadBase64LambdaInstance: NodejsFunction;
 
 /**
  * Configuration of Lambda functions
  * @param scope 
  */
 export function configureLambdaResources(scope: Construct, logGroups: {
-    templatesManagementLogsGroup: LogGroup,
-    deliveryLogsGroup: LogGroup,
-    reportsLogsGroup: LogGroup
+    documentOperations: LogGroup,
 }) {
-    const templateUpdateLambdaIamRole = createLambdaRole(scope, ResourceName.iam.EMAIL_TEMPLATE_UPDATE_LAMBDA);
-    addCloudWatchPutPolicy(templateUpdateLambdaIamRole, ResourceName.cloudWatch.TEMPLATES_MANAGEMENT_LOGS_GROUP);   
-    addS3WritePolicy(templateUpdateLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
-    templateUpdateLambdaInstance = new NodejsFunction(scope, 
-        ResourceName.lambdas.EMAIL_TEMPLATE_UPDATE, 
+    const documentUploadBase64LambdaIamRole = createLambdaRole(scope, 
+        ResourceName.iam.DOCUMENT_UPLOAD_BASE64_LAMBDA);
+    addCloudWatchPutPolicy(documentUploadBase64LambdaIamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);   
+    addS3WritePolicy(documentUploadBase64LambdaIamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
+    documentUploadBase64LambdaInstance = new NodejsFunction(scope, 
+        ResourceName.lambdas.DOCUMENT_UPLOAD_BASE64, 
         {
-            functionName: ResourceName.lambdas.EMAIL_TEMPLATE_UPDATE,
-            description: 'Updates email template file inside S3 bucket, based on passed JSON data',
-            entry: resolve(dirname(__filename), `${lambdaFilesLocation}/email-template-update.ts`),
+            functionName: ResourceName.lambdas.DOCUMENT_UPLOAD_BASE64,
+            description: 'Uploads base64 document in S3 bucket and saves metadata in DynamoDB',
+            entry: resolve(dirname(__filename), `${lambdaFilesLocation}/document-upload-base64.ts`),
             memorySize: 256,
             timeout: Duration.minutes(3),
             handler: 'handler',
-            logGroup: logGroups.templatesManagementLogsGroup,
-            role: templateUpdateLambdaIamRole,
+            logGroup: logGroups.documentOperations,
+            role: documentUploadBase64LambdaIamRole,
             environment: {
                 REGION: process.env.AWS_REGION || '',
-                BUCKET_NAME: ResourceName.s3Buckets.EMAIL_BUCKET,
-                BUCKET_TEMPLATES_LOCATION: s3BucketStructure.EMAILS_TEMPLATES_LOCATION,
-                BUCKET_TEMPLATES_URL_PREFIX: `s3://${ResourceName.s3Buckets.EMAIL_BUCKET}/${s3BucketStructure.EMAILS_TEMPLATES_LOCATION}`,
-            },
-        }     
-    );
-
-
-    const deliverySendLambdaIamRole = createLambdaRole(scope, ResourceName.iam.EMAIL_DELIVERY_SEND_EMAIL_LAMBDA);
-    addCloudWatchPutPolicy(deliverySendLambdaIamRole, ResourceName.cloudWatch.DELIVERY_LOGS_GROUP); 
-    addDynamoDbPutPolicy(deliverySendLambdaIamRole, ResourceName.dynamoDbTables.EMAIL_LOGS);
-    addS3ReadPolicy(deliverySendLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
-    addS3WritePolicy(deliverySendLambdaIamRole, ResourceName.s3Buckets.EMAIL_BUCKET);
-    deliverySendLambdaInstance = new NodejsFunction(scope, 
-        ResourceName.lambdas.EMAIL_DELIVERY_SEND, 
-        {
-            functionName: ResourceName.lambdas.EMAIL_DELIVERY_SEND,
-            description: 'Sends branded email to the user, based on the passed JSON data',
-            entry: resolve(dirname(__filename), `${lambdaFilesLocation}/email-send.ts`),
-            memorySize: 256,
-            timeout: Duration.minutes(3),
-            handler: 'handler',
-            logGroup: logGroups.deliveryLogsGroup,
-            role: deliverySendLambdaIamRole,
-            environment: {
-                REGION: process.env.AWS_REGION || '',
-                BUCKET_NAME: ResourceName.s3Buckets.EMAIL_BUCKET,
-                BUCKET_TEMPLATES_LOCATION: s3BucketStructure.EMAILS_TEMPLATES_LOCATION,
-                BUCKET_LOGS_LOCATION:  s3BucketStructure.EMAILS_LOGS_LOCATION,
-                LOGS_TABLE_NAME: ResourceName.dynamoDbTables.EMAIL_LOGS,
-                EMAIL_FROM: process.env.EMAIL_FROM || '',
-                EMAIL_REPLY_TO: process.env.EMAIL_REPLY_TO || '',
-                EMAIL_SMTP_HOST: process.env.EMAIL_SMTP_HOST || '',
-                EMAIL_SMTP_PORT: process.env.EMAIL_SMTP_PORT || '',
-                EMAIL_SMTP_USERNAME: process.env.EMAIL_SMTP_USERNAME || '',
-                EMAIL_SMTP_PASSWORD: process.env.EMAIL_SMTP_PASSWORD || '',
-                EMAIL_SMTP_IS_SECURE: process.env.EMAIL_SMTP_IS_SECURE || '',
-                EMAILS_MEDIA_PATH: `https://${ResourceName.s3Buckets.EMAIL_MEDIA_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${s3BucketStructure.EMAILS_MEDIA_FILES_LOCATION}`
+                BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
+                BUCKET_UPLOAD_FOLDER: 'documents/$1/$2/uploaded'
             },
         }     
     );
 }
 
-export const templateUpdateLambda = () => templateUpdateLambdaInstance;
-export const deliverySendLambda = () => deliverySendLambdaInstance;
+export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstance;

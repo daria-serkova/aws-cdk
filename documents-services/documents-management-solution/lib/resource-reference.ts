@@ -33,6 +33,19 @@ export const ResourceName = {
     s3Buckets: {
         DOCUMENTS_BUCKET: resourceName('documents-bucket').toLowerCase(),
     },
+    apiGateway: {
+        DOCUMENTS_SERVCIE_GATEWAY: resourceName('documents-api'),
+        DOCUMENTS_SERVCIE_API_USAGE_PLAN: resourceName('documents-api-usage-plan'),
+        DOCUMENTS_SERVCIE_API_KEY: resourceName('documents-api-key'),
+        DOCUMENTS_SERVCIE_API_REQUEST_VALIDATOR: resourceName('documents-api-request-validator'),
+        DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentUploadBase64`,
+    },
+    iam: {
+        DOCUMENT_UPLOAD_BASE64_LAMBDA: resourceName('document-upload-base64-lbd-role'),
+    },
+    lambdas: {
+        DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64'),
+    },
     
 
 
@@ -49,25 +62,6 @@ export const ResourceName = {
     },
    
     
-    s3Deployments: {
-        // Uploads media files, used in the emails, inside S3 bucket.
-        EMAIL_BUCKET_MEDIA_FILES_UPLOAD: resourceName('upload-emails-media-files'),
-        EMAIL_BUCKET_MEDIA_FILES_UPLOAD_ROLE: resourceName('upload-emails-media-files-role'),
-    },
-    apiGateway: {
-        EMAILS_SERVCIE_GATEWAY: resourceName('emails-api'),
-        EMAILS_SERVCIE_API_USAGE_PLAN: resourceName('emails-api-usage-plan'),
-        EMAILS_SERVCIE_API_KEY: resourceName('emails-api-key'),
-        EMAILS_SERVCIE_API_REQUEST_VALIDATOR: resourceName('emails-api-request-validator'),
-        EMAILS_SERVCIE_REQUEST_MODEL_TEMPLATE_UPDATE: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}EmailTemplateUpdate`,
-        EMAILS_SERVCIE_REQUEST_MODEL_DELIVERY_SEND: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}EmailSendUpdate`
-    },
-    lambdas: {
-        EMAIL_TEMPLATE_UPDATE: resourceName('email-template-update'),
-        EMAIL_DELIVERY_SEND: resourceName('email-send'),
-    },
-    iam: {
-        EMAIL_TEMPLATE_UPDATE_LAMBDA: resourceName('email-template-update-lbd-role'),
-        EMAIL_DELIVERY_SEND_EMAIL_LAMBDA: resourceName('email-send-lbd-role'),
-    },
+    
+   
 }
