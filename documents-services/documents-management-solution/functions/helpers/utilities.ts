@@ -6,6 +6,10 @@ import { v4 as uuidv4 } from 'uuid';
 export function generateUUID(): string {
     return uuidv4();
 }
+/**
+ * Path inside S3 bucket where all new documents should be uploaded
+ */
+export const uploadFolder = (param1: string, param2: string) => `documents/${param1}/${param2}/uploaded`;
 
 /**
  * Returns a list of supported document formats along with their corresponding MIME content types.
@@ -33,7 +37,7 @@ export function generateUUID(): string {
  * 
  * @returns {Array<{format: string, contentType: string}>} - An array of objects, each containing a document format and its MIME content type.
  */
- export const supportedFormats = (): Array<{ format: string; contentType: string; }> => [
+ export const supportedDocumentsTypes = (): Array<{ format: string; contentType: string; }> => [
     { format: 'PDF', contentType: 'application/pdf' },
     { format: 'DOC', contentType: 'application/msword' },
     { format: 'DOCX', contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' },
@@ -52,7 +56,6 @@ export function generateUUID(): string {
     { format: 'XML', contentType: 'application/xml' },
     { format: 'DICOM', contentType: 'application/dicom' }
 ];
-export const uploadFolder = (param1: string, param2: string) => `documents/${param1}/${param2}/uploaded`;
 
 /**
  * Finds and returns the MIME content type for a given document format.
@@ -61,10 +64,12 @@ export const uploadFolder = (param1: string, param2: string) => `documents/${par
  * @returns {string | null} - The corresponding MIME content type, or null if the format is not supported.
  */
 export const getContentTypeByFormat = (format: string): string | null => {
-    const formats = supportedFormats();
-    const formatObj = formats.find(f => f.format.toUpperCase() === format.toUpperCase());
+    const documentsTypes = supportedDocumentsTypes();
+    const formatObj = documentsTypes.find(f => f.format.toUpperCase() === format.toUpperCase());
     return formatObj ? formatObj.contentType : null;
 };
+// Define supported formats for API Gateway Request Models
+export const supportedFormats = supportedDocumentsTypes().map(f => f.format);
 
 /**
  * Returns a list of supported document categories commonly used in various business contexts.
@@ -72,7 +77,7 @@ export const getContentTypeByFormat = (format: string): string | null => {
  * 
  * @returns {Array<string>} - An array of supported document categories.
  */
- export const supportedCategories = (): Array<string> => [
+ export const supportedCategories = [
     // HR Categories
     'EMPLOYMENT_CONTRACT',
     'EMPLOYEE_ONBOARDING',

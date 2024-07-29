@@ -4,7 +4,7 @@ import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Reso
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
 import { documentUploadBase64Lambda } from "./lambdas";
-import { supportedCategories } from "../../functions/helpers/utilities";
+import { supportedCategories, supportedFormats } from "../../functions/helpers/utilities";
 
 interface ApiNodes {
     document: Resource;
@@ -72,6 +72,7 @@ export function configureApiGatewayResources(scope: Construct ) {
 // Large files may exceed these limits after base64 encoding. In this scenarios use pre-signed url.
 function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64;
+    const formats = supportedFormats;
     let requestModel = {
         contentType: "application/json",
         description: "Document base64 upload API endpoint body validation",
@@ -88,10 +89,12 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
                 },
                 documentFormat: {
                     type: JsonSchemaType.STRING,
+                    enum: formats
                 },
                 documentCategory: {
                     type: JsonSchemaType.STRING,
-                    enum: supportedCategories(),
+                    enum: supportedCategories,
+                    
                 },
                 documentSize: {
                     type: JsonSchemaType.NUMBER,
