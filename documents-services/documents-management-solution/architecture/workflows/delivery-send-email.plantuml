@@ -1,0 +1,17 @@
+@startuml Send Email Workflow
+
+actor Client
+
+participant "API Gateway" as APIGW
+participant "Lambda Function" as Lambda
+participant "S3 Bucket" as S3
+
+Client -> APIGW : Call /delivery/send
+APIGW -> Lambda : Trigger Lambda Function
+Lambda -> S3 : Pull HTML template from s3:///emails-bucket/templates/locale
+S3 --> Lambda : Return HTML template
+Lambda -> Lambda : Replace placeholders with dynamic data
+Lambda -> Client : Send email to recipient
+Lambda -> S3 : Store copy of sent email and metadata in s3:///emails-bucket/logs/{email} folder
+
+@enduml
