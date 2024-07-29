@@ -3,18 +3,13 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import { generateUUID, getContentTypeByFormat } from './helpers/utilities';
 
 export interface UploadedDocument {
-  userId: string;
+  documentOwnerId: string;
   documentName: string;
   documentFormat: string;
   documentSize: number;
   documentCategory: string;
   documentContent: string;
-  metadata: {
-    documentNumber: string,
-    issueDate: string,
-    expiryDate: string,
-    issuedBy: string
-  }
+  metadata: object
 }
 const s3 = new S3({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
@@ -29,17 +24,22 @@ const BUCKET_UPLOAD_FOLDER =  process.env.BUCKET_UPLOAD_FOLDER!;
  * @throws - Throws an error if the upload fails, with the error message or 'Internal Server Error' as the default.
  */
  export const handler: APIGatewayProxyHandler = async (event) => {
-  
     const document = JSON.parse(event.body || '{}') as UploadedDocument;
     const buffer = Buffer.from(document.documentContent, 'base64');
     const documentId = generateUUID();
-    const uploadLocation = BUCKET_UPLOAD_FOLDER.replace('$1', document.userId).replace('$2', document.documentCategory);
-    const key = `${uploadLocation}/${document.documentCategory}-${document.userId}-${documentId}.${document.documentFormat}`;
+    const metadata = document.metadata;
+    const metadataEntries = Object.entries(metadata).reduce((acc: any, [key, value]) => {
+      acc[key] = value.toString();
+      return acc;
+    }, {});
+    const uploadLocation = BUCKET_UPLOAD_FOLDER.replace('$1', document.documentOwnerId).replace('$2', document.documentCategory);
+    const key = `${uploadLocation}/${document.documentCategory}-${document.documentOwnerId}-${documentId}.${document.documentFormat}`;
     await s3.upload({
       Bucket: BUCKET_NAME,
       Key: key,
       Body: buffer,
       ContentType: getContentTypeByFormat(document.documentFormat),
+      Metadata: metadataEntries,
     }).promise();
     return {
       statusCode: 200,

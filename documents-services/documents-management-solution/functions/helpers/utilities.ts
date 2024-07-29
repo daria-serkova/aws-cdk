@@ -33,7 +33,7 @@ export function generateUUID(): string {
  * 
  * @returns {Array<{format: string, contentType: string}>} - An array of objects, each containing a document format and its MIME content type.
  */
- export const supportedFormats = () => [
+ export const supportedFormats = (): Array<{ format: string; contentType: string; }> => [
     { format: 'PDF', contentType: 'application/pdf' },
     { format: 'DOC', contentType: 'application/msword' },
     { format: 'DOCX', contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' },

@@ -79,7 +79,7 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
         schema: {
             type: JsonSchemaType.OBJECT,
             properties: {
-                userId: {
+                documentOwnerId: {
                     type: JsonSchemaType.STRING,
                 },
                 documentName: {
@@ -105,7 +105,7 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
                 },
             },
             required: [
-                "userId", 
+                "documentOwnerId", 
                 "documentName",
                 "documentFormat", 
                 "documentCategory", 
