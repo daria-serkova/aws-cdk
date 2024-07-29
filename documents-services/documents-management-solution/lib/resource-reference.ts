@@ -29,11 +29,15 @@ export const ResourceName = {
         DOCUMENT_WORKFLOW_LOGS_GROUP: resourceName('document-workflow'),
         DOCMENT_NOTIFICATIONS_LOGS_GROUP: resourceName('document-notifications'),
         DOCUMENT_ADMINISTRATION_LOGS_GROUP: resourceName('document-administration'),
-
+    },
+    s3Buckets: {
+        DOCUMENTS_BUCKET: resourceName('documents-bucket').toLowerCase(),
     },
     
 
 
+
+    
 
 
     
@@ -43,12 +47,7 @@ export const ResourceName = {
         // Store detailed logs of each email sent, including metadata and status.
         EMAIL_LOGS: resourceName('emails-logs'),
     },
-    s3Buckets: {
-        // Store public media files.
-        EMAIL_MEDIA_BUCKET: resourceName('emails-media-bucket').toLowerCase(),
-         // Store email templates and sent emails bodies for audit purposes.
-        EMAIL_BUCKET: resourceName('emails-bucket').toLowerCase(),
-    },
+   
     
     s3Deployments: {
         // Uploads media files, used in the emails, inside S3 bucket.
