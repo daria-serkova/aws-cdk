@@ -1,6 +1,7 @@
 import { S3 } from 'aws-sdk';
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { generateUUID, getContentTypeByFormat } from './helpers/utilities';
+import { generateUUID, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
+import { Buffer } from 'buffer';
 
 export interface UploadedDocument {
   documentOwnerId: string;
@@ -13,7 +14,6 @@ export interface UploadedDocument {
 }
 const s3 = new S3({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
-const BUCKET_UPLOAD_FOLDER =  process.env.BUCKET_UPLOAD_FOLDER!;
 
 /**
  * Lambda function handler for uploading a document to an S3 bucket.
@@ -27,13 +27,19 @@ const BUCKET_UPLOAD_FOLDER =  process.env.BUCKET_UPLOAD_FOLDER!;
     const document = JSON.parse(event.body || '{}') as UploadedDocument;
     const buffer = Buffer.from(document.documentContent, 'base64');
     const documentId = generateUUID();
-    const metadata = document.metadata;
+    const uploadedAt = new Date().toISOString();
+    const metadata = {
+      ...document.metadata,
+      documentId: documentId,
+      uploadedAt: uploadedAt,
+      documentOwnerId: document.documentOwnerId
+    };
     const metadataEntries = Object.entries(metadata).reduce((acc: any, [key, value]) => {
       acc[key] = value.toString();
       return acc;
     }, {});
-    const uploadLocation = BUCKET_UPLOAD_FOLDER.replace('$1', document.documentOwnerId).replace('$2', document.documentCategory);
-    const key = `${uploadLocation}/${document.documentCategory}-${document.documentOwnerId}-${documentId}.${document.documentFormat}`;
+    const uploadLocation = uploadFolder(document.documentOwnerId, document.documentCategory);
+    const key = `${uploadLocation}/${document.documentCategory}-${uploadedAt}.${document.documentFormat}`;
     await s3.upload({
       Bucket: BUCKET_NAME,
       Key: key,

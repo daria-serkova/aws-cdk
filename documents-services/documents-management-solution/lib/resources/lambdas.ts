@@ -36,7 +36,6 @@ export function configureLambdaResources(scope: Construct, logGroups: {
             environment: {
                 REGION: process.env.AWS_REGION || '',
                 BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
-                BUCKET_UPLOAD_FOLDER: 'documents/$1/$2/uploaded'
             },
         }     
     );
