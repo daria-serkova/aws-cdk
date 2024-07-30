@@ -1,6 +1,8 @@
 import { S3 } from 'aws-sdk';
+import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { marshall } from '@aws-sdk/util-dynamodb';
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { generateUUID, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
+import { generateUUID, getContentTypeByFormat, uploadFolder, WorkflowStatus } from './helpers/utilities';
 import { Buffer } from 'buffer';
 
 export interface UploadedDocument {
@@ -13,7 +15,9 @@ export interface UploadedDocument {
   metadata: object
 }
 const s3 = new S3({ region: process.env.REGION });
+const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
+const TABLE_NAME = process.env.TABLE_NAME!;
 
 /**
  * Lambda function handler for uploading a document to an S3 bucket.
@@ -40,13 +44,41 @@ const BUCKET_NAME = process.env.BUCKET_NAME!;
     }, {});
     const uploadLocation = uploadFolder(document.documentOwnerId, document.documentCategory);
     const key = `${uploadLocation}/${document.documentCategory}-${uploadedAt}.${document.documentFormat}`;
-    await s3.upload({
-      Bucket: BUCKET_NAME,
-      Key: key,
-      Body: buffer,
-      ContentType: getContentTypeByFormat(document.documentFormat),
-      Metadata: metadataEntries,
-    }).promise();
+    try {
+      await s3.upload({
+        Bucket: BUCKET_NAME,
+        Key: key,
+        Body: buffer,
+        ContentType: getContentTypeByFormat(document.documentFormat),
+        Metadata: metadataEntries,
+      }).promise();
+    } catch (error) {
+      console.error('Error uploading document to S3:', error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: 'Failed to upload document. Please try again later.' }),
+      };
+    }
+    try {
+      await dynamoDb.send(new PutItemCommand({
+        TableName: TABLE_NAME,
+        Item: marshall({
+          documentId,
+          documentOwnerId: document.documentOwnerId,
+          documentCategory: document.documentCategory,
+          uploadedAt,
+          status: WorkflowStatus.PENDING_APPROVAL,
+          url: `s3://${BUCKET_NAME}/${key}`,
+          ...document.metadata,
+        })
+      }));
+    } catch (error) {
+      console.error('Error uploading document metadata to DynamoDB:', error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ message: `Failed to upload document's metadata. Please try again later.` }),
+      };
+    }
     return {
       statusCode: 200,
       body: JSON.stringify({ 
@@ -55,16 +87,3 @@ const BUCKET_NAME = process.env.BUCKET_NAME!;
       })
     }
   }
-        // const metadata = {
-        //     id: documentId,
-        //     providerId: document.providerId,
-        //     type: document.category,
-        //     url: `s3://${bucketName}/${key}`,
-        //     documentNumber: document.metadata.documentNumber,
-        //     issueDate: document.metadata.issueDate,
-        //     expiryDate: document.metadata.expiryDate,
-        //     issuedBy: document.metadata.issuedBy,
-        //     verificationStatus: DocumentsStatuses.VERIFICATION.PENDING,
-        //     uploadTimestamp: new Date().getTime().toString()
-        // }
-        

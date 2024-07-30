@@ -3,7 +3,7 @@ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 import { Duration } from 'aws-cdk-lib';
 import { resolve, dirname } from 'path';
-import { addCloudWatchPutPolicy, addDynamoDbPutPolicy, addS3ReadPolicy, addS3WritePolicy, createLambdaRole } from './iam';
+import { addCloudWatchPutPolicy,  addDynamoDbWritePolicy,  addS3WritePolicy, createLambdaRole } from './iam';
 import { ResourceName } from '../resource-reference';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 
@@ -20,7 +20,8 @@ export default function configureLambdaResources(scope: Construct, logGroups: {
 }) {
     const documentUploadBase64LambdaIamRole = createLambdaRole(scope, 
         ResourceName.iam.DOCUMENT_UPLOAD_BASE64_LAMBDA);
-    addCloudWatchPutPolicy(documentUploadBase64LambdaIamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);   
+    addCloudWatchPutPolicy(documentUploadBase64LambdaIamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);
+    addDynamoDbWritePolicy(documentUploadBase64LambdaIamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);   
     addS3WritePolicy(documentUploadBase64LambdaIamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
     documentUploadBase64LambdaInstance = new NodejsFunction(scope, 
         ResourceName.lambdas.DOCUMENT_UPLOAD_BASE64, 
@@ -36,6 +37,7 @@ export default function configureLambdaResources(scope: Construct, logGroups: {
             environment: {
                 REGION: process.env.AWS_REGION || '',
                 BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
+                TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA
             },
         }     
     );

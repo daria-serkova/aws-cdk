@@ -145,3 +145,7 @@ export const supportedFormats = supportedDocumentsTypes().map(f => f.format);
     'RESIDENCE_PERMIT',
     'BIRTH_CERTIFICATE'
 ];
+
+export const WorkflowStatus = {
+    PENDING_APPROVAL: 'PENDING_APPROVAL'
+}

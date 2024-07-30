@@ -34,7 +34,7 @@ export const addS3ReadPolicy = (role: Role, bucketName: string) => {
         ],
     }));
 }
-export const addDynamoDbPutPolicy = (role: Role, tableName: string) => {
+export const addDynamoDbWritePolicy = (role: Role, tableName: string) => {
     role.addToPolicy(new PolicyStatement({
         actions: [
             'dynamodb:PutItem'
