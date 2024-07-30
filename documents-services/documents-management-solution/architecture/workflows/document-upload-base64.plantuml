@@ -1,0 +1,23 @@
+@startuml Upload Base64 document
+
+actor Client
+
+participant "API Gateway" as APIGW
+participant "Lambda Function" as Lambda
+participant "S3 Bucket" as S3
+participant "DynamoDB Table" as DynamoDB
+
+Client -> APIGW : Call /document/upload-base64 with JSON body
+APIGW -> APIGW : Validate required fields, format, and category
+APIGW -> Lambda : Trigger Lambda Function if valid
+alt S3 and DynamoDB operations successful
+    Lambda -> S3 : Save document to s3://bucket/documents/{{docOwnerId}}/{{docCategory}}/uploaded/{{docCategory}}-{{uploadDate}}.{{docFormat}}
+    Lambda -> DynamoDB : Save S3 path and metadata object to DynamoDB table
+    Lambda -> APIGW : Return 200 OK
+    APIGW -> Client : 200 OK
+else S3 or DynamoDB operations fail
+    Lambda -> APIGW : Return 500 Internal Server Error
+    APIGW -> Client : 500 Internal Server Error
+end
+
+@enduml

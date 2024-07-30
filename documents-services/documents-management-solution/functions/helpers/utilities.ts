@@ -77,75 +77,121 @@ export const supportedFormats = supportedDocumentsTypes().map(f => f.format);
  * 
  * @returns {Array<string>} - An array of supported document categories.
  */
- export const supportedCategories = [
+ export const supportedDocumentsCategories = (): Array<{ category: string; reviewRequired: boolean; }> => [
     // HR Categories
-    'EMPLOYMENT_CONTRACT',
-    'EMPLOYEE_ONBOARDING',
-    'PERFORMANCE_REVIEW',
-    'TRAINING_CERTIFICATE',
-    'PAYROLL_RECORD',
-    'RESIGNATION_LETTER',
-    'TERMINATION_NOTICE',
-    'NON_DISCLOSURE_AGREEMENT',
-    'BENEFITS_ENROLLMENT_FORM',
-    'TIME_OFF_REQUEST',
+    { category: 'EMPLOYMENT_CONTRACT', reviewRequired: false },
+    { category: 'EMPLOYEE_ONBOARDING', reviewRequired: false },
+    { category: 'PERFORMANCE_REVIEW', reviewRequired: false },
+    { category: 'TRAINING_CERTIFICATE', reviewRequired: false },
+    { category: 'PAYROLL_RECORD', reviewRequired: false },
+    { category: 'RESIGNATION_LETTER', reviewRequired: false },
+    { category: 'TERMINATION_NOTICE', reviewRequired: false },
+    { category: 'NON_DISCLOSURE_AGREEMENT', reviewRequired: false },
+    { category: 'BENEFITS_ENROLLMENT_FORM', reviewRequired: false },
+    { category: 'TIME_OFF_REQUEST', reviewRequired: false },
 
     // Healthcare Categories
-    'MEDICAL_LICENSE',
-    'PATIENT_RECORD',
-    'INSURANCE_CLAIM',
-    'PRESCRIPTION',
-    'LAB_REPORT',
-    'RADIOLOGY_IMAGE',
-    'CONSENT_FORM',
-    'TREATMENT_PLAN',
-    'REFERRAL_LETTER',
-    'IMMUNIZATION_RECORD',
+    { category: 'MEDICAL_LICENSE', reviewRequired: true },
+    { category: 'PATIENT_RECORD', reviewRequired: true },
+    { category: 'INSURANCE_CLAIM', reviewRequired: true },
+    { category: 'PRESCRIPTION', reviewRequired: true },
+    { category: 'LAB_REPORT', reviewRequired: true },
+    { category: 'RADIOLOGY_IMAGE', reviewRequired: true },
+    { category: 'CONSENT_FORM', reviewRequired: true },
+    { category: 'TREATMENT_PLAN', reviewRequired: true },
+    { category: 'REFERRAL_LETTER', reviewRequired: true },
+    { category: 'IMMUNIZATION_RECORD', reviewRequired: true },
 
     // Legal Categories
-    'CONTRACT',
-    'CASE_FILE',
-    'COURT_ORDER',
-    'AFFIDAVIT',
-    'LEGAL_OPINION',
-    'PROPERTY_DEED',
-    'WILL_AND_TESTAMENT',
-    'INTELLECTUAL_PROPERTY',
-    'BUSINESS_LICENSE',
-    'LEGAL_NOTICE',
+    { category: 'CONTRACT', reviewRequired: true },
+    { category: 'CASE_FILE', reviewRequired: true },
+    { category: 'COURT_ORDER', reviewRequired: true },
+    { category: 'AFFIDAVIT', reviewRequired: true },
+    { category: 'LEGAL_OPINION', reviewRequired: true },
+    { category: 'PROPERTY_DEED', reviewRequired: true },
+    { category: 'WILL_AND_TESTAMENT', reviewRequired: true },
+    { category: 'INTELLECTUAL_PROPERTY', reviewRequired: true },
+    { category: 'BUSINESS_LICENSE', reviewRequired: true },
+    { category: 'LEGAL_NOTICE', reviewRequired: true },
 
     // Finance Categories
-    'INVOICE',
-    'RECEIPT',
-    'TAX_RETURN',
-    'FINANCIAL_STATEMENT',
-    'EXPENSE_REPORT',
+    { category: 'INVOICE', reviewRequired: false },
+    { category: 'RECEIPT', reviewRequired: false },
+    { category: 'TAX_RETURN', reviewRequired: false },
+    { category: 'FINANCIAL_STATEMENT', reviewRequired: false },
+    { category: 'EXPENSE_REPORT', reviewRequired: false },
 
     // Real Estate Categories
-    'LEASE_AGREEMENT',
-    'PURCHASE_AGREEMENT',
-    'INSPECTION_REPORT',
-    'APPRAISAL_REPORT',
-    'CLOSING_DOCUMENT',
+    { category: 'LEASE_AGREEMENT', reviewRequired: false },
+    { category: 'PURCHASE_AGREEMENT', reviewRequired: false },
+    { category: 'INSPECTION_REPORT', reviewRequired: false },
+    { category: 'APPRAISAL_REPORT', reviewRequired: false },
+    { category: 'CLOSING_DOCUMENT', reviewRequired: false },
 
     // Education Categories
-    'TRANSCRIPT',
-    'DIPLOMA',
-    'ENROLLMENT_FORM',
-    'COURSE_MATERIAL',
-    'CERTIFICATE_OF_COMPLETION',
+    { category: 'TRANSCRIPT', reviewRequired: false },
+    { category: 'DIPLOMA', reviewRequired: false },
+    { category: 'ENROLLMENT_FORM', reviewRequired: false },
+    { category: 'COURSE_MATERIAL', reviewRequired: false },
+    { category: 'CERTIFICATE_OF_COMPLETION', reviewRequired: false },
 
     // Identity Verification Categories
-    'DRIVING_LICENSE',
-    'PASSPORT',
-    'AADHAAR_CARD',
-    'NATIONAL_ID_CARD',
-    'SOCIAL_SECURITY_CARD',
-    'VOTER_ID_CARD',
-    'RESIDENCE_PERMIT',
-    'BIRTH_CERTIFICATE'
+    { category: 'DRIVING_LICENSE', reviewRequired: false },
+    { category: 'PASSPORT', reviewRequired: false },
+    { category: 'AADHAAR_CARD', reviewRequired: false },
+    { category: 'NATIONAL_ID_CARD', reviewRequired: false },
+    { category: 'SOCIAL_SECURITY_CARD', reviewRequired: false },
+    { category: 'VOTER_ID_CARD', reviewRequired: false },
+    { category: 'RESIDENCE_PERMIT', reviewRequired: false },
+    { category: 'BIRTH_CERTIFICATE', reviewRequired: false }
 ];
 
-export const WorkflowStatus = {
-    PENDING_APPROVAL: 'PENDING_APPROVAL'
+// Define supported formats for API Gateway Request Models
+export const SupportedCategories = supportedDocumentsCategories().map(f => f.category);
+
+
+export const DocumentStatuses = {
+    UPLOADED: "Uploaded",                       // The document has been successfully uploaded to the system but has not yet been processed.
+    PENDING_REVIEW: "Pending Review",           // The document is awaiting review by an administrator or an automated system.
+    UNDER_REVIEW: "Under Review",               // The document is currently being reviewed for accuracy and validity.
+    VERIFIED: "Verified",                       // The document has been reviewed and verified as authentic and accurate.
+    REJECTED: "Rejected",                       // The document has been reviewed and found to be invalid, incomplete, or fraudulent.
+    EXPIRED: "Expired",                         // The document has passed its expiry date and is no longer considered valid.
+    RENEWAL_REQUIRED: "Renewal Required",       // The document is nearing its expiry date and needs to be renewed.
+    IN_PROGRESS: "In Progress",                 // The document is in the process of being uploaded or processed.
+    FAILED_UPLOAD: "Failed Upload",             // The document upload failed due to some error.
+    AWAITING_METADATA: "Awaiting Metadata",     // The document has been uploaded but is missing required metadata.
+    ARCHIVED: "Archived",                       // The document has been archived and is no longer actively used.
+    DELETED: "Deleted",                         // The document has been deleted from the system.
+    FLAGGED: "Flagged",                         // The document has been flagged for further investigation or special attention.
+    PROCESSING: "Processing",                   // The document is currently being processed by the system (e.g., virus scan, format conversion).
+    PENDING_APPROVAL: "Pending Approval",       // The document has been reviewed and is awaiting final approval from a higher authority.
+    APPROVED: "Approved",                       // The document has been approved after review.
+    SUBMITTED: "Submitted",                     // The document has been submitted for review or processing but has not yet been addressed.
+    SUPERSEDED: "Superseded",                   // The document has been replaced by a newer version.
+    QUARANTINED: "Quarantined"                  // The document has been identified as potentially harmful and is isolated for further examination.
 }
+
+/**
+ * Determines the document status based on the category.
+ *
+ * @param {string} category - The category of the document.
+ * @returns {string} - The status of the document ("Uploaded" or "Pending Review").
+ */
+ export const determineDocumentStatus = (category: string): string => {
+    const categoryObj = supportedDocumentsCategories().find(cat => cat.category === category);
+    return categoryObj && categoryObj.reviewRequired ? DocumentStatuses.PENDING_REVIEW : DocumentStatuses.UPLOADED;
+};
+
+// "auditTrail": [
+//     {
+//         "eventTimestamp": "2024-07-29T12:34:56Z",
+//         "eventType": "UPLOAD",
+//         "details": "Document uploaded by user provider-abcde-12345."
+//     },
+//     {
+//         "eventTimestamp": "2024-07-30T14:22:10Z",
+//         "eventType": "VERIFY",
+//         "details": "Document verified by admin user-xyz."
+//     }
+// ]

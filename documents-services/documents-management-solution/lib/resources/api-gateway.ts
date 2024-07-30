@@ -4,7 +4,7 @@ import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Reso
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
 import { documentUploadBase64Lambda } from "./lambdas";
-import { supportedCategories, supportedFormats } from "../../functions/helpers/utilities";
+import { SupportedCategories, supportedFormats } from "../../functions/helpers/utilities";
 
 interface ApiNodes {
     document: Resource;
@@ -93,7 +93,7 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
                 },
                 documentCategory: {
                     type: JsonSchemaType.STRING,
-                    enum: supportedCategories,
+                    enum: SupportedCategories,
                     
                 },
                 documentSize: {

@@ -2,7 +2,7 @@ import { S3 } from 'aws-sdk';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { generateUUID, getContentTypeByFormat, uploadFolder, WorkflowStatus } from './helpers/utilities';
+import { determineDocumentStatus, generateUUID, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
 import { Buffer } from 'buffer';
 
 export interface UploadedDocument {
@@ -67,9 +67,9 @@ const TABLE_NAME = process.env.TABLE_NAME!;
           documentOwnerId: document.documentOwnerId,
           documentCategory: document.documentCategory,
           uploadedAt,
-          status: WorkflowStatus.PENDING_APPROVAL,
+          status: determineDocumentStatus(document.documentCategory),
           url: `s3://${BUCKET_NAME}/${key}`,
-          ...document.metadata,
+          ...document.metadata
         })
       }));
     } catch (error) {
