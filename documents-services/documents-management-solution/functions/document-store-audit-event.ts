@@ -1,36 +1,34 @@
-import { S3 } from 'aws-sdk';
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { APIGatewayProxyHandler } from 'aws-lambda';
-import { determineDocumentStatus, generateUUID, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
-import { Buffer } from 'buffer';
+import { AuditEvent } from './helpers/types';
 
-export interface UploadedDocument {
-  documentOwnerId: string;
-  documentName: string;
-  documentFormat: string;
-  documentSize: number;
-  documentCategory: string;
-  documentContent: string;
-  metadata: object
-}
-
+const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
+const TABLE_NAME = process.env.TABLE_NAME!;
 
 /**
- * Lambda function handler for uploading a document to an S3 bucket.
- * The function processes a document object, which is expected to be passed in the event payload in the base64-encoded format.
+ * Lambda function handler for storing audit events in DynamoDB.
  *
- * @param event - The input event containing the document object to be uploaded.
- * @returns - An object containing document metadata object
- * @throws - Throws an error if the upload fails, with the error message or 'Internal Server Error' as the default.
+ * @param event - The input event containing the document metadata.
+ * @returns - A success message if the metadata is stored successfully.
+ * @throws - Throws an error if the metadata storage fails.
  */
- export const handler: APIGatewayProxyHandler = async (event) => {
-    const document = JSON.parse(event.body || '{}') as UploadedDocument;
-   
+ export const handler = async (event: any): Promise<any> => {
+  const auditEvent: AuditEvent = event;
+  try {
+    await dynamoDb.send(new PutItemCommand({
+      TableName: TABLE_NAME,
+      Item: marshall(auditEvent)
+    }));
+  } catch (error) {
+    console.error('Error saving audit event to DynamoDB:', error);
     return {
-      statusCode: 200,
-      body: JSON.stringify({ 
-        message: 'Document uploaded successfully',
-      })
-    }
+      statusCode: 500,
+      body: JSON.stringify({ message: `Failed to save audit event. Please try again later.` }),
+    };
   }
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: 'Document metadata uploaded successfully' })
+  };
+};
