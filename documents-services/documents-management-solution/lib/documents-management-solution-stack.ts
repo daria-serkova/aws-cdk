@@ -6,6 +6,7 @@ import configureS3Resources from './resources/s3';
 import configureLambdaResources from './resources/lambdas';
 import configureApiGatewayResources from './resources/api-gateway';
 import configureDynamoDbResources from './resources/dynamo-db';
+import { configureDocumentBase64UploadWorkflowStateMachine } from './resources/state-machines';
 export class DocumentsManagementSolutionStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -18,6 +19,7 @@ export class DocumentsManagementSolutionStack extends cdk.Stack {
     configureS3Resources(this);
     configureDynamoDbResources(this);
     configureLambdaResources(this, logGroups);
+    configureDocumentBase64UploadWorkflowStateMachine(this);
     configureApiGatewayResources(this);
   }
 }

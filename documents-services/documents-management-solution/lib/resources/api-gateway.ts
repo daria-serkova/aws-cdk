@@ -5,6 +5,7 @@ import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
 import { documentUploadBase64Lambda, documentViewLambda } from "./lambdas";
 import { SupportedCategories, supportedFormats } from "../../functions/helpers/utilities";
+import { uploadDocumentBase64StateMachineIntegration } from "./state-machines";
 
 interface ApiNodes {
     document: Resource;
@@ -120,7 +121,7 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
         },
     };
     apiGateway.addModel(modelName, requestModel);
-    node.addResource('upload-base64').addMethod("POST", new LambdaIntegration(documentUploadBase64Lambda()), {
+    node.addResource('upload-base64').addMethod("POST", uploadDocumentBase64StateMachineIntegration(), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },
         requestValidator: requestValidatorInstance,

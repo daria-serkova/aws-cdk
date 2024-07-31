@@ -3,6 +3,7 @@ import { Bucket } from "aws-cdk-lib/aws-s3";
 import { BucketDeployment } from "aws-cdk-lib/aws-s3-deployment";
 import { Construct } from "constructs";
 import { ResourceName } from "../resource-reference";
+import { StateMachine } from "aws-cdk-lib/aws-stepfunctions";
 
 export const createLambdaRole = (scope: Construct, name: string) => {
     return new Role(scope, name, {
@@ -91,3 +92,29 @@ export const  addPublicAccessPermissionsToS3Bucket = (bucket: Bucket) => {
       }));
       return deploymentRole;
   }
+
+  export const createStateMachineRole = (scope: Construct, name: string) => {
+    const stateMachineRole = new Role(scope, name, {
+        roleName: name,
+        assumedBy: new ServicePrincipal('states.amazonaws.com'),
+    });
+    stateMachineRole.addToPolicy(new PolicyStatement({
+        actions: ['states:StartExecution'],
+        resources: ['*'], // Specify more restrictive ARNs as needed
+    }));
+    return stateMachineRole;
+  }
+
+  export const createApiGatewayRole = (scope: Construct, name: string) => {
+    const apiGatewayRole = new Role(scope, name, {
+        roleName: name,
+        assumedBy: new ServicePrincipal('apigateway.amazonaws.com'),
+      });
+      return apiGatewayRole
+  }
+  export const addStateMachineExecutionPolicy = (role: Role, arn: string) => {
+    role.addToPolicy(new PolicyStatement({
+        actions: ['states:StartExecution'],
+        resources: [arn],
+    }));
+}

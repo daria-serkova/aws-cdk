@@ -17,6 +17,7 @@ import { LogGroup } from 'aws-cdk-lib/aws-logs';
 const lambdaFilesLocation = '../../functions';
 
 let documentUploadBase64LambdaInstance: NodejsFunction;
+let documentUploadMetadataLambdaInstance: NodejsFunction;
 let documentViewLambdaInstance: NodejsFunction;
 
 /**
@@ -28,14 +29,13 @@ export default function configureLambdaResources(scope: Construct, logGroups: {
 }) {
     const documentUploadBase64LambdaIamRole = createLambdaRole(scope, 
         ResourceName.iam.DOCUMENT_UPLOAD_BASE64_LAMBDA);
-    addCloudWatchPutPolicy(documentUploadBase64LambdaIamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);
-    addDynamoDbWritePolicy(documentUploadBase64LambdaIamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);   
+    addCloudWatchPutPolicy(documentUploadBase64LambdaIamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP); 
     addS3WritePolicy(documentUploadBase64LambdaIamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
     documentUploadBase64LambdaInstance = new NodejsFunction(scope, 
         ResourceName.lambdas.DOCUMENT_UPLOAD_BASE64, 
         {
             functionName: ResourceName.lambdas.DOCUMENT_UPLOAD_BASE64,
-            description: 'Uploads base64 document in S3 bucket and saves metadata in DynamoDB',
+            description: 'Uploads base64 document in S3 bucket ',
             entry: resolve(dirname(__filename), `${lambdaFilesLocation}/document-upload-base64.ts`),
             memorySize: 256,
             timeout: Duration.minutes(3),
@@ -45,6 +45,27 @@ export default function configureLambdaResources(scope: Construct, logGroups: {
             environment: {
                 REGION: process.env.AWS_REGION || '',
                 BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET
+            },
+        }     
+    );
+
+    const documentUploadMetadataLambdaIamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_UPLOAD_METADATA_LAMBDA);
+    addCloudWatchPutPolicy(documentUploadMetadataLambdaIamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);
+    addDynamoDbWritePolicy(documentUploadMetadataLambdaIamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);   
+    documentUploadMetadataLambdaInstance = new NodejsFunction(scope, 
+        ResourceName.lambdas.DOCUMENT_UPLOAD_METADATA, 
+        {
+            functionName: ResourceName.lambdas.DOCUMENT_UPLOAD_METADATA,
+            description: 'Saves metadata of the uploaded document in the DynamoDB',
+            entry: resolve(dirname(__filename), `${lambdaFilesLocation}/document-upload-metadata.ts`),
+            memorySize: 256,
+            timeout: Duration.minutes(3),
+            handler: 'handler',
+            logGroup: logGroups.documentOperations,
+            role: documentUploadMetadataLambdaIamRole,
+            environment: {
+                REGION: process.env.AWS_REGION || '',
+                TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA
             },
         }     
     );
@@ -75,4 +96,5 @@ export default function configureLambdaResources(scope: Construct, logGroups: {
 }
 
 export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstance;
+export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaInstance;
 export const documentViewLambda = () => documentViewLambdaInstance;
