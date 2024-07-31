@@ -1,6 +1,6 @@
 import { S3 } from 'aws-sdk';
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { AuditEventCodes, generateUUID, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
+import { AuditEventCodes, generateUUID, getAuditEvent, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
 import { Buffer } from 'buffer';
 
 export interface UploadedDocument {
@@ -67,7 +67,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
           documentCategory: document.documentCategory,
           key: `s3://${BUCKET_NAME}/${key}`,
           ...metadata,
-          action: AuditEventCodes.UPLOAD,
+          audit: getAuditEvent(AuditEventCodes.UPLOAD, uploadedAt, document.documentOwnerId, documentId)
         }
       })
     }

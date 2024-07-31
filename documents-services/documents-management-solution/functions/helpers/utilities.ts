@@ -182,6 +182,9 @@ export const DocumentStatuses = {
     const categoryObj = supportedDocumentsCategories().find(cat => cat.category === category);
     return categoryObj && categoryObj.reviewRequired ? DocumentStatuses.PENDING_REVIEW : DocumentStatuses.UPLOADED;
 };
+export const PreSignUrlsExpirationConfigs = {
+    DOCUMENT_VIEW: 3600
+}
 
 export const AuditEventCodes = {
     UPLOAD: "Upload",                         // When a document is uploaded.
@@ -224,17 +227,11 @@ export const AuditEventCodes = {
     ANNOTATION_REMOVE: "Annotation Remove"    // When an annotation is removed from a document.
   };
   
-
-
-// "auditTrail": [
-//     {
-//         "eventTimestamp": "2024-07-29T12:34:56Z",
-//         "eventType": "UPLOAD",
-//         "details": "Document uploaded by user provider-abcde-12345."
-//     },
-//     {
-//         "eventTimestamp": "2024-07-30T14:22:10Z",
-//         "eventType": "VERIFY",
-//         "details": "Document verified by admin user-xyz."
-//     }
-// ]
+export const getAuditEvent = (eventAction: string, eventTime: string, eventInitiator: string, eventObject: string) => {
+    return  {
+        event: eventAction,
+        eventTimestamp: eventTime,
+        eventInitiator: eventInitiator,
+        eventObject: eventObject
+      }
+}

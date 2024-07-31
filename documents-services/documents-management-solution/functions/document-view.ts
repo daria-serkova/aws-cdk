@@ -2,12 +2,12 @@ import { S3 } from 'aws-sdk';
 import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
 import { APIGatewayProxyHandler } from 'aws-lambda';
+import { AuditEventCodes, getAuditEvent, PreSignUrlsExpirationConfigs } from './helpers/utilities';
 
 const s3 = new S3({ region: process.env.REGION });
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
 const TABLE_NAME = process.env.TABLE_NAME!;
-
 /**
  * Lambda function handler for generating a presigned URL for an S3 object.
  *
@@ -33,16 +33,17 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     }
     const documentMetadata = unmarshall(Item);
     const documentKey = documentMetadata.url.replace(`s3://${BUCKET_NAME}/`, '');
-
-    // Generate presigned URL for the S3 object
     const url = s3.getSignedUrl('getObject', {
       Bucket: BUCKET_NAME,
       Key: documentKey,
-      Expires: 60 * 60, // URL expiration time in seconds (e.g., 1 hour)
+      Expires: PreSignUrlsExpirationConfigs.DOCUMENT_VIEW,
     });
     return {
       statusCode: 200,
-      body: JSON.stringify({ url }),
+      body: JSON.stringify({ 
+        url,
+        audit: getAuditEvent(AuditEventCodes.VIEW, new Date().toISOString(), documentOwnerId, documentId)
+      }),
     };
   } catch (error) {
     console.error('Error generating presigned URL:', error);
