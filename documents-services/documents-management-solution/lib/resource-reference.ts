@@ -45,16 +45,21 @@ export const ResourceName = {
         DOCUMENT_UPLOAD_BASE64_LAMBDA: resourceName('document-upload-base64-lbd-role'),
         DOCUMENT_UPLOAD_METADATA_LAMBDA: resourceName('document-upload-metadata-lbd-role'),
         DOCUMENT_VIEW_LAMBDA: resourceName('document-view-lbd-role'),
+        STORE_AUDIT_EVENT_LAMBDA: resourceName('store-audit-event-lbd-role'),
         DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE: resourceName('upload-b64-document-sm-role'),
+        
         API_GATEWAY_ROLE: resourceName('api-gateway-role'),
     },
     lambdas: {
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64'),
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata'),
         DOCUMENT_VIEW: resourceName('document-view'),
+        STORE_AUDIT_EVENT: resourceName('store-audit-event'),
     },
     dynamoDbTables: {
         DOCUMENTS_METADATA: resourceName('documents-metadata'),
+        DOCUMENTS_AUDIT: resourceName('documents-audit'),
+        DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR: resourceName('documents-audit-by-event-initiator'),
     },
     stateMachines: {
         DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE: resourceName('upload-b64-document-sm')

@@ -5,7 +5,7 @@ import * as lambdas from "./lambdas";
 import { AwsIntegration } from "aws-cdk-lib/aws-apigateway";
 import { addStateMachineExecutionPolicy, createApiGatewayRole, createStateMachineRole } from "./iam";
 import { ResourceName } from "../resource-reference";
-import { Fail, Pass, StateMachine, TaskInput } from "aws-cdk-lib/aws-stepfunctions";
+import { Fail, Parallel, Pass, StateMachine, TaskInput } from "aws-cdk-lib/aws-stepfunctions";
 
 let uploadDocumentBase64StateMachineIntegrationInstance: AwsIntegration;
 /**
@@ -29,11 +29,29 @@ export function configureDocumentBase64UploadWorkflowStateMachine(scope: Constru
         errors: ['States.ALL'],
         resultPath: '$.error',
     });
+    const uploadAuditTask = new LambdaInvoke(scope, 'Store Audit Record', {
+        lambdaFunction: lambdas.storeAuditEventLambda(),
+        inputPath: '$.body.audit',
+        outputPath: '$.Payload',
+    }).addCatch(new Fail(scope, 'Audit Upload Failed'), {
+        errors: ['States.ALL'],
+        resultPath: '$.error',
+    });
+    
      // Create IAM Role for Step Functions
    const stateMachineRole = createStateMachineRole(scope, ResourceName.iam.DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE);
 
+   const parallelTasks = new Parallel(scope, 'Parallel Tasks')
+    .branch(uploadMetadataTask)
+    .branch(uploadAuditTask)
+    .addCatch(new Fail(scope, 'Parallel Tasks Failed'), {
+        errors: ['States.ALL'],
+        resultPath: '$.error',
+    });
+
+    // Define the state machine definition
     const definition = uploadDocumentTask
-        .next(uploadMetadataTask)
+        .next(parallelTasks)
         .next(new Pass(scope, 'Success'));
         
     const stateMachine = new StateMachine(scope, ResourceName.stateMachines.DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE, {

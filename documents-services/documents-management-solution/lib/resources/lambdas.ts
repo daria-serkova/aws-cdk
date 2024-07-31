@@ -18,6 +18,7 @@ const lambdaFilesLocation = '../../functions';
 
 let documentUploadBase64LambdaInstance: NodejsFunction;
 let documentUploadMetadataLambdaInstance: NodejsFunction;
+let storeAuditEventLambdaInstance: NodejsFunction;
 let documentViewLambdaInstance: NodejsFunction;
 
 /**
@@ -70,6 +71,27 @@ export default function configureLambdaResources(scope: Construct, logGroups: {
         }     
     );
 
+    const storeAuditEventLambdaIamRole = createLambdaRole(scope, ResourceName.iam.STORE_AUDIT_EVENT_LAMBDA);
+    addCloudWatchPutPolicy(storeAuditEventLambdaIamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);
+    addDynamoDbWritePolicy(storeAuditEventLambdaIamRole, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT);   
+    storeAuditEventLambdaInstance = new NodejsFunction(scope, 
+        ResourceName.lambdas.STORE_AUDIT_EVENT, 
+        {
+            functionName: ResourceName.lambdas.STORE_AUDIT_EVENT,
+            description: 'Stores audit events in the DynamoDB',
+            entry: resolve(dirname(__filename), `${lambdaFilesLocation}/document-store-audit-event.ts`),
+            memorySize: 256,
+            timeout: Duration.minutes(3),
+            handler: 'handler',
+            logGroup: logGroups.documentOperations,
+            role: storeAuditEventLambdaIamRole,
+            environment: {
+                REGION: process.env.AWS_REGION || '',
+                TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT
+            },
+        }     
+    );
+
     const documentViewIamRole = createLambdaRole(scope, 
         ResourceName.iam.DOCUMENT_VIEW_LAMBDA);
     addCloudWatchPutPolicy(documentViewIamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);
@@ -97,4 +119,5 @@ export default function configureLambdaResources(scope: Construct, logGroups: {
 
 export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstance;
 export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaInstance;
+export const storeAuditEventLambda = () => storeAuditEventLambdaInstance;
 export const documentViewLambda = () => documentViewLambdaInstance;

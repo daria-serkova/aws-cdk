@@ -227,11 +227,12 @@ export const AuditEventCodes = {
     ANNOTATION_REMOVE: "Annotation Remove"    // When an annotation is removed from a document.
   };
   
-export const getAuditEvent = (eventAction: string, eventTime: string, eventInitiator: string, eventObject: string) => {
+export const getAuditEvent = (documentId: string, event: string, eventTime: string, eventInitiator: string, ) => {
     return  {
-        event: eventAction,
+        auditId: generateUUID(),
+        documentId,
+        event: event,
         eventTimestamp: eventTime,
-        eventInitiator: eventInitiator,
-        eventObject: eventObject
+        eventInitiator: eventInitiator
       }
 }

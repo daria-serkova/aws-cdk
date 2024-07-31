@@ -62,7 +62,7 @@ export const handler = async (event: any): Promise<any> => {
     statusCode: 200,
     body: { 
       metadata,
-      audit: getAuditEvent(AuditEventCodes.UPLOAD, uploadedAt, document.documentOwnerId, documentId)
+      audit: getAuditEvent(documentId, AuditEventCodes.UPLOAD, uploadedAt, document.documentOwnerId)
     }
   }
 }
