@@ -1,33 +1,45 @@
 import { S3 } from 'aws-sdk';
+import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
+import { unmarshall } from '@aws-sdk/util-dynamodb';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 
 const s3 = new S3({ region: process.env.REGION });
+const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
+const TABLE_NAME = process.env.TABLE_NAME!;
 
 /**
  * Lambda function handler for generating a presigned URL for an S3 object.
  *
- * @param event - The input event containing the S3 object key.
+ * @param event - The input event containing the request body.
  * @returns - The presigned URL for the S3 object.
  * @throws - Throws an error if the URL generation fails.
  */
 export const handler: APIGatewayProxyHandler = async (event) => {
-  const { key } = event.queryStringParameters || {};
-
-  if (!key) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ message: 'Missing "key" query parameter.' }),
-    };
-  }
-
+  const { initiatorSystemCode, documentOwnerId, documentId } = JSON.parse(event.body || '{}');
   try {
+    const { Item } = await dynamoDb.send(new GetItemCommand({
+      TableName: TABLE_NAME,
+      Key: {
+        documentId: { S: documentId },
+        documentOwnerId: { S: documentOwnerId }
+      }
+    }));
+    if (!Item) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ message: 'Document not found.' }),
+      };
+    }
+    const documentMetadata = unmarshall(Item);
+    const documentKey = documentMetadata.url.replace(`s3://${BUCKET_NAME}/`, '');
+
+    // Generate presigned URL for the S3 object
     const url = s3.getSignedUrl('getObject', {
       Bucket: BUCKET_NAME,
-      Key: key,
+      Key: documentKey,
       Expires: 60 * 60, // URL expiration time in seconds (e.g., 1 hour)
     });
-
     return {
       statusCode: 200,
       body: JSON.stringify({ url }),

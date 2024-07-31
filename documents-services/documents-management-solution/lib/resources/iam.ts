@@ -44,6 +44,16 @@ export const addDynamoDbWritePolicy = (role: Role, tableName: string) => {
         ],
     }));
 }
+export const addDynamoDbReadPolicy = (role: Role, tableName: string) => {
+    role.addToPolicy(new PolicyStatement({
+        actions: [
+            'dynamodb:GetItem'
+        ],
+        resources: [
+            `arn:aws:dynamodb:${process.env.AWS_REGION}:${process.env.AWS_ACCOUNT}:table/${tableName}`
+        ],
+    }));
+}
 
 export const addCloudWatchPutPolicy = (role: Role, logGroupName: string) => {
     role.addToPolicy(new PolicyStatement({

@@ -3,13 +3,21 @@ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 import { Duration } from 'aws-cdk-lib';
 import { resolve, dirname } from 'path';
-import { addCloudWatchPutPolicy,  addDynamoDbWritePolicy,  addS3WritePolicy, createLambdaRole } from './iam';
+import { 
+    addCloudWatchPutPolicy,  
+    addDynamoDbWritePolicy,  
+    addS3WritePolicy, 
+    createLambdaRole,
+    addS3ReadPolicy,
+    addDynamoDbReadPolicy
+} from './iam';
 import { ResourceName } from '../resource-reference';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 
 const lambdaFilesLocation = '../../functions';
 
 let documentUploadBase64LambdaInstance: NodejsFunction;
+let documentViewLambdaInstance: NodejsFunction;
 
 /**
  * Configuration of Lambda functions
@@ -36,11 +44,35 @@ export default function configureLambdaResources(scope: Construct, logGroups: {
             role: documentUploadBase64LambdaIamRole,
             environment: {
                 REGION: process.env.AWS_REGION || '',
+                BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET
+            },
+        }     
+    );
+
+    const documentViewIamRole = createLambdaRole(scope, 
+        ResourceName.iam.DOCUMENT_VIEW_LAMBDA);
+    addCloudWatchPutPolicy(documentViewIamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);
+    addDynamoDbReadPolicy(documentViewIamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);  
+    addS3ReadPolicy(documentViewIamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
+    documentViewLambdaInstance = new NodejsFunction(scope, 
+        ResourceName.lambdas.DOCUMENT_VIEW, 
+        {
+            functionName: ResourceName.lambdas.DOCUMENT_VIEW,
+            description: 'Retrieves the S3 object URL and returns it to the end-user',
+            entry: resolve(dirname(__filename), `${lambdaFilesLocation}/document-view.ts`),
+            memorySize: 256,
+            timeout: Duration.minutes(3),
+            handler: 'handler',
+            logGroup: logGroups.documentOperations,
+            role: documentViewIamRole,
+            environment: {
+                REGION: process.env.AWS_REGION || '',
                 BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
-                TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA
+                TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
             },
         }     
     );
 }
 
 export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstance;
+export const documentViewLambda = () => documentViewLambdaInstance;

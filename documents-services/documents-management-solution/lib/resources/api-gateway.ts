@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Resource, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
-import { documentUploadBase64Lambda } from "./lambdas";
+import { documentUploadBase64Lambda, documentViewLambda } from "./lambdas";
 import { SupportedCategories, supportedFormats } from "../../functions/helpers/utilities";
 
 interface ApiNodes {
@@ -66,10 +66,9 @@ export default function configureApiGatewayResources(scope: Construct ) {
         document: version.addResource('document'),
     }
     configureDocumentUploadBase64Endpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
+    configureDocumentViewEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
 }
 
-// API Gateway has payload size limits (10 MB). 
-// Large files may exceed these limits after base64 encoding. In this scenarios use pre-signed url.
 function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64;
     const formats = supportedFormats;
@@ -122,6 +121,40 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
     };
     apiGateway.addModel(modelName, requestModel);
     node.addResource('upload-base64').addMethod("POST", new LambdaIntegration(documentUploadBase64Lambda()), {
+        apiKeyRequired: true,
+        requestModels: { "application/json": requestModel },
+        requestValidator: requestValidatorInstance,
+    });
+}
+function configureDocumentViewEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+    const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_VIEW;
+    let requestModel = {
+        contentType: "application/json",
+        description: "Document view API endpoint body validation",
+        modelName: modelName,
+        modelId: modelName,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                initiatorSystemCode: {
+                    type: JsonSchemaType.STRING,
+                },
+                documentOwnerId: {
+                    type: JsonSchemaType.STRING,
+                },
+                documentId: {
+                    type: JsonSchemaType.STRING,
+                },
+            },
+            required: [
+                "initiatorSystemCode",
+                "documentOwnerId", 
+                "documentId",
+            ],
+        },
+    };
+    apiGateway.addModel(modelName, requestModel);
+    node.addResource('view').addMethod("POST", new LambdaIntegration(documentViewLambda()), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },
         requestValidator: requestValidatorInstance,

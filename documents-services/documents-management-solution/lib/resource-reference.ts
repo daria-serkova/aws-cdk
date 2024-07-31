@@ -39,12 +39,15 @@ export const ResourceName = {
         DOCUMENTS_SERVCIE_API_KEY: resourceName('documents-api-key'),
         DOCUMENTS_SERVCIE_API_REQUEST_VALIDATOR: resourceName('documents-api-request-validator'),
         DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentUploadBase64`,
+        DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_VIEW: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentView`,
     },
     iam: {
         DOCUMENT_UPLOAD_BASE64_LAMBDA: resourceName('document-upload-base64-lbd-role'),
+        DOCUMENT_VIEW_LAMBDA: resourceName('document-view-lbd-role'),
     },
     lambdas: {
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64'),
+        DOCUMENT_VIEW: resourceName('document-view'),
     },
     dynamoDbTables: {
         DOCUMENTS_METADATA: resourceName('documents-metadata'),
