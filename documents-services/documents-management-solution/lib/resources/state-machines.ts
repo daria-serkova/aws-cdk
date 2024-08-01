@@ -36,6 +36,9 @@ export function configureDocumentBase64UploadWorkflowStateMachine(scope: Constru
         lambdaFunction: lambdas.storeAuditEventLambda(),
         inputPath: '$',
         outputPath: '$.Payload.body',
+    }).addCatch(new Fail(scope, 'Audit Upload Failed'), {
+        errors: ['States.ALL'],
+        resultPath: '$.error',
     });
     const sendNotifications = new LambdaInvoke(scope, 'Send notification to user', {
       lambdaFunction: lambdas.documentSendNotificationsLambda(),
