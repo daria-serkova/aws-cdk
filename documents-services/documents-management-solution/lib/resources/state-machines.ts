@@ -5,34 +5,43 @@ import * as lambdas from "./lambdas";
 import { AwsIntegration } from "aws-cdk-lib/aws-apigateway";
 import { addStateMachineExecutionPolicy, createApiGatewayRole, createStateMachineRole } from "./iam";
 import { ResourceName } from "../resource-reference";
-import { StateMachine } from "aws-cdk-lib/aws-stepfunctions";
+import { StateMachine, TaskStateBase } from "aws-cdk-lib/aws-stepfunctions";
 import { Role } from "aws-cdk-lib/aws-iam";
+import { Duration } from "aws-cdk-lib";
 
 let workflowDocumentUploadBase64Instance: AwsIntegration;
 export const workflowDocumentUploadBase64 = () => workflowDocumentUploadBase64Instance;
 
 export default function configureStateMachines (scope: Construct) {
     const apiGatewayRole = createApiGatewayRole(scope, ResourceName.iam.API_GATEWAY_ROLE);
-    const validateBase64DocumentTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_VALIDATE_BASE64_DOCUMENT, {
-      lambdaFunction: lambdas.documentUploadBase64Lambda(),
-      outputPath: '$.Payload.body',
-    });
-    const uploadBase64DocumentTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_UPLOAD_BASE64_DOCUMENT, {
-      lambdaFunction: lambdas.documentUploadBase64Lambda(),
-      outputPath: '$.Payload.body',
-    });
-    const uploadDocumentMetadataTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_UPLOAD_DOCUMENT_METADATA, {
-      lambdaFunction: lambdas.documentUploadBase64Lambda(),
-      outputPath: '$.Payload.body',
-    });
-    const storeAuditEventTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_STORE_AUDIT_EVENT, {
-      lambdaFunction: lambdas.documentUploadBase64Lambda(),
-      outputPath: '$.Payload.body',
-    });
     const errorsHandlingTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_ERRORS_HANDLING_TASK, {
       lambdaFunction: lambdas.errorsHandlingLambda(),
       outputPath: '$.Payload.body',
-  });
+    });
+
+    const validateBase64DocumentTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_VALIDATE_BASE64_DOCUMENT, {
+      lambdaFunction: lambdas.documentValidateBase64Lambda(),
+      outputPath: '$.Payload.body',
+    }).addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
+      .addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
+    
+    const uploadBase64DocumentTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_UPLOAD_BASE64_DOCUMENT, {
+      lambdaFunction: lambdas.documentUploadBase64Lambda(),
+      outputPath: '$.Payload.body',
+    }).addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
+      .addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
+    
+    const uploadDocumentMetadataTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_UPLOAD_DOCUMENT_METADATA, {
+      lambdaFunction: lambdas.documentUploadBase64Lambda(),
+      outputPath: '$.Payload.body',
+    }).addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
+      .addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
+    
+    const storeAuditEventTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_STORE_AUDIT_EVENT, {
+      lambdaFunction: lambdas.documentUploadBase64Lambda(),
+      outputPath: '$.Payload.body',
+    }).addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
+      .addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
 
     workflowDocumentUploadBase64Instance = configureWorkflowDocumentUploadBase64(
       scope, 
@@ -40,17 +49,14 @@ export default function configureStateMachines (scope: Construct) {
       validateBase64DocumentTask,
       uploadBase64DocumentTask,
       uploadDocumentMetadataTask,
-      storeAuditEventTask,
-      errorsHandlingTask
+      storeAuditEventTask
   );
-   
-
 }
 /**
  * Configuration of State Machine for 'Upload Base 64 Document' workflow
  * @param scope 
  */
-const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole: Role, ...tasks: LambdaInvoke[]): AwsIntegration => {
+const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole: Role, ...tasks: TaskStateBase[]): AwsIntegration => {
   const [ 
     validateBase64DocumentTask,
     uploadBase64DocumentTask,
