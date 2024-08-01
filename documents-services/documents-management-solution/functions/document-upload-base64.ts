@@ -1,10 +1,16 @@
 import { S3 } from 'aws-sdk';
-import { AuditEventCodes, determineDocumentStatus, generateUUID, getAuditEvent, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
+import { EventCodes, determineDocumentStatus, generateUUID, getAuditEvent, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
 import { Buffer } from 'buffer';
 import { DocumentMetadata } from './helpers/types';
+import { getDocumentUploadNotifications } from './helpers/notifications';
 
 export interface UploadedDocument {
-  documentOwnerId: string;
+  initiatorSystemCode: string;
+  documentOwner: {
+    documentOwnerId: string;
+    documentOwnerEmail: string;
+    documentOwnerName: string;
+  };
   documentName: string;
   documentFormat: string;
   documentSize: number;
@@ -29,7 +35,7 @@ export const handler = async (event: any): Promise<any> => {
   const buffer = Buffer.from(document.documentContent, 'base64');
   const documentId = generateUUID();
   const uploadedAt = new Date().toISOString();
-  const uploadLocation = uploadFolder(document.documentOwnerId, document.documentCategory);
+  const uploadLocation = uploadFolder(document.documentOwner.documentOwnerId, document.documentCategory);
   const key = `${uploadLocation}/${document.documentCategory}-${uploadedAt}.${document.documentFormat}`;
   try {
     await s3.upload({
@@ -39,7 +45,7 @@ export const handler = async (event: any): Promise<any> => {
       ContentType: getContentTypeByFormat(document.documentFormat),
       Metadata: {
         documentId,
-        documentOwnerId: document.documentOwnerId,
+        documentOwnerId: document.documentOwner.documentOwnerId,
       },
     }).promise();
   } catch (error) {
@@ -51,7 +57,7 @@ export const handler = async (event: any): Promise<any> => {
   }
   const metadata: DocumentMetadata = {
     documentId: documentId,
-    documentOwnerId: document.documentOwnerId,
+    documentOwnerId: document.documentOwner.documentOwnerId,
     documentCategory: document.documentCategory,
     uploadedAt: uploadedAt,
     key: `s3://${BUCKET_NAME}/${key}`,
@@ -61,8 +67,19 @@ export const handler = async (event: any): Promise<any> => {
   return {
     statusCode: 200,
     body: { 
+      documentId,
       metadata,
-      audit: getAuditEvent(documentId, AuditEventCodes.UPLOAD, uploadedAt, document.documentOwnerId)
+      audit: getAuditEvent(
+        documentId, 
+        EventCodes.UPLOAD, 
+        uploadedAt, 
+        document.documentOwner.documentOwnerId, 
+        document.initiatorSystemCode),
+      notifications: getDocumentUploadNotifications(
+        document.documentOwner.documentOwnerEmail,
+        document.documentOwner.documentOwnerName, 
+        document.documentCategory,
+        document.initiatorSystemCode)
     }
   }
 }

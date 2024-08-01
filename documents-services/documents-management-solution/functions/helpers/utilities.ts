@@ -186,7 +186,7 @@ export const PreSignUrlsExpirationConfigs = {
     DOCUMENT_VIEW: 3600
 }
 
-export const AuditEventCodes = {
+export const EventCodes = {
     UPLOAD: "Upload",                         // When a document is uploaded.
     METADATA_UPDATE: "Metadata Update",       // When a document's metadata is updated.
     DELETE: "Delete",                         // When a document is deleted.
@@ -227,12 +227,22 @@ export const AuditEventCodes = {
     ANNOTATION_REMOVE: "Annotation Remove"    // When an annotation is removed from a document.
   };
   
-export const getAuditEvent = (documentId: string, event: string, eventTime: string, eventInitiator: string, ) => {
+export const getAuditEvent = (
+        documentId: string, 
+        event: string, 
+        eventTime: string, 
+        eventInitiator: string, 
+        initiatorSystemCode: string) => {
     return  {
         auditId: generateUUID(),
         documentId,
-        event: event,
-        eventTimestamp: eventTime,
-        eventInitiator: eventInitiator
+        event,
+        eventTime,
+        eventInitiator,
+        initiatorSystemCode
       }
 }
+
+export const getCurrentTime = () => new Date().toISOString();
+
+

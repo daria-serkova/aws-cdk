@@ -1,0 +1,57 @@
+# Deployment should be done to region, where end users are located to fullfill data residency requirements, since it will consist of data of the client's users.
+# * For client from USA use: us-east-1 (N. Virginia)
+AWS_REGION=us-east-1
+
+# Account where AWS resources deployment should be done.
+AWS_ACCOUNT=782183945597
+
+# Client business name.
+TAG_CLIENT_NAME=DVS Corp
+
+# Client business code.
+TAG_CLIENT_CODE=DVS
+
+# Country where deployment is done. Possible values: 
+# * USA
+# * India
+# * etc.
+APP_COUNTRY_VERSION=USA
+
+# Industry
+TAG_INDUSTRY=Healthcare
+
+# Solution name
+TAG_SOLUTION=Doclantic Documents Management Solution
+
+# Solution code
+TAG_SOLUTION_CODE=DVS-DMS
+
+# Module name within solution
+TAG_APPLICATION=Doclantic Documents Management Solution
+
+# Module code within solution.
+TAG_APPLICATION_CODE=DVS-DMS
+
+# Prefix, that will be added to names of all AWS Resources, created for this application. S
+AWS_RESOURCES_NAME_PREFIX=DVS-DMS-B
+
+# Environment. Possible values: 
+# * development
+# * testing
+# * performance
+# * production
+TAG_ENVIRONMENT=dev-dasha
+
+# Required Compliance rules. Possible values: 
+# * HIPPA - for healthcare data 
+# * PII - for applications with Personally Identifiable Information
+# * PCI-DSS - for applications with credit cards processing
+# * NONE - if no regulations are applicable
+TAG_COMPLIANCE=PII # Documents and metadata can contain PII data 
+TAG_SECURITY_LEVEL=Confidential
+TAG_LIFECYCLE=Active
+TAG_BACKUP_POLICY=No Backup
+TAG_BACKUP_RETENTION_POLICY=0 Days
+
+EMS_SERVICE_URL=https://TBD.execute-api.us-east-1.amazonaws.com/dev/v1
+EMS_SERVICE_TOKEN=TBD

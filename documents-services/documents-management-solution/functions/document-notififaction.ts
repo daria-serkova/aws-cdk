@@ -1,20 +1,9 @@
-import { S3 } from 'aws-sdk';
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { marshall } from '@aws-sdk/util-dynamodb';
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { determineDocumentStatus, generateUUID, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
-import { Buffer } from 'buffer';
+import fetch from 'node-fetch'; // Make sure to include 'node-fetch' in your dependencies
+import { EmailNotification } from './helpers/types';
 
-export interface UploadedDocument {
-  documentOwnerId: string;
-  documentName: string;
-  documentFormat: string;
-  documentSize: number;
-  documentCategory: string;
-  documentContent: string;
-  metadata: object
-}
-
+const EMS_SERVICE_URL = process.env.EMS_SERVICE_URL!;
+const EMS_SERVICE_TOKEN = process.env.EMS_SERVICE_TOKEN!;
 
 /**
  * Lambda function handler for uploading a document to an S3 bucket.
@@ -24,13 +13,56 @@ export interface UploadedDocument {
  * @returns - An object containing document metadata object
  * @throws - Throws an error if the upload fails, with the error message or 'Internal Server Error' as the default.
  */
- export const handler: APIGatewayProxyHandler = async (event) => {
-    const document = JSON.parse(event.body || '{}') as UploadedDocument;
-   
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ 
-        message: 'Document uploaded successfully',
-      })
+ export const handler = async (event: any): Promise<any> => {
+    const notifications: EmailNotification[] = event.notifications;
+
+    try {
+        for (let index = 0; index < notifications.length; index++) {
+          const notification = notifications[index];
+          const response = await fetch(`${EMS_SERVICE_URL}/delivery/send`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': EMS_SERVICE_TOKEN,
+            },
+            body: JSON.stringify(notification),
+        });
+  
+        }
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ 
+                message: 'Notifications sent successfully',
+            }),
+        };
+    } catch (error) {
+        console.error('Error sending notifications:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ 
+                message: 'Internal Server Error',
+            }),
+        };
     }
-  }
+}
+
+/**
+ * Sends a notification to the EMS service.
+ *
+ * @param notification - The notification object to be sent.
+ * @returns - A promise that resolves when the fetch operation completes.
+ */
+const fetchNotification = async (notification: EmailNotification): Promise<void> => {
+    const response = await fetch(`${EMS_SERVICE_URL}/delivery/send`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': EMS_SERVICE_TOKEN,
+        },
+        body: JSON.stringify(notification),
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to send notification: ${response.statusText}`);
+    }
+};

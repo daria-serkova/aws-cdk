@@ -5,7 +5,7 @@ import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
 import { documentUploadBase64Lambda, documentViewLambda } from "./lambdas";
 import { SupportedCategories, supportedFormats } from "../../functions/helpers/utilities";
-import { uploadDocumentBase64StateMachineIntegration } from "./state-machines";
+import { uploadDocumentBase64StateMachineIntegration, viewDocumentStateMachineIntegration } from "./state-machines";
 
 interface ApiNodes {
     document: Resource;
@@ -81,8 +81,8 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
         schema: {
             type: JsonSchemaType.OBJECT,
             properties: {
-                documentOwnerId: {
-                    type: JsonSchemaType.STRING,
+                documentOwner: {
+                    type: JsonSchemaType.OBJECT,
                 },
                 documentName: {
                     type: JsonSchemaType.STRING,
@@ -110,7 +110,7 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
                 },
             },
             required: [
-                "documentOwnerId", 
+                "documentOwner", 
                 "documentName",
                 "documentFormat", 
                 "documentCategory", 
@@ -120,11 +120,30 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
             ],
         },
     };
+    const documentIdModel = apiGateway.addModel('DocumentIdModel', {
+        contentType: 'application/json',
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                documentId: {
+                    type: JsonSchemaType.STRING,
+                },
+            },
+            required: ['documentId'],
+        },
+    });
     apiGateway.addModel(modelName, requestModel);
     node.addResource('upload-base64').addMethod("POST", uploadDocumentBase64StateMachineIntegration(), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },
         requestValidator: requestValidatorInstance,
+        methodResponses: [
+            {
+                statusCode: '200',
+                responseModels: { 'application/json': documentIdModel },
+            },
+        ],
+
     });
 }
 function configureDocumentViewEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
@@ -154,10 +173,11 @@ function configureDocumentViewEndpoint(apiGateway: RestApi, node: Resource, requ
             ],
         },
     };
+    
     apiGateway.addModel(modelName, requestModel);
-    node.addResource('view').addMethod("POST", new LambdaIntegration(documentViewLambda()), {
+    node.addResource('view').addMethod("POST", viewDocumentStateMachineIntegration(), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },
-        requestValidator: requestValidatorInstance,
+        requestValidator: requestValidatorInstance
     });
 }

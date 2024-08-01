@@ -25,10 +25,10 @@ function resourceName(value: string) {
  */
 export const ResourceName = {
     cloudWatch: {
-        DOCUMENT_OPERATIONS_LOGS_GROUP: resourceName('document-operations'),
-        DOCUMENT_WORKFLOW_LOGS_GROUP: resourceName('document-workflow'),
-        DOCMENT_NOTIFICATIONS_LOGS_GROUP: resourceName('document-notifications'),
-        DOCUMENT_ADMINISTRATION_LOGS_GROUP: resourceName('document-administration'),
+        DOCUMENT_OPERATIONS_LOGS_GROUP: resourceName('document-operations-log-group'),
+        DOCUMENT_WORKFLOW_LOGS_GROUP: resourceName('document-workflow-log-group'),
+        DOCMENT_NOTIFICATIONS_LOGS_GROUP: resourceName('document-notifications-log-group'),
+        DOCUMENT_ADMINISTRATION_LOGS_GROUP: resourceName('document-administration-log-group'),
     },
     s3Buckets: {
         DOCUMENTS_BUCKET: resourceName('documents-bucket').toLowerCase(),
@@ -45,15 +45,19 @@ export const ResourceName = {
         DOCUMENT_UPLOAD_BASE64_LAMBDA: resourceName('document-upload-base64-lbd-role'),
         DOCUMENT_UPLOAD_METADATA_LAMBDA: resourceName('document-upload-metadata-lbd-role'),
         DOCUMENT_VIEW_LAMBDA: resourceName('document-view-lbd-role'),
+        DOCUMENT_NOTIFICATIONS_LAMBDA: resourceName('document-notifications-lbd-role'),
         STORE_AUDIT_EVENT_LAMBDA: resourceName('store-audit-event-lbd-role'),
-        DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE: resourceName('upload-b64-document-sm-role'),
         
+        DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE: resourceName('upload-b64-document-sm-role'),
+        DOCUMENT_VIEW_STATE_MANCHINE: resourceName('document-view-sm-role'),
+
         API_GATEWAY_ROLE: resourceName('api-gateway-role'),
     },
     lambdas: {
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64'),
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata'),
         DOCUMENT_VIEW: resourceName('document-view'),
+        DOCUMENT_NOTIFICATIONS: resourceName('document-notifications'),
         STORE_AUDIT_EVENT: resourceName('store-audit-event'),
     },
     dynamoDbTables: {
@@ -62,7 +66,8 @@ export const ResourceName = {
         DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR: resourceName('documents-audit-by-event-initiator'),
     },
     stateMachines: {
-        DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE: resourceName('upload-b64-document-sm')
+        DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE: resourceName('upload-b64-document-sm'),
+        DOCUMENT_VIEW_STATE_MANCHINE: resourceName('document-view-sm')
     }
    
     

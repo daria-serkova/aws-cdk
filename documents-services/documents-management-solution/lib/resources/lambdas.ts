@@ -20,6 +20,7 @@ let documentUploadBase64LambdaInstance: NodejsFunction;
 let documentUploadMetadataLambdaInstance: NodejsFunction;
 let storeAuditEventLambdaInstance: NodejsFunction;
 let documentViewLambdaInstance: NodejsFunction;
+let documentSendNotificationsLambdaInstance: NodejsFunction;
 
 /**
  * Configuration of Lambda functions
@@ -111,7 +112,28 @@ export default function configureLambdaResources(scope: Construct, logGroups: {
             environment: {
                 REGION: process.env.AWS_REGION || '',
                 BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
-                TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+                TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA
+            },
+        }     
+    );
+    const documentNotificationsIamRole = createLambdaRole(scope, 
+        ResourceName.iam.DOCUMENT_NOTIFICATIONS_LAMBDA);
+    addCloudWatchPutPolicy(documentNotificationsIamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);
+    documentSendNotificationsLambdaInstance = new NodejsFunction(scope, 
+        ResourceName.lambdas.DOCUMENT_NOTIFICATIONS, 
+        {
+            functionName: ResourceName.lambdas.DOCUMENT_NOTIFICATIONS,
+            description: 'Sends email notifications to operation stakeholders',
+            entry: resolve(dirname(__filename), `${lambdaFilesLocation}/document-notififaction.ts`),
+            memorySize: 256,
+            timeout: Duration.minutes(3),
+            handler: 'handler',
+            logGroup: logGroups.documentOperations,
+            role: documentNotificationsIamRole,
+            environment: {
+                REGION: process.env.AWS_REGION || '',
+                EMS_SERVICE_URL: process.env.EMS_SERVICE_URL || '',
+                EMS_SERVICE_TOKEN: process.env.EMS_SERVICE_TOKEN || ''
             },
         }     
     );
@@ -121,3 +143,4 @@ export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstan
 export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaInstance;
 export const storeAuditEventLambda = () => storeAuditEventLambdaInstance;
 export const documentViewLambda = () => documentViewLambdaInstance;
+export const documentSendNotificationsLambda = () => documentSendNotificationsLambdaInstance;

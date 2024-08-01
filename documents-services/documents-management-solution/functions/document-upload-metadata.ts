@@ -13,12 +13,20 @@ const TABLE_NAME = process.env.TABLE_NAME!;
  * @throws - Throws an error if the metadata storage fails.
  */
  export const handler = async (event: any): Promise<any> => {
-  const metadata: DocumentMetadata = event;
+  const metadata: DocumentMetadata = event.metadata;
   try {
     await dynamoDb.send(new PutItemCommand({
       TableName: TABLE_NAME,
       Item: marshall(metadata)
     }));
+    return {
+      statusCode: 200,
+      body: {
+          documentId: event.documentId, // Pass the documentId to the next step
+          audit: event.audit, // Pass the audit info to the next step
+          notifications: event.notifications // Pass notifications info to the next step
+      }
+  };
   } catch (error) {
     console.error('Error uploading document metadata to DynamoDB:', error);
     return {
@@ -27,8 +35,4 @@ const TABLE_NAME = process.env.TABLE_NAME!;
     };
   }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: 'Document metadata uploaded successfully' })
-  };
 };
