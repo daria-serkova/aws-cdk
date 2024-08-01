@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Resource, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
-import { SupportedCategories, supportedFormats } from "../../functions/helpers/utilities";
+import { SupportedDocumentsCategories, SupportedDocumentsFormats } from "../../functions/helpers/utilities";
 import { workflowDocumentUploadBase64 } from "./state-machines";
 
 interface ApiNodes {
@@ -71,7 +71,6 @@ export default function configureApiGatewayResources(scope: Construct ) {
 
 function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64;
-    const formats = supportedFormats;
     let requestModel = {
         contentType: "application/json",
         description: "Document base64 upload API endpoint body validation",
@@ -88,11 +87,11 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
                 },
                 documentFormat: {
                     type: JsonSchemaType.STRING,
-                    enum: formats
+                    enum: SupportedDocumentsFormats
                 },
                 documentCategory: {
                     type: JsonSchemaType.STRING,
-                    enum: SupportedCategories,
+                    enum: SupportedDocumentsCategories,
                     
                 },
                 documentSize: {

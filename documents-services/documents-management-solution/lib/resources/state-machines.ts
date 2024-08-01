@@ -66,11 +66,10 @@ const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole:
   ] = tasks;
 
   const stateMachineRole = createStateMachineRole(scope, ResourceName.iam.WORKFLOW_DOCUMENT_UPLOAD_BASE64);
-  const definition = validateBase64DocumentTask.addCatch(errorsHandlingTask, { resultPath: '$.error-info' })
-    .next(uploadBase64DocumentTask.addCatch(errorsHandlingTask, { resultPath: '$.error-info' }))
-    .next(uploadDocumentMetadataTask.addCatch(errorsHandlingTask, { resultPath: '$.error-info' }))
-    .next(storeAuditEventTask.addCatch(errorsHandlingTask, { resultPath: '$.error-info' })
-  );    
+  const definition = validateBase64DocumentTask
+    .next(uploadBase64DocumentTask)
+    .next(uploadDocumentMetadataTask)
+    .next(storeAuditEventTask);  
   const stateMachine = new StateMachine(scope, ResourceName.stateMachines.WORKFLOW_DOCUMENT_UPLOAD_BASE64, {
     stateMachineName:  ResourceName.stateMachines.WORKFLOW_DOCUMENT_UPLOAD_BASE64,
     definition,

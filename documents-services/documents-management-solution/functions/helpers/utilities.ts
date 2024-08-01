@@ -68,8 +68,6 @@ export const getContentTypeByFormat = (format: string): string | null => {
     const formatObj = documentsTypes.find(f => f.format.toUpperCase() === format.toUpperCase());
     return formatObj ? formatObj.contentType : null;
 };
-// Define supported formats for API Gateway Request Models
-export const supportedFormats = supportedDocumentsTypes().map(f => f.format);
 
 /**
  * Returns a list of supported document categories commonly used in various business contexts.
@@ -146,9 +144,9 @@ export const supportedFormats = supportedDocumentsTypes().map(f => f.format);
     { category: 'BIRTH_CERTIFICATE', reviewRequired: false }
 ];
 
-// Define supported formats for API Gateway Request Models
-export const SupportedCategories = supportedDocumentsCategories().map(f => f.category);
-
+export const SupportedDocumentsCategories: string[] = supportedDocumentsCategories().map(f => f.category);
+export const SupportedDocumentsFormats: string[] = supportedDocumentsTypes().map(f => f.format);
+export const AllowedBasicDocumentSize: number = 5 * 1024 * 1024; // 5 MB
 
 export const DocumentStatuses = {
     UPLOADED: "Uploaded",                       // The document has been successfully uploaded to the system but has not yet been processed.
