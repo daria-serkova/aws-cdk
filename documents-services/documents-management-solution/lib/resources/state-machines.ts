@@ -40,11 +40,6 @@ export function configureDocumentBase64UploadWorkflowStateMachine(scope: Constru
         errors: ['States.ALL'],
         resultPath: '$.error',
     });
-    const sendNotifications = new LambdaInvoke(scope, 'Send notification to user', {
-      lambdaFunction: lambdas.documentSendNotificationsLambda(),
-      inputPath: '$',
-      outputPath: '$.Payload.body',
-    });
     
      // Create IAM Role for Step Functions
    const stateMachineRole = createStateMachineRole(scope, ResourceName.iam.DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE);
@@ -53,7 +48,6 @@ export function configureDocumentBase64UploadWorkflowStateMachine(scope: Constru
     const definition = uploadDocumentTask
         .next(uploadMetadataTask)
         .next(uploadAuditTask)
-        .next(sendNotifications)
         
     const stateMachine = new StateMachine(scope, ResourceName.stateMachines.DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE, {
         stateMachineName:  ResourceName.stateMachines.DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE,
