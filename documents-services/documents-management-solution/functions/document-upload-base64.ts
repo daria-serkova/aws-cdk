@@ -21,6 +21,7 @@ export interface UploadedDocument {
 
 const s3 = new S3({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
+const UPLOAD_NOTIFICATION_RECIPIENT = process.env.UPLOAD_NOTIFICATION_RECIPIENT!;
 
 /**
  * Lambda function handler for uploading a document to an S3 bucket.
@@ -78,8 +79,9 @@ export const handler = async (event: any): Promise<any> => {
       notifications: getDocumentUploadNotifications(
         document.documentOwner.documentOwnerEmail,
         document.documentOwner.documentOwnerName, 
-        document.documentCategory,
-        document.initiatorSystemCode)
+        document.initiatorSystemCode,
+        metadata,
+        UPLOAD_NOTIFICATION_RECIPIENT)
     }
   }
 }

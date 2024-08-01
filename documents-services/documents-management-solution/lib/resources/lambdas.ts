@@ -46,7 +46,8 @@ export default function configureLambdaResources(scope: Construct, logGroups: {
             role: documentUploadBase64LambdaIamRole,
             environment: {
                 REGION: process.env.AWS_REGION || '',
-                BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET
+                BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
+                UPLOAD_NOTIFICATION_RECIPIENT: process.env.UPLOAD_NOTIFICATION_RECIPIENT || ''
             },
         }     
     );

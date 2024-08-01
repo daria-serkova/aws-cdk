@@ -26,25 +26,16 @@ export function configureDocumentBase64UploadWorkflowStateMachine(scope: Constru
     const uploadDocumentTask = new LambdaInvoke(scope, 'Upload Base64 Document', {
         lambdaFunction: lambdas.documentUploadBase64Lambda(),
         outputPath: '$.Payload.body',
-    }).addCatch(new Fail(scope, 'Upload Failed'), {
-        errors: ['States.ALL'],
-        resultPath: '$.error',
     });
     const uploadMetadataTask = new LambdaInvoke(scope, 'Upload Base64 Document Metadata', {
         lambdaFunction: lambdas.documentUploadMetadataLambda(),
         inputPath: '$',
         outputPath: '$.Payload.body',
-    }).addCatch(new Fail(scope, 'Metadata Upload Failed'), {
-        errors: ['States.ALL'],
-        resultPath: '$.error',
     });
     const uploadAuditTask = new LambdaInvoke(scope, 'Store Document Upload Audit Record', {
         lambdaFunction: lambdas.storeAuditEventLambda(),
         inputPath: '$',
         outputPath: '$.Payload.body',
-    }).addCatch(new Fail(scope, 'Audit Upload Failed'), {
-        errors: ['States.ALL'],
-        resultPath: '$.error',
     });
     const sendNotifications = new LambdaInvoke(scope, 'Send notification to user', {
       lambdaFunction: lambdas.documentSendNotificationsLambda(),

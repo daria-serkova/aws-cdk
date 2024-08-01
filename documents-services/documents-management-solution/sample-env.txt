@@ -55,3 +55,4 @@ TAG_BACKUP_RETENTION_POLICY=0 Days
 
 EMS_SERVICE_URL=https://TBD.execute-api.us-east-1.amazonaws.com/dev/v1
 EMS_SERVICE_TOKEN=TBD
+UPLOAD_NOTIFICATION_RECIPIENT=documents.verification@company.com
