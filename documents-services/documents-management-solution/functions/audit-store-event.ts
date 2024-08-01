@@ -14,7 +14,9 @@ const TABLE_NAME = process.env.TABLE_NAME!;
  * @throws - Throws an error if the metadata storage fails.
  */
  export const handler = async (event: any): Promise<any> => {
-  const auditEvent: AuditEvent = event.audit;
+  const auditEvent: AuditEvent = event.body?.audit;
+  const objectId: string = event?.body?. objectId;
+  
   try {
     await dynamoDb.send(new PutItemCommand({
       TableName: TABLE_NAME,
@@ -23,15 +25,17 @@ const TABLE_NAME = process.env.TABLE_NAME!;
     return {
       statusCode: 200,
       body: {
-          documentId: event.documentId,
-          notifications: event.notifications
+        objectId
       }
     }
   } catch (error) {
     console.error('Error saving audit event to DynamoDB:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: `Failed to save audit event. Please try again later.` }),
+      body: { 
+        message: `Failed to save audit event. Please try again later.`,
+        errors: `${error.message}`
+      },
     };
   }
   

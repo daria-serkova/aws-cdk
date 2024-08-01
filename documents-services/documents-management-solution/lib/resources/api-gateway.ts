@@ -118,7 +118,7 @@ function configureDocumentUploadBase64Endpoint(scope: Construct, apiGateway: Res
         },
     };
     apiGateway.addModel(ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64, requestModel);
-    node.addMethod('POST', StepFunctionsIntegration.startExecution(workflowDocumentUploadBase64()), {
+    node.addResource("upload-base64").addMethod('POST', StepFunctionsIntegration.startExecution(workflowDocumentUploadBase64()), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },
         requestValidator: requestValidatorInstance,

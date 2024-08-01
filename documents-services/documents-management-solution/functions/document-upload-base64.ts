@@ -32,8 +32,9 @@ const UPLOAD_NOTIFICATION_RECIPIENT = process.env.UPLOAD_NOTIFICATION_RECIPIENT!
  * @throws - Throws an error if the upload fails, with the error message or 'Internal Server Error' as the default.
  */
 export const handler = async (event: any): Promise<any> => {
-  const document: UploadedDocument = event;
-  const buffer = Buffer.from(document.documentContent, 'base64');
+  const document : UploadedDocument = event?.body?.document;
+  console.log(JSON.stringify(document));
+  const buffer = Buffer.from(document?.documentContent, 'base64');
   const documentId = generateUUID();
   const uploadedAt = new Date().toISOString();
   const uploadLocation = uploadFolder(document.documentOwner.documentOwnerId, document.documentCategory);
@@ -53,35 +54,26 @@ export const handler = async (event: any): Promise<any> => {
     console.error('Error uploading document to S3:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: 'Failed to upload document. Please try again later.' }),
+      body: { 
+        message: 'Failed to upload document. Please try again later.',
+        errors: error.message
+      }
     };
   }
-  const metadata: DocumentMetadata = {
-    documentId: documentId,
-    documentOwnerId: document.documentOwner.documentOwnerId,
-    documentCategory: document.documentCategory,
-    uploadedAt: uploadedAt,
-    key: `s3://${BUCKET_NAME}/${key}`,
-    ...document.metadata,
-    status: determineDocumentStatus(document.documentCategory),
-  };
   return {
     statusCode: 200,
     body: { 
-      documentId,
-      metadata,
-      audit: getAuditEvent(
-        documentId, 
-        EventCodes.UPLOAD, 
-        uploadedAt, 
-        document.documentOwner.documentOwnerId, 
-        document.initiatorSystemCode),
-      notifications: getDocumentUploadNotifications(
-        document.documentOwner.documentOwnerEmail,
-        document.documentOwner.documentOwnerName, 
-        document.initiatorSystemCode,
-        metadata,
-        UPLOAD_NOTIFICATION_RECIPIENT)
+      objectId: documentId,
+      metadata: {
+        documentId,
+        documentOwnerId: document.documentOwner.documentOwnerId,
+        documentCategory: document.documentCategory,
+        uploadedAt,
+        key,
+        metadata: document.metadata,
+        status: determineDocumentStatus(document.documentCategory),
+      },
+      audit: getAuditEvent(documentId, EventCodes.UPLOAD, uploadedAt, document.documentOwner.documentOwnerId, document.initiatorSystemCode)
     }
   }
 }

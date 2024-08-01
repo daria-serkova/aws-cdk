@@ -67,7 +67,7 @@ import imageType from 'image-type';
             return await isImageValid(fileBuffer, format, errors);
         
         default:
-            errors.push('Validation failed: Attempted to validate integrity of unsuupported format');
+            errors.push('Validation failed: Attempted to validate integrity of unsupported format');
             return false;
     }
 }

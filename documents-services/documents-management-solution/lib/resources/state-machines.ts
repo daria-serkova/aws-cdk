@@ -26,20 +26,20 @@ export default function configureStateMachines (scope: Construct, logGroup: LogG
     const uploadBase64DocumentTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_UPLOAD_BASE64_DOCUMENT, {
       lambdaFunction: lambdas.documentUploadBase64Lambda(),
       outputPath: '$.Payload',
-    }).addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
-      .addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
+    })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
+      //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
     
     const uploadDocumentMetadataTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_UPLOAD_DOCUMENT_METADATA, {
       lambdaFunction: lambdas.documentUploadBase64Lambda(),
       outputPath: '$.Payload',
-    }).addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
-      .addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
+    })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
+      //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
     
     const storeAuditEventTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_STORE_AUDIT_EVENT, {
       lambdaFunction: lambdas.documentUploadBase64Lambda(),
       outputPath: '$.Payload',
-    }).addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
-      .addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
+    })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
+      //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
 
     workflowDocumentUploadBase64Instance = configureWorkflowDocumentUploadBase64(
       scope,
@@ -76,8 +76,8 @@ const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole:
     .next(new Choice(scope, 'IsValidDocument')
     .when(Condition.numberEquals('$.statusCode', 200), 
       uploadBase64DocumentTask
-        .next(uploadDocumentMetadataTask)
-        .next(storeAuditEventTask)
+      .next(uploadDocumentMetadataTask)
+      .next(storeAuditEventTask)
     )
     .otherwise(failState)
   );
@@ -88,46 +88,10 @@ const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole:
       role: stateMachineRole,
       logs: {
         destination: logGroup,
-        level: LogLevel.ALL, // Set to LogLevel.ERROR or LogLevel.OFF as needed
+        level: LogLevel.ALL,
         includeExecutionData: true, // Optional: Include execution data in logs
       },
     });
   addStateMachineExecutionPolicy(apiGatewayRole, stateMachine.stateMachineArn);
   return stateMachine;
-//   return new AwsIntegration({
-//     service: 'states',
-//     action: 'StartExecution',
-//     options: {
-//       credentialsRole: apiGatewayRole,
-//       integrationResponses: [
-//         {
-//           "statusCode": "200",
-//           "responseTemplates": {
-//             "application/json": `
-//             #set($inputRoot = $input.path('$'))
-// #if($inputRoot.body)
-//   #set($body = $input.json('$.body'))
-//   {
-//     "statusCode": "$body.statusCode",
-//     "message": "$body.message",
-//     "errors": $body.errors,
-//     "document": $body.document
-//   }
-// #else
-//   {}
-// #end
-
-//             `
-//           }
-//         }
-        
-//       ],
-//       requestTemplates: {
-//         'application/json': `{
-//           "input": "$util.escapeJavaScript($input.body).replace('\"', '\"')",
-//           "stateMachineArn": "${stateMachine.stateMachineArn}"
-//         }`,
-//       },
-//     },
-//   });
 }
