@@ -42,23 +42,28 @@ export const ResourceName = {
         DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_VIEW: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentView`,
     },
     iam: {
-        DOCUMENT_UPLOAD_BASE64_LAMBDA: resourceName('document-upload-base64-lbd-role'),
-        DOCUMENT_UPLOAD_METADATA_LAMBDA: resourceName('document-upload-metadata-lbd-role'),
-        DOCUMENT_VIEW_LAMBDA: resourceName('document-view-lbd-role'),
-        DOCUMENT_NOTIFICATIONS_LAMBDA: resourceName('document-notifications-lbd-role'),
-        STORE_AUDIT_EVENT_LAMBDA: resourceName('store-audit-event-lbd-role'),
-        
-        DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE: resourceName('upload-b64-document-sm-role'),
-        DOCUMENT_VIEW_STATE_MANCHINE: resourceName('document-view-sm-role'),
+        // Lambdas roles
+        DOCUMENT_VALIDATE_BASE64: resourceName('document-validate-base64-lbd-role'),
+        DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64-lbd-role'),
+        DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd-role'),
+        DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd-role'),
+        AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd-role'),
+        NOTIFICATIONS_SEND: resourceName('notifications-send-lbd-role'),
+        ERRORS_HANDLING: resourceName('errors-handling-lbd-role'),
+        // ---------------- 
+        WORKFLOW_DOCUMENT_UPLOAD_BASE64: resourceName('workflow-upload-b64-document-sm-role'),
+        //DOCUMENT_VIEW_STATE_MANCHINE: resourceName('document-view-sm-role'),
 
         API_GATEWAY_ROLE: resourceName('api-gateway-role'),
     },
     lambdas: {
-        DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64'),
-        DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata'),
-        DOCUMENT_VIEW: resourceName('document-view'),
-        DOCUMENT_NOTIFICATIONS: resourceName('document-notifications'),
-        STORE_AUDIT_EVENT: resourceName('store-audit-event'),
+        DOCUMENT_VALIDATE_BASE64: resourceName('document-validate-base64-lbd'),
+        DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64-lbd'),
+        DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd'),
+        DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd'),
+        AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd'),
+        NOTIFICATIONS_SEND: resourceName('notifications-send-lbd'),
+        ERRORS_HANDLING: resourceName('errors-handling-lbd'),
     },
     dynamoDbTables: {
         DOCUMENTS_METADATA: resourceName('documents-metadata'),
@@ -66,8 +71,14 @@ export const ResourceName = {
         DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR: resourceName('documents-audit-by-event-initiator'),
     },
     stateMachines: {
-        DOCUMENT_UPLOAD_BASE64_STATE_MANCHINE: resourceName('upload-b64-document-sm'),
-        DOCUMENT_VIEW_STATE_MANCHINE: resourceName('document-view-sm')
+        WORKFLOW_DOCUMENT_UPLOAD_BASE64: resourceName('workflow-upload-b64-document-sm'),
+        //DOCUMENT_VIEW_STATE_MANCHINE: resourceName('document-view-sm'),
+
+        TASK_VALIDATE_BASE64_DOCUMENT: resourceName('validate-b64-document-task'),
+        TASK_UPLOAD_BASE64_DOCUMENT: resourceName('upload-b64-document-task'),
+        TASK_UPLOAD_DOCUMENT_METADATA: resourceName('upload-document-meta-task'),
+        TASK_STORE_AUDIT_EVENT: resourceName('store-audit-event-task'),
+        TASK_ERRORS_HANDLING_TASK: resourceName('errors-handling-task'),
     }
    
     
