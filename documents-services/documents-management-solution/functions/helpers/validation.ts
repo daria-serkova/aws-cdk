@@ -11,9 +11,10 @@ import imageType from 'image-type';
  * @param {string} documentType - The type of the document to be validated.
  * @returns {boolean} - Returns true if the document format is supported; otherwise, returns false.
  */
- export const isValidDocumentFormat = (documentType: string): boolean => {
+ export const isValidDocumentFormat = (documentType: string, errors: string[]): boolean => {
     if (!SupportedDocumentsFormats.includes(documentType)) {
-        throw new Error(`Validation failed: document format (${documentType}) is not supported`);
+        errors.push(`Validation failed: document format (${documentType}) is not supported`);
+        return false;
     }
     return true;
 };
@@ -25,9 +26,10 @@ import imageType from 'image-type';
  * @param {string} documentCategory - The category of the document to be validated.
  * @returns {boolean} - Returns true if the document category is supported; otherwise, returns false.
  */
- export const isValidDocumentCategory = (documentCategory: string): boolean => {
+ export const isValidDocumentCategory = (documentCategory: string, errors: string[]): boolean => {
     if (!SupportedDocumentsCategories.includes(documentCategory)) {
-        throw new Error(`Validation failed: document category (${documentCategory}) is not supported`);
+        errors.push(`Validation failed: document category (${documentCategory}) is not supported`);
+        return false;
     }
     return true;
 };
@@ -39,9 +41,10 @@ import imageType from 'image-type';
  * @param {number} documentSize - The size of the document to be validated in bytes.
  * @returns {boolean} - Returns true if the document size is within the allowed limit; otherwise, returns false.
  */
- export const isValidDocumentSize = (documentSize: number): boolean => {
+ export const isValidDocumentSize = (documentSize: number, errors: string[]): boolean => {
     if (documentSize > AllowedBasicDocumentSize) {
-        throw new Error(`Validation failed: document larger than ${AllowedBasicDocumentSize} bytes`);
+        errors.push(`Validation failed: document larger than ${AllowedBasicDocumentSize} bytes`);
+        return false;
     }
     return true;
 };
@@ -52,17 +55,19 @@ import imageType from 'image-type';
  * @param format - The format to check against (e.g., 'PDF', 'PNG', 'JPG', 'JPEG').
  * @returns True if the file is valid and matches the format, False otherwise.
  */
- export const isFileIntegrityConfirmed = async (base64Content: string, format: string): Promise<boolean> => {
+ export const isFileIntegrityConfirmed = async (base64Content: string, format: string, errors: string[]): Promise<boolean> => {
     const fileBuffer = Buffer.from(base64Content, 'base64');
     switch (format) {
         case 'PDF':
-            return isPdfValid(fileBuffer);
+            return await isPdfValid(fileBuffer, errors);
+        
         case 'PNG':
         case 'JPG':
         case 'JPEG':
-            return isImageValid(fileBuffer, format);
+            return await isImageValid(fileBuffer, format, errors);
+        
         default:
-            console.error('Unsupported format');
+            errors.push('Validation failed: Attempted to validate integrity of unsuupported format');
             return false;
     }
 }
@@ -73,12 +78,16 @@ import imageType from 'image-type';
  * @param fileBuffer - Buffer containing the file content.
  * @returns True if the PDF is valid, False if it is corrupted or invalid.
  */
-async function isPdfValid(fileBuffer: Buffer): Promise<boolean> {
+async function isPdfValid(fileBuffer: Buffer, errors: string[]): Promise<boolean> {
     try {
         const pdfDoc = await PDFDocument.load(fileBuffer);
-        return pdfDoc.getPageCount() > 0;
+        const isEmpty = pdfDoc.getPageCount() <= 0;
+        if (isEmpty) {
+            errors.push('Validation failed: Empty PDF file uploaded');
+        }
+        return isEmpty;
     } catch (error) {
-        console.error('Error while loading PDF file', error);
+        errors.push('Validation failed: PDF file is corrupted');
         return false;
     }
 }
@@ -90,18 +99,22 @@ async function isPdfValid(fileBuffer: Buffer): Promise<boolean> {
  * @param format - The expected image format (e.g., 'PNG', 'JPG', 'JPEG').
  * @returns True if the image is valid and matches the format, False otherwise.
  */
-async function isImageValid(fileBuffer: Buffer, format: string): Promise<boolean> {
+async function isImageValid(fileBuffer: Buffer, format: string, errors: string[]): Promise<boolean> {
     try {
         const imageTypeInfo = await imageType(fileBuffer);
         if (imageTypeInfo) {
-            return imageTypeInfo.ext === format.toLowerCase();
+            const isFormatMatch = imageTypeInfo.ext === format.toLowerCase();
+            if (!isFormatMatch) {
+                errors.push(`Validation failed: Uploaded image file is not a valid ${format} format`);
+            }
+            return isFormatMatch;
         } else {
-            console.error(`Uploaded file is not a valid ${format} format`);
+            errors.push(`Validation failed: Uploaded image file is corrupted`);
             return false;
         }
     } catch (error) {
         console.error('Error while checking image file', error);
+        errors.push('Validation failed: Uploaded image file is corrupted');
         return false;
- 
     }
 }

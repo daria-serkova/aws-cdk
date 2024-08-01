@@ -19,7 +19,7 @@ export class DocumentsManagementSolutionStack extends cdk.Stack {
     configureS3Resources(this);
     configureDynamoDbResources(this);
     configureLambdaResources(this, logGroups);
-    configureStateMachines(this);
+    configureStateMachines(this, logGroups.documentWorkflow);
     configureApiGatewayResources(this);
   }
 }

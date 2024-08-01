@@ -1,11 +1,10 @@
 
 import { Construct } from "constructs";
-import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Resource, RestApi } from "aws-cdk-lib/aws-apigateway";
+import { Cors, JsonSchemaType, Period, RequestValidator, Resource, RestApi, StepFunctionsIntegration } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
 import { SupportedDocumentsCategories, SupportedDocumentsFormats } from "../../functions/helpers/utilities";
 import { workflowDocumentUploadBase64 } from "./state-machines";
-
 interface ApiNodes {
     document: Resource;
 }
@@ -65,11 +64,11 @@ export default function configureApiGatewayResources(scope: Construct ) {
     apiNodesInstance = {
         document: version.addResource('document'),
     }
-    configureDocumentUploadBase64Endpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
+    configureDocumentUploadBase64Endpoint(scope, apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     //configureDocumentViewEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
 }
 
-function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+function configureDocumentUploadBase64Endpoint(scope: Construct, apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64;
     let requestModel = {
         contentType: "application/json",
@@ -118,65 +117,10 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
             ],
         },
     };
-    const documentIdModel = apiGateway.addModel('DocumentIdModel', {
-        contentType: 'application/json',
-        schema: {
-            type: JsonSchemaType.OBJECT,
-            properties: {
-                documentId: {
-                    type: JsonSchemaType.STRING,
-                },
-            },
-            required: ['documentId'],
-        },
-    });
-    apiGateway.addModel(modelName, requestModel);
-    node.addResource('upload-base64').addMethod("POST", workflowDocumentUploadBase64(), {
+    apiGateway.addModel(ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64, requestModel);
+    node.addMethod('POST', StepFunctionsIntegration.startExecution(workflowDocumentUploadBase64()), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },
         requestValidator: requestValidatorInstance,
-        methodResponses: [
-            {
-                statusCode: '200',
-                responseModels: { 'application/json': documentIdModel },
-            },
-        ],
-
-    });
+    })
 }
-// }
-// function configureDocumentViewEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
-//     const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_VIEW;
-//     let requestModel = {
-//         contentType: "application/json",
-//         description: "Document view API endpoint body validation",
-//         modelName: modelName,
-//         modelId: modelName,
-//         schema: {
-//             type: JsonSchemaType.OBJECT,
-//             properties: {
-//                 initiatorSystemCode: {
-//                     type: JsonSchemaType.STRING,
-//                 },
-//                 documentOwnerId: {
-//                     type: JsonSchemaType.STRING,
-//                 },
-//                 documentId: {
-//                     type: JsonSchemaType.STRING,
-//                 },
-//             },
-//             required: [
-//                 "initiatorSystemCode",
-//                 "documentOwnerId", 
-//                 "documentId",
-//             ],
-//         },
-//     };
-    
-//     apiGateway.addModel(modelName, requestModel);
-//     node.addResource('view').addMethod("POST", viewDocumentStateMachineIntegration(), {
-//         apiKeyRequired: true,
-//         requestModels: { "application/json": requestModel },
-//         requestValidator: requestValidatorInstance
-//     });
-// }
