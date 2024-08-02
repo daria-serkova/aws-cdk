@@ -85,10 +85,14 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
         schema: {
             type: JsonSchemaType.OBJECT,
             properties: {
-                documentOwner: {
-                    type: JsonSchemaType.OBJECT,
+                initiatorSystemCode: {
+                    type: JsonSchemaType.STRING,
+                    enum: SupportedInitiatorSystemCodes
                 },
-                documentName: {
+                requestorId: {
+                    type: JsonSchemaType.STRING
+                },
+                documentOwnerId: {
                     type: JsonSchemaType.STRING,
                 },
                 documentFormat: {
@@ -97,9 +101,8 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
                 },
                 documentCategory: {
                     type: JsonSchemaType.STRING,
-                    enum: SupportedDocumentsCategories,
-                    
-                },
+                    enum: SupportedDocumentsCategories, 
+                }, 
                 documentSize: {
                     type: JsonSchemaType.NUMBER,
                 },
@@ -109,22 +112,19 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
                 metadata: {
                     type: JsonSchemaType.OBJECT,
                 },
-                initiatorSystemCode: {
-                    type: JsonSchemaType.STRING
-                },
             },
             required: [
-                "documentOwner", 
-                "documentName",
-                "documentFormat", 
-                "documentCategory", 
-                "documentSize",
-                "documentContent",
-                "initiatorSystemCode"
+               "initiatorSystemCode",
+               "requestorId",
+               "documentOwnerId",
+               "documentFormat",
+               "documentCategory",
+               "documentSize",
+               "documentContent"
             ],
         },
     };
-    apiGateway.addModel(ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64, requestModel);
+    apiGateway.addModel(modelName, requestModel);
     node.addResource("upload-base64").addMethod('POST', StepFunctionsIntegration.startExecution(workflowDocumentUploadBase64()), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },

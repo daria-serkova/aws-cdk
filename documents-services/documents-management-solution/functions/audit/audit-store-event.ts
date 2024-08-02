@@ -20,6 +20,7 @@ const TABLE_NAME = process.env.TABLE_NAME!;
       statusCode: 400,
       body: {
         error: `Can't store audit event. Required data is not provided`,
+        data: event.body
       }
     }
   }

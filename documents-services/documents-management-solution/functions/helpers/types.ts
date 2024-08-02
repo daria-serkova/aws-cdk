@@ -9,17 +9,6 @@
 /**
  * Represents a document with associated details and metadata.
  */
-export interface DocumentBase64 {
-    initiatorSystemCode: string;
-    documentOwner: DocumentOwner;
-    documentName: string;
-    documentFormat: string;
-    documentSize: number;
-    documentCategory: string;
-    documentContent: string;
-    metadata: any;
-}
-
 
 
 export interface DocumentMetadata {

@@ -86,17 +86,17 @@ const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole:
  * @param scope 
  */
 const configureWorkflowGetDocumentDetails = (scope: Construct, apiGatewayRole: Role, logGroup: LogGroup): StateMachine => {
-  const generateDocumentPreSignedUrlTask = new LambdaInvoke(scope, ResourceName.stateMachines.WF_GET_DETAILS_TASK_GET_URL, {
-    lambdaFunction: lambdas.documentGeneratePreSignedLambda(),
-    outputPath: '$.Payload',
-  })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
-    //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
   const getDocumentMetadataTask = new LambdaInvoke(scope, ResourceName.stateMachines.WF_GET_DETAILS_TASK_GET_METADATA, {
     lambdaFunction: lambdas.documentGetMetadataLambda(),
     outputPath: '$.Payload',
   })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
     //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
-    
+  const generateDocumentPreSignedUrlTask = new LambdaInvoke(scope, ResourceName.stateMachines.WF_GET_DETAILS_TASK_GET_URL, {
+    lambdaFunction: lambdas.documentGeneratePreSignedLambda(),
+    outputPath: '$.Payload',
+  })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
+    //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
+  
   const storeAuditEventTask = new LambdaInvoke(scope, ResourceName.stateMachines.WF_GET_DETAILS_TASK_STORE_AUDIT_EVENT, {
     lambdaFunction: lambdas.auditStoreEventLambda(),
     inputPath: '$',

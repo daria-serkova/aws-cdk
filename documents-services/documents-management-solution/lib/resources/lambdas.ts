@@ -85,7 +85,7 @@ const configureLambdaValidateBase64Document = (scope: Construct, logGroup: LogGr
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_VALIDATE_BASE64, {
         functionName: ResourceName.lambdas.DOCUMENT_VALIDATE_BASE64,
         description: 'Checks if the document meets certain criteria before uploading.',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/document-validate-base64.ts`),
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/validate-base64.ts`),
         memorySize: 256,
         timeout: Duration.minutes(3),
         handler: 'handler',
@@ -115,7 +115,7 @@ const configureLambdaUploadBase64Document = (scope: Construct, logGroup: LogGrou
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_UPLOAD_BASE64, {
         functionName: ResourceName.lambdas.DOCUMENT_UPLOAD_BASE64,
         description: 'Uploads base64 document in S3 bucket',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/document-upload-base64.ts`),
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/upload-base64.ts`),
         memorySize: 256,
         timeout: Duration.minutes(3),
         handler: 'handler',
@@ -146,7 +146,7 @@ const configureLambdaUploadDocumentMetadata = (scope: Construct, logGroup: LogGr
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_UPLOAD_METADATA, {
         functionName: ResourceName.lambdas.DOCUMENT_UPLOAD_METADATA,
         description: 'Saves metadata of the uploaded document in the DynamoDB',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/document-upload-metadata.ts`),
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/add-metadata.ts`),
         memorySize: 256,
         timeout: Duration.minutes(3),
         handler: 'handler',
@@ -203,7 +203,7 @@ const configureLambdaSendNotifications = (scope: Construct, logGroup: LogGroup):
 const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GENERATE_PRESIGNED_URL);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);  
+    addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);
     addS3ReadPolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGNED_URL, {
         functionName: ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGNED_URL,
