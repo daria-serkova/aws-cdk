@@ -41,6 +41,8 @@ export default function configureStateMachines (scope: Construct, logGroup: LogG
     })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
       //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
 
+    
+
     workflowDocumentUploadBase64Instance = configureWorkflowDocumentUploadBase64(
       scope,
       apiGatewayRole,  
@@ -65,9 +67,7 @@ const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole:
 
   const stateMachineRole = createStateMachineRole(scope, ResourceName.iam.WORKFLOW_DOCUMENT_UPLOAD_BASE64);
   addCloudWatchPutPolicy(stateMachineRole, ResourceName.cloudWatch.DOCUMENT_WORKFLOW_LOGS_GROUP);
-  
-
-  const failState = new Fail(scope, 'ValidationFailed', {
+  const failState = new Fail(scope, ResourceName.stateMachines.FAILED_STATE_DOCUMENT_UPLOAD_VALIDATION, {
     errorPath: '$.body.message',
     causePath: '$.body.errors'
   });
@@ -88,7 +88,7 @@ const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole:
       logs: {
         destination: logGroup,
         level: LogLevel.ALL,
-        includeExecutionData: true, // Optional: Include execution data in logs
+        //includeExecutionData: true,
       },
     });
   addStateMachineExecutionPolicy(apiGatewayRole, stateMachine.stateMachineArn);

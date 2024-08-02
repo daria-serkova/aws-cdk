@@ -79,9 +79,6 @@ export const ResourceName = {
         TASK_UPLOAD_DOCUMENT_METADATA: resourceName('upload-document-meta-task'),
         TASK_STORE_AUDIT_EVENT: resourceName('store-audit-event-task'),
         TASK_ERRORS_HANDLING_TASK: resourceName('errors-handling-task'),
+        FAILED_STATE_DOCUMENT_UPLOAD_VALIDATION: resourceName('failed-document-upload-validation'),
     }
-   
-    
-    
-   
 }
