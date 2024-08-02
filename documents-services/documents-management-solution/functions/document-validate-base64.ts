@@ -10,7 +10,6 @@ import * as validation from './helpers/validation';
  exports.handler = async (event: any) => {
   const document: DocumentBase64 = event.body;
   const errors: string[] = [];
-  
   const isValid = validation.isValidDocumentFormat(document.documentFormat, errors)
     && validation.isValidDocumentCategory(document.documentCategory, errors)
     && validation.isValidDocumentSize(document.documentSize, errors)

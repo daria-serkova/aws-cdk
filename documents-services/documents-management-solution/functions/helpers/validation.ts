@@ -81,11 +81,11 @@ import imageType from 'image-type';
 async function isPdfValid(fileBuffer: Buffer, errors: string[]): Promise<boolean> {
     try {
         const pdfDoc = await PDFDocument.load(fileBuffer);
-        const isEmpty = pdfDoc.getPageCount() <= 0;
-        if (isEmpty) {
+        const isNotEmpty = pdfDoc.getPageCount() > 0;
+        if (!isNotEmpty) {
             errors.push('Validation failed: Empty PDF file uploaded');
         }
-        return isEmpty;
+        return isNotEmpty;
     } catch (error) {
         errors.push('Validation failed: PDF file is corrupted');
         return false;

@@ -13,7 +13,7 @@ const TABLE_NAME = process.env.TABLE_NAME!;
  * @throws - Throws an error if the metadata storage fails.
  */
  export const handler = async (event: any): Promise<any> => {
-  const metadata : DocumentMetadata = event?.body?. metadata;
+  const metadata : DocumentMetadata = event?.body?.metadata;
   const objectId: string = event?.body?. objectId;
   try {
     await dynamoDb.send(new PutItemCommand({
@@ -24,7 +24,7 @@ const TABLE_NAME = process.env.TABLE_NAME!;
       statusCode: 200,
       body: {
         objectId,
-        audit: event?.body?. audit
+        audit: event?.body?.audit
       }
   };
   } catch (error) {

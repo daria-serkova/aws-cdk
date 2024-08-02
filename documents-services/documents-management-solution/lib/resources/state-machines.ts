@@ -30,13 +30,13 @@ export default function configureStateMachines (scope: Construct, logGroup: LogG
       //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
     
     const uploadDocumentMetadataTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_UPLOAD_DOCUMENT_METADATA, {
-      lambdaFunction: lambdas.documentUploadBase64Lambda(),
+      lambdaFunction: lambdas.documentUploadMetadataLambda(),
       outputPath: '$.Payload',
     })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
       //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
     
     const storeAuditEventTask = new LambdaInvoke(scope, ResourceName.stateMachines.TASK_STORE_AUDIT_EVENT, {
-      lambdaFunction: lambdas.documentUploadBase64Lambda(),
+      lambdaFunction: lambdas.auditStoreEventLambda(),
       outputPath: '$.Payload',
     })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
       //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
@@ -71,13 +71,12 @@ const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole:
     errorPath: '$.body.message',
     causePath: '$.body.errors'
   });
-
   const definition = validateBase64DocumentTask
-    .next(new Choice(scope, 'IsValidDocument')
+  .next(new Choice(scope, 'IsValidDocument')
     .when(Condition.numberEquals('$.statusCode', 200), 
       uploadBase64DocumentTask
-      .next(uploadDocumentMetadataTask)
-      .next(storeAuditEventTask)
+        .next(uploadDocumentMetadataTask)
+        .next(storeAuditEventTask)
     )
     .otherwise(failState)
   );

@@ -1,8 +1,7 @@
 import { S3 } from 'aws-sdk';
 import { EventCodes, determineDocumentStatus, generateUUID, getAuditEvent, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
 import { Buffer } from 'buffer';
-import { DocumentMetadata } from './helpers/types';
-import { getDocumentUploadNotifications } from './helpers/notifications';
+import { DocumentBase64 } from './helpers/types';
 
 export interface UploadedDocument {
   initiatorSystemCode: string;
@@ -21,7 +20,6 @@ export interface UploadedDocument {
 
 const s3 = new S3({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
-const UPLOAD_NOTIFICATION_RECIPIENT = process.env.UPLOAD_NOTIFICATION_RECIPIENT!;
 
 /**
  * Lambda function handler for uploading a document to an S3 bucket.
@@ -32,9 +30,8 @@ const UPLOAD_NOTIFICATION_RECIPIENT = process.env.UPLOAD_NOTIFICATION_RECIPIENT!
  * @throws - Throws an error if the upload fails, with the error message or 'Internal Server Error' as the default.
  */
 export const handler = async (event: any): Promise<any> => {
-  const document : UploadedDocument = event?.body?.document;
-  console.log(JSON.stringify(document));
-  const buffer = Buffer.from(document?.documentContent, 'base64');
+  const document : DocumentBase64 = event?.body?.document;
+  const buffer = Buffer.from(document.documentContent, 'base64');
   const documentId = generateUUID();
   const uploadedAt = new Date().toISOString();
   const uploadLocation = uploadFolder(document.documentOwner.documentOwnerId, document.documentCategory);
@@ -70,7 +67,7 @@ export const handler = async (event: any): Promise<any> => {
         documentCategory: document.documentCategory,
         uploadedAt,
         key,
-        metadata: document.metadata,
+        ...document.metadata,
         status: determineDocumentStatus(document.documentCategory),
       },
       audit: getAuditEvent(documentId, EventCodes.UPLOAD, uploadedAt, document.documentOwner.documentOwnerId, document.initiatorSystemCode)
