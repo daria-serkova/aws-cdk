@@ -1,5 +1,5 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { EventCodes, determineDocumentStatus, generateUUID, getAuditEvent, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
+import { determineDocumentStatus, generateUUID, getAuditEvent, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
 import { Buffer } from 'buffer';
 import { DocumentBase64 } from './helpers/types';
 
@@ -71,7 +71,7 @@ export const handler = async (event: any): Promise<any> => {
         ...document.metadata,
         status: determineDocumentStatus(document.documentCategory),
       },
-      audit: getAuditEvent(key, version, EventCodes.UPLOAD, uploadedAt, document.documentOwner.documentOwnerId, document.initiatorSystemCode)
+      
     }
   }
 }

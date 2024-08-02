@@ -3,10 +3,11 @@ import { Construct } from "constructs";
 import * as lambdas from "./lambdas";
 import { addCloudWatchPutPolicy, addStateMachineExecutionPolicy, createApiGatewayRole, createStateMachineRole } from "./iam";
 import { ResourceName } from "../resource-reference";
-import { Choice, Condition, Fail, LogLevel, StateMachine, StateMachineType, TaskStateBase } from "aws-cdk-lib/aws-stepfunctions";
+import { Choice, Condition, Fail, JsonPath, LogLevel, StateMachine, StateMachineType, TaskInput, TaskStateBase } from "aws-cdk-lib/aws-stepfunctions";
 import { Role } from "aws-cdk-lib/aws-iam";
 import { Duration } from "aws-cdk-lib";
 import { LogGroup } from "aws-cdk-lib/aws-logs";
+import { EventCodes } from "../../helpers/utilities";
 
 let workflowDocumentUploadBase64Instance: StateMachine;
 export const workflowDocumentUploadBase64 = () => workflowDocumentUploadBase64Instance;
@@ -41,6 +42,11 @@ const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole:
   
   const storeAuditEventTask = new LambdaInvoke(scope, ResourceName.stateMachines.WF_UPLOAD_TASK_STORE_AUDIT_EVENT, {
     lambdaFunction: lambdas.auditStoreEventLambda(),
+    inputPath: '$',
+    payload: TaskInput.fromObject({
+      action: EventCodes.UPLOAD,
+      body: JsonPath.stringAt('$.body')
+    }),
     outputPath: '$.Payload',
   })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
     //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
@@ -79,7 +85,7 @@ const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole:
  * Configuration of State Machine for 'Get Document Details' workflow
  * @param scope 
  */
- const configureWorkflowGetDocumentDetails = (scope: Construct, apiGatewayRole: Role, logGroup: LogGroup): StateMachine => {
+const configureWorkflowGetDocumentDetails = (scope: Construct, apiGatewayRole: Role, logGroup: LogGroup): StateMachine => {
   const generateDocumentPreSignedUrlTask = new LambdaInvoke(scope, ResourceName.stateMachines.WF_GET_DETAILS_TASK_GET_URL, {
     lambdaFunction: lambdas.documentGeneratePreSignedLambda(),
     outputPath: '$.Payload',
@@ -90,8 +96,14 @@ const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole:
     outputPath: '$.Payload',
   })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
     //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
+    
   const storeAuditEventTask = new LambdaInvoke(scope, ResourceName.stateMachines.WF_GET_DETAILS_TASK_STORE_AUDIT_EVENT, {
     lambdaFunction: lambdas.auditStoreEventLambda(),
+    inputPath: '$',
+    payload: TaskInput.fromObject({
+      action: EventCodes.VIEW,
+      body: JsonPath.stringAt('$.body')
+    }),
     outputPath: '$.Payload',
   })//.addRetry({ maxAttempts: 3, interval: Duration.seconds(10), backoffRate: 2 })
     //.addCatch(errorsHandlingTask, { resultPath: '$.error-info' });
@@ -99,7 +111,7 @@ const configureWorkflowDocumentUploadBase64 = (scope: Construct, apiGatewayRole:
   addCloudWatchPutPolicy(stateMachineRole, ResourceName.cloudWatch.DOCUMENT_WORKFLOW_LOGS_GROUP);
   const definition = getDocumentMetadataTask
         .next(generateDocumentPreSignedUrlTask)
-        //.next(storeAuditEventTask)
+        .next(storeAuditEventTask)
     const stateMachine = new StateMachine(scope, ResourceName.stateMachines.WORKFLOW_DOCUMENT_GET_DETAILS, {
       stateMachineName:  ResourceName.stateMachines.WORKFLOW_DOCUMENT_GET_DETAILS,
       stateMachineType: StateMachineType.EXPRESS,
