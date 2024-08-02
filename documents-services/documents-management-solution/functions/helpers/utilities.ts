@@ -227,6 +227,7 @@ export const EventCodes = {
   
 export const getAuditEvent = (
         documentId: string, 
+        version: string,
         event: string, 
         eventTime: string, 
         eventInitiator: string, 
@@ -234,6 +235,7 @@ export const getAuditEvent = (
     return  {
         auditId: generateUUID(),
         documentId,
+        version,
         event,
         eventTime,
         eventInitiator,

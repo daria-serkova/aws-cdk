@@ -1,4 +1,4 @@
-import { S3 } from 'aws-sdk';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { EventCodes, determineDocumentStatus, generateUUID, getAuditEvent, getContentTypeByFormat, uploadFolder } from './helpers/utilities';
 import { Buffer } from 'buffer';
 import { DocumentBase64 } from './helpers/types';
@@ -17,8 +17,7 @@ export interface UploadedDocument {
   documentContent: string;
   metadata: object
 }
-
-const s3 = new S3({ region: process.env.REGION });
+const s3Client = new S3Client({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
 
 /**
@@ -32,21 +31,23 @@ const BUCKET_NAME = process.env.BUCKET_NAME!;
 export const handler = async (event: any): Promise<any> => {
   const document : DocumentBase64 = event?.body?.document;
   const buffer = Buffer.from(document.documentContent, 'base64');
-  const documentId = generateUUID();
+  //const documentId = generateUUID();
   const uploadedAt = new Date().toISOString();
   const uploadLocation = uploadFolder(document.documentOwner.documentOwnerId, document.documentCategory);
-  const key = `${uploadLocation}/${document.documentCategory}-${uploadedAt}.${document.documentFormat}`;
+  const key = `${uploadLocation}/${document.documentCategory}.${document.documentFormat}`;
+  let version: string;
   try {
-    await s3.upload({
+    const uploadResult = await s3Client.send(new PutObjectCommand({
       Bucket: BUCKET_NAME,
       Key: key,
       Body: buffer,
       ContentType: getContentTypeByFormat(document.documentFormat),
       Metadata: {
-        documentId,
+        //documentId: documentId,
         documentOwnerId: document.documentOwner.documentOwnerId,
       },
-    }).promise();
+    }));
+    version = uploadResult.VersionId
   } catch (error) {
     console.error('Error uploading document to S3:', error);
     return {
@@ -60,17 +61,17 @@ export const handler = async (event: any): Promise<any> => {
   return {
     statusCode: 200,
     body: { 
-      objectId: documentId,
+      objectId: key,
       metadata: {
-        documentId,
+        documentId: key,
         documentOwnerId: document.documentOwner.documentOwnerId,
         documentCategory: document.documentCategory,
         uploadedAt,
-        key,
+        version,
         ...document.metadata,
         status: determineDocumentStatus(document.documentCategory),
       },
-      audit: getAuditEvent(documentId, EventCodes.UPLOAD, uploadedAt, document.documentOwner.documentOwnerId, document.initiatorSystemCode)
+      audit: getAuditEvent(key, version, EventCodes.UPLOAD, uploadedAt, document.documentOwner.documentOwnerId, document.initiatorSystemCode)
     }
   }
 }
