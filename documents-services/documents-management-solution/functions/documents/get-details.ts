@@ -5,22 +5,18 @@ const client = new DynamoDBClient({ region: process.env.REGION });
 const TABLE_NAME = process.env.TABLE_NAME!;
 const INDEX_DOCUMENT_ID_NAME = process.env.INDEX_DOCUMENT_ID_NAME!;
 const INDEX_USER_ID_NAME = process.env.INDEX_USER_ID_NAME!;
-const actions = {
-  USER: "USER",
-  DOCUMENT: "DOCUMENT"
-}
 
 /**
  * Lambda function handler for retrieving list of audit events.
  *
- * @param event - The input event containing documentId, userId and audit action.
+ * @param event - The input event containing the objectId.
  * @returns - A list of items matching the objectId.
  * @throws - Throws an error if the query operation fails.
  */
 export const handler = async (event: any): Promise<any> => {
   const body = JSON.parse(event.body!);
   const { documentId, userId, action } = body;
-  if ((action === actions.USER && userId === '*') || (action === actions.DOCUMENT && documentId === '*')) {
+  if ((action === 'USER' && userId === '*') || (action === 'DOCUMENT' && documentId === '*')) {
     return {
       statusCode: 500,
       body: JSON.stringify({
@@ -28,7 +24,7 @@ export const handler = async (event: any): Promise<any> => {
       }),
     };
   }
-  const params = action === actions.DOCUMENT
+  const params = action === 'DOCUMENT'
   ? {
       TableName: TABLE_NAME,
       IndexName: INDEX_DOCUMENT_ID_NAME,
