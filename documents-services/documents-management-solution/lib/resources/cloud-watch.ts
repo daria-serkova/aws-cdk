@@ -13,18 +13,21 @@ import { isProduction } from '../../helpers/utilities';
         removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
         retention: isProduction ? RetentionDays.SIX_MONTHS : RetentionDays.ONE_DAY,
     });
+
     const documentWorkflow = new LogGroup(scope, ResourceName.cloudWatch.DOCUMENT_WORKFLOW_LOGS_GROUP, {
         logGroupName: ResourceName.cloudWatch.DOCUMENT_WORKFLOW_LOGS_GROUP,
         removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
         retention: isProduction ? RetentionDays.SIX_MONTHS : RetentionDays.ONE_DAY,
     });
+    
     const documentNotifications = new LogGroup(scope, ResourceName.cloudWatch.DOCMENT_NOTIFICATIONS_LOGS_GROUP, {
         logGroupName: ResourceName.cloudWatch.DOCMENT_NOTIFICATIONS_LOGS_GROUP,
         removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
         retention: isProduction ? RetentionDays.SIX_MONTHS : RetentionDays.ONE_DAY,
     });
-    const documentAdministration = new LogGroup(scope, ResourceName.cloudWatch.DOCUMENT_ADMINISTRATION_LOGS_GROUP, {
-        logGroupName: ResourceName.cloudWatch.DOCUMENT_ADMINISTRATION_LOGS_GROUP,
+    
+    const documentAudit = new LogGroup(scope, ResourceName.cloudWatch.DOCUMENT_AUDIT_LOGS_GROUP, {
+        logGroupName: ResourceName.cloudWatch.DOCUMENT_AUDIT_LOGS_GROUP,
         removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
         retention: isProduction ? RetentionDays.SIX_MONTHS : RetentionDays.ONE_DAY,
     });
@@ -32,6 +35,6 @@ import { isProduction } from '../../helpers/utilities';
         documentOperations,
         documentWorkflow,
         documentNotifications,
-        documentAdministration
+        documentAudit
     }
 }

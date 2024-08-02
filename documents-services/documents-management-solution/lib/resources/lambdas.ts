@@ -9,43 +9,61 @@ import {
     addDynamoDbWritePolicy,  
     addS3WritePolicy,
     addDynamoDbReadPolicy,
-    addS3ReadPolicy
+    addS3ReadPolicy,
+    addDynamoDbIndexReadPolicy
 } from './iam';
 import { ResourceName } from '../resource-reference';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 
 const lambdaFilesLocation = '../../functions';
 
+/**
+ * Lambdas, related to Documents operations functionality
+ */
 let documentValidateBase64LambdaInstance: NodejsFunction;
 let documentUploadBase64LambdaInstance: NodejsFunction;
 let documentUploadMetadataLambdaInstance: NodejsFunction;
-let auditStoreEventLambdaInstance: NodejsFunction;
-let notificationsSendLambdaInstance: NodejsFunction;
 let documentGeneratePreSignedLambdaInstance: NodejsFunction;
-let errorsHandlingLambdaInstance: NodejsFunction;
-
 export const documentValidateBase64Lambda = () => documentValidateBase64LambdaInstance;
 export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstance;
 export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaInstance;
 export const documentGeneratePreSignedLambda = () => documentGeneratePreSignedLambdaInstance;
-export const auditStoreEventLambda = () => auditStoreEventLambdaInstance;
+/**
+ * Lambdas, related to Communication functionality
+ */
+let notificationsSendLambdaInstance: NodejsFunction;
 export const notificationsSendLambda = () => notificationsSendLambdaInstance;
+/**
+ * Lambdas, related to Audit functionality
+ */
+let auditStoreEventLambdaInstance: NodejsFunction;
+let auditGetEventsLambdaInstance: NodejsFunction;
+export const auditStoreEventLambda = () => auditStoreEventLambdaInstance;
+export const auditGetEventsLambda = () => auditGetEventsLambdaInstance;
+/**
+ * Lambdas, related to Errors handling
+ */
+let errorsHandlingLambdaInstance: NodejsFunction;
 export const errorsHandlingLambda = () => errorsHandlingLambdaInstance;
-
 /**
  * Configuration of Lambda functions
  * @param scope 
  */
 export default function configureLambdaResources(
         scope: Construct, 
-        logGroups: { documentOperations: LogGroup }) {
+        logGroups: { 
+            documentOperations: LogGroup, 
+            documentAudit: LogGroup    
+}) {
     documentValidateBase64LambdaInstance = configureLambdaValidateBase64Document(scope, logGroups.documentOperations);
     documentUploadBase64LambdaInstance = configureLambdaUploadBase64Document(scope, logGroups.documentOperations);
     documentUploadMetadataLambdaInstance = configureLambdaUploadDocumentMetadata(scope, logGroups.documentOperations);
     documentGeneratePreSignedLambdaInstance = configureLambdaDocumentGeneratePreSignedUrl(scope, logGroups.documentOperations);
-    auditStoreEventLambdaInstance = configureLambdaStoreAuditEvent(scope, logGroups.documentOperations);
     notificationsSendLambdaInstance = configureLambdaSendNotifications(scope, logGroups.documentOperations);
     errorsHandlingLambdaInstance = configureLambdaErrorHandling(scope, logGroups.documentOperations);
+
+    auditStoreEventLambdaInstance = configureLambdaStoreAuditEvent(scope, logGroups.documentAudit);
+    auditGetEventsLambdaInstance = configureLambdaGetAuditEvents(scope, logGroups.documentAudit);
 }
 
 /**
@@ -132,37 +150,6 @@ const configureLambdaUploadDocumentMetadata = (scope: Construct, logGroup: LogGr
         environment: {
             REGION: process.env.AWS_REGION || '',
             TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA
-        },
-    });
-    return lambda;   
-}
-/**
- * Configures an AWS Lambda function to upload audit events about changes, related to documents to a DynamoDB table.
- * This function creates an IAM role for the Lambda function, adds policies to allow
- * writing to CloudWatch logs and DynamoDB, and sets up the Lambda function with necessary configurations.
- *
- * @param {Construct} scope - The scope in which this resource is defined.
- * @param {LogGroup} logGroup - The CloudWatch log group for logging Lambda function activity.
- * 
- * @returns {NodejsFunction} - The configured NodejsFunction instance.
- *
- */
- const configureLambdaStoreAuditEvent = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
-    const iamRole = createLambdaRole(scope, ResourceName.iam.AUDIT_STORE_EVENT);
-    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT); 
-    const lambda = new NodejsFunction(scope, ResourceName.lambdas.AUDIT_STORE_EVENT, {
-        functionName: ResourceName.lambdas.AUDIT_STORE_EVENT,
-        description: 'Stores audit events in the DynamoDB',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/audit-store-event.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
-        logGroup: logGroup,
-        role: iamRole,
-        environment: {
-            REGION: process.env.AWS_REGION || '',
-            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT
         },
     });
     return lambda;   
@@ -258,6 +245,74 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
+        },
+    });
+    return lambda;   
+}
+/**
+ * Configures an AWS Lambda function to upload audit events about changes, related to documents to a DynamoDB table.
+ * This function creates an IAM role for the Lambda function, adds policies to allow
+ * writing to CloudWatch logs and DynamoDB, and sets up the Lambda function with necessary configurations.
+ *
+ * @param {Construct} scope - The scope in which this resource is defined.
+ * @param {LogGroup} logGroup - The CloudWatch log group for logging Lambda function activity.
+ * 
+ * @returns {NodejsFunction} - The configured NodejsFunction instance.
+ *
+ */
+ const configureLambdaStoreAuditEvent = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.AUDIT_STORE_EVENT);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT); 
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.AUDIT_STORE_EVENT, {
+        functionName: ResourceName.lambdas.AUDIT_STORE_EVENT,
+        description: 'Stores audit events in the DynamoDB',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/audit/audit-store-event.ts`),
+        memorySize: 256,
+        timeout: Duration.minutes(3),
+        handler: 'handler',
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT
+        },
+    });
+    return lambda;   
+}
+
+/**
+ * Configures an AWS Lambda function to get list of audit events.
+ * This function creates an IAM role for the Lambda function, adds policies to allow
+ * writing to CloudWatch logs and read from Audit DynamoDB, and sets up the Lambda function with necessary configurations.
+ *
+ * @param {Construct} scope - The scope in which this resource is defined.
+ * @param {LogGroup} logGroup - The CloudWatch log group for logging Lambda function activity.
+ * 
+ * @returns {NodejsFunction} - The configured NodejsFunction instance.
+ *
+ */
+ const configureLambdaGetAuditEvents = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.AUDIT_GET_EVENTS);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName); 
+    addDynamoDbIndexReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT, 
+        ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID); 
+    addDynamoDbIndexReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT, 
+        ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR); 
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.AUDIT_GET_EVENTS, {
+        functionName: ResourceName.lambdas.AUDIT_GET_EVENTS,
+        description: 'Get list of audit events',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/audit/audit-get-events.ts`),
+        memorySize: 256,
+        timeout: Duration.minutes(3),
+        handler: 'handler',
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT,
+            INDEX_DOCUMENT_ID_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID,
+            INDEX_USER_ID_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR,
         },
     });
     return lambda;   

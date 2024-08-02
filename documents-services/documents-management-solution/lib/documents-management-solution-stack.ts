@@ -14,7 +14,7 @@ export class DocumentsManagementSolutionStack extends cdk.Stack {
       documentOperations: LogGroup,
       documentWorkflow: LogGroup,
       documentNotifications: LogGroup,
-      documentAdministration: LogGroup
+      documentAudit: LogGroup
     } = configureCloudWatchResources(this);
     configureS3Resources(this);
     configureDynamoDbResources(this);

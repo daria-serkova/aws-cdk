@@ -33,4 +33,10 @@ export default function configureDynamoDbResources(scope: Construct ) {
         sortKey: { name: 'documentId', type: AttributeType.STRING },
         projectionType: ProjectionType.ALL,
     });
+    documentsAuditTable.addGlobalSecondaryIndex({
+        indexName: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID,
+        partitionKey: { name: 'documentId', type: AttributeType.STRING },
+        sortKey: { name: 'eventInitiator', type: AttributeType.STRING },
+        projectionType: ProjectionType.ALL,
+    });
 }

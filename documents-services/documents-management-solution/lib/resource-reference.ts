@@ -28,7 +28,7 @@ export const ResourceName = {
         DOCUMENT_OPERATIONS_LOGS_GROUP: resourceName('document-operations-log-group'),
         DOCUMENT_WORKFLOW_LOGS_GROUP: resourceName('document-workflow-log-group'),
         DOCMENT_NOTIFICATIONS_LOGS_GROUP: resourceName('document-notifications-log-group'),
-        DOCUMENT_ADMINISTRATION_LOGS_GROUP: resourceName('document-administration-log-group'),
+        DOCUMENT_AUDIT_LOGS_GROUP: resourceName('document-audit-log-group'),
     },
     s3Buckets: {
         DOCUMENTS_BUCKET: resourceName('documents-bucket').toLowerCase(),
@@ -40,6 +40,8 @@ export const ResourceName = {
         DOCUMENTS_SERVCIE_API_REQUEST_VALIDATOR: resourceName('documents-api-request-validator'),
         DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentUploadBase64`,
         DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_VIEW: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentView`,
+
+        AUDIT_REQUEST_MODEL_GET_EVENTS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}AuditGetEvents`,
     },
     iam: {
         // Lambdas roles
@@ -47,7 +49,11 @@ export const ResourceName = {
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64-lbd-role'),
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd-role'),
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd-role'),
+        
         AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd-role'),
+        AUDIT_GET_EVENTS: resourceName('get-audit-events-lbd-role'),
+        
+        
         NOTIFICATIONS_SEND: resourceName('notifications-send-lbd-role'),
         ERRORS_HANDLING: resourceName('errors-handling-lbd-role'),
         // ---------------- 
@@ -61,14 +67,18 @@ export const ResourceName = {
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64-lbd'),
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd'),
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd'),
-        AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd'),
+        
         NOTIFICATIONS_SEND: resourceName('notifications-send-lbd'),
         ERRORS_HANDLING: resourceName('errors-handling-lbd'),
+
+        AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd'),
+        AUDIT_GET_EVENTS: resourceName('get-audit-events-lbd'),
     },
     dynamoDbTables: {
         DOCUMENTS_METADATA: resourceName('documents-metadata'),
         DOCUMENTS_AUDIT: resourceName('documents-audit'),
         DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR: resourceName('documents-audit-by-event-initiator'),
+        DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID: resourceName('documents-audit-by-document-id'),
     },
     stateMachines: {
         WORKFLOW_DOCUMENT_UPLOAD_BASE64: resourceName('workflow-upload-b64-document-sm'),

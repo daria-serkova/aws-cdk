@@ -1,12 +1,15 @@
 
 import { Construct } from "constructs";
-import { Cors, JsonSchemaType, Period, RequestValidator, Resource, RestApi, StepFunctionsIntegration } from "aws-cdk-lib/aws-apigateway";
+import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Resource, RestApi, StepFunctionsIntegration } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
-import { SupportedDocumentsCategories, SupportedDocumentsFormats } from "../../functions/helpers/utilities";
+import { SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
 import { workflowDocumentUploadBase64 } from "./state-machines";
+import { auditGetEventsLambda } from "./lambdas";
+
 interface ApiNodes {
     document: Resource;
+    audit: Resource;
 }
 let apiNodesInstance: ApiNodes;
 
@@ -63,12 +66,16 @@ export default function configureApiGatewayResources(scope: Construct ) {
     const version = apiGatewayInstance.root.addResource('v1');
     apiNodesInstance = {
         document: version.addResource('document'),
+        audit: version.addResource('audit'),
     }
-    configureDocumentUploadBase64Endpoint(scope, apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
-    //configureDocumentViewEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
+    /* Documents endpoints */
+    configureDocumentUploadBase64Endpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
+    
+    /* Audit endpoints */
+    configureAuditGetEventsEndpoint(apiGatewayInstance, apiNodesInstance.audit, requestValidatorInstance);
 }
 
-function configureDocumentUploadBase64Endpoint(scope: Construct, apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64;
     let requestModel = {
         contentType: "application/json",
@@ -123,4 +130,44 @@ function configureDocumentUploadBase64Endpoint(scope: Construct, apiGateway: Res
         requestModels: { "application/json": requestModel },
         requestValidator: requestValidatorInstance,
     })
+}
+function configureAuditGetEventsEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+    const modelName = ResourceName.apiGateway.AUDIT_REQUEST_MODEL_GET_EVENTS;
+    let requestModel = {
+        contentType: "application/json",
+        description: "Audit: Get List of events",
+        modelName: modelName,
+        modelId: modelName,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                initiatorSystemCode: {
+                    type: JsonSchemaType.STRING,
+                    enum: SupportedInitiatorSystemCodes
+                },
+                action: {
+                    type: JsonSchemaType.STRING,
+                    enum: [ 'USER', 'DOCUMENT']
+                },
+                userId: {
+                    type: JsonSchemaType.STRING,
+                },
+                documentId: {
+                    type: JsonSchemaType.STRING,
+                },
+            },
+            required: [
+                "initiatorSystemCode",
+                "action",
+                "userId",
+                "documentId"
+            ],
+        },
+    };
+    apiGateway.addModel(modelName, requestModel);
+    node.addResource('get-events').addMethod("POST", new LambdaIntegration(auditGetEventsLambda()), {
+        apiKeyRequired: true,
+        requestModels: { "application/json": requestModel },
+        requestValidator: requestValidatorInstance,
+    });
 }
