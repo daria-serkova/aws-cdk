@@ -4,7 +4,7 @@ import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Reso
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
 import { SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
-import { workflowDocumentUploadBase64 } from "./state-machines";
+import { workflowDocumentUploadBase64, workflowGetDocumentDetails } from "./state-machines";
 import { auditGetEventsLambda } from "./lambdas";
 
 interface ApiNodes {
@@ -70,7 +70,7 @@ export default function configureApiGatewayResources(scope: Construct ) {
     }
     /* Documents endpoints */
     configureDocumentUploadBase64Endpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
-    
+    configureGetDocumentDetailsEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     /* Audit endpoints */
     configureAuditGetEventsEndpoint(apiGatewayInstance, apiNodesInstance.audit, requestValidatorInstance);
 }
@@ -126,6 +126,41 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
     };
     apiGateway.addModel(ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64, requestModel);
     node.addResource("upload-base64").addMethod('POST', StepFunctionsIntegration.startExecution(workflowDocumentUploadBase64()), {
+        apiKeyRequired: true,
+        requestModels: { "application/json": requestModel },
+        requestValidator: requestValidatorInstance,
+    })
+}
+function configureGetDocumentDetailsEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+    const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_GET_DETAILS;
+    let requestModel = {
+        contentType: "application/json",
+        description: "Request model: Get Document Details API endpoint",
+        modelName: modelName,
+        modelId: modelName,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                initiatorSystemCode: {
+                    type: JsonSchemaType.STRING,
+                    enum: SupportedInitiatorSystemCodes
+                },
+                documentId: {
+                    type: JsonSchemaType.STRING,
+                },
+                requestorId: {
+                    type: JsonSchemaType.STRING,
+                },
+            },
+            required: [
+                "initiatorSystemCode", 
+                "documentId",
+                "requestorId"
+            ],
+        },
+    };
+    apiGateway.addModel(modelName, requestModel);
+    node.addResource("get-details").addMethod('POST', StepFunctionsIntegration.startExecution(workflowGetDocumentDetails()), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },
         requestValidator: requestValidatorInstance,

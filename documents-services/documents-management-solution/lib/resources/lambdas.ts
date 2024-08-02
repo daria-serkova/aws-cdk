@@ -24,10 +24,13 @@ let documentValidateBase64LambdaInstance: NodejsFunction;
 let documentUploadBase64LambdaInstance: NodejsFunction;
 let documentUploadMetadataLambdaInstance: NodejsFunction;
 let documentGeneratePreSignedLambdaInstance: NodejsFunction;
+let documentGetMetadataLambdaInstance: NodejsFunction;
 export const documentValidateBase64Lambda = () => documentValidateBase64LambdaInstance;
 export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstance;
 export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaInstance;
+export const documentGetMetadataLambda = () => documentGetMetadataLambdaInstance;
 export const documentGeneratePreSignedLambda = () => documentGeneratePreSignedLambdaInstance;
+
 /**
  * Lambdas, related to Communication functionality
  */
@@ -59,6 +62,8 @@ export default function configureLambdaResources(
     documentUploadBase64LambdaInstance = configureLambdaUploadBase64Document(scope, logGroups.documentOperations);
     documentUploadMetadataLambdaInstance = configureLambdaUploadDocumentMetadata(scope, logGroups.documentOperations);
     documentGeneratePreSignedLambdaInstance = configureLambdaDocumentGeneratePreSignedUrl(scope, logGroups.documentOperations);
+    documentGetMetadataLambdaInstance = configureLambdaGetDocumentMetadata(scope, logGroups.documentOperations);
+    
     notificationsSendLambdaInstance = configureLambdaSendNotifications(scope, logGroups.documentOperations);
     errorsHandlingLambdaInstance = configureLambdaErrorHandling(scope, logGroups.documentOperations);
 
@@ -203,7 +208,7 @@ const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup:
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGNED_URL, {
         functionName: ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGNED_URL,
         description: 'Retrieves the S3 object pre-signed URL and returns it to the end-user',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/document-view.ts`),
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/generate-presigned-url.ts`),
         memorySize: 256,
         timeout: Duration.minutes(3),
         handler: 'handler',
@@ -313,6 +318,28 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
             TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT,
             INDEX_DOCUMENT_ID_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID,
             INDEX_USER_ID_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR,
+        },
+    });
+    return lambda;   
+}
+
+ const configureLambdaGetDocumentMetadata = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_METADATA);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_METADATA, {
+        functionName: ResourceName.lambdas.DOCUMENT_GET_METADATA,
+        description: 'Retrieves information about document metadata',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-metadata.ts`),
+        memorySize: 256,
+        timeout: Duration.minutes(3),
+        handler: 'handler',
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+
         },
     });
     return lambda;   

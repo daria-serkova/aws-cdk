@@ -12,7 +12,6 @@ export default function configureDynamoDbResources(scope: Construct ) {
     new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_METADATA, {
         tableName: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
         partitionKey: { name: "documentId", type: AttributeType.STRING },
-        sortKey: { name: "documentOwnerId", type: AttributeType.STRING },
         billingMode: BillingMode.PAY_PER_REQUEST,
         tableClass: TableClass.STANDARD,
         encryption: TableEncryption.DEFAULT,

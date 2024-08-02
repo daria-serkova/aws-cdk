@@ -45,4 +45,12 @@ export interface EmailNotification {
     initiatorSystemCode: string
 }
 
-
+//---------
+export interface GetDocumentDetailsWorkflowData {
+    initiatorSystemCode: string,
+    documentId: string,
+    requestorId: string,
+    documentUrl?: string,
+    metadata?: any,
+    audit?: any
+}

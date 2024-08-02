@@ -185,7 +185,7 @@ export const DocumentStatuses = {
     return categoryObj && categoryObj.reviewRequired ? DocumentStatuses.PENDING_REVIEW : DocumentStatuses.UPLOADED;
 };
 export const PreSignUrlsExpirationConfigs = {
-    DOCUMENT_VIEW: 3600
+    DOCUMENT_VIEW_EXPIRATION_DURATION: 3600
 }
 
 export const EventCodes = {

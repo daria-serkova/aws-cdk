@@ -38,8 +38,9 @@ export const ResourceName = {
         DOCUMENTS_SERVCIE_API_USAGE_PLAN: resourceName('documents-api-usage-plan'),
         DOCUMENTS_SERVCIE_API_KEY: resourceName('documents-api-key'),
         DOCUMENTS_SERVCIE_API_REQUEST_VALIDATOR: resourceName('documents-api-request-validator'),
+        
         DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentUploadBase64`,
-        DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_VIEW: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentView`,
+        DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_GET_DETAILS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetDetails`,
 
         AUDIT_REQUEST_MODEL_GET_EVENTS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}AuditGetEvents`,
     },
@@ -49,7 +50,8 @@ export const ResourceName = {
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64-lbd-role'),
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd-role'),
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd-role'),
-        
+        DOCUMENT_GET_METADATA: resourceName('document-get-metadata-lbd-role'),
+
         AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd-role'),
         AUDIT_GET_EVENTS: resourceName('get-audit-events-lbd-role'),
         
@@ -58,7 +60,7 @@ export const ResourceName = {
         ERRORS_HANDLING: resourceName('errors-handling-lbd-role'),
         // ---------------- 
         WORKFLOW_DOCUMENT_UPLOAD_BASE64: resourceName('workflow-upload-b64-document-sm-role'),
-        //DOCUMENT_VIEW_STATE_MANCHINE: resourceName('document-view-sm-role'),
+        WORKFLOW_DOCUMENT_GET_DETAILS: resourceName('workflow-get-document-details-sm-role'),
 
         API_GATEWAY_ROLE: resourceName('api-gateway-role'),
     },
@@ -67,6 +69,7 @@ export const ResourceName = {
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64-lbd'),
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd'),
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd'),
+        DOCUMENT_GET_METADATA: resourceName('document-get-metadata-lbd'),
         
         NOTIFICATIONS_SEND: resourceName('notifications-send-lbd'),
         ERRORS_HANDLING: resourceName('errors-handling-lbd'),
@@ -81,14 +84,22 @@ export const ResourceName = {
         DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID: resourceName('documents-audit-by-document-id'),
     },
     stateMachines: {
+        
+        
         WORKFLOW_DOCUMENT_UPLOAD_BASE64: resourceName('workflow-upload-b64-document-sm'),
-        //DOCUMENT_VIEW_STATE_MANCHINE: resourceName('document-view-sm'),
+        
+        WF_UPLOAD_TASK_VALIDATE_BASE64_DOCUMENT: resourceName('wf-upload-task-validate-b64-document'),
+        WF_UPLOAD_TASK_ADD_BASE64_DOCUMENT: resourceName('wf-upload-task-add-b64-document'),
+        WF_UPLOAD_TASK_ADD_METADATA: resourceName('wf-upload-task-add-metadata'),
+        WF_UPLOAD_TASK_STORE_AUDIT_EVENT: resourceName('wf-upload-task-record-audit'),
+        WF_UPLOAD_FAILED_STATE_BASE64_VALIDATION: resourceName('wf-upload-task-failed-b64-validation'),
 
-        TASK_VALIDATE_BASE64_DOCUMENT: resourceName('validate-b64-document-task'),
-        TASK_UPLOAD_BASE64_DOCUMENT: resourceName('upload-b64-document-task'),
-        TASK_UPLOAD_DOCUMENT_METADATA: resourceName('upload-document-meta-task'),
-        TASK_STORE_AUDIT_EVENT: resourceName('store-audit-event-task'),
-        TASK_ERRORS_HANDLING_TASK: resourceName('errors-handling-task'),
-        FAILED_STATE_DOCUMENT_UPLOAD_VALIDATION: resourceName('failed-document-upload-validation'),
+
+        WORKFLOW_DOCUMENT_GET_DETAILS: resourceName('workflow-get-document-details-sm'),
+        WF_GET_DETAILS_TASK_GET_METADATA: resourceName('wf-get-details-task-get-metadata'),
+        WF_GET_DETAILS_TASK_GET_URL: resourceName('wf-get-details-task-get-url'),
+        WF_GET_DETAILS_TASK_STORE_AUDIT_EVENT: resourceName('wf-get-details-task-record-audit'),
+
+        
     }
 }
