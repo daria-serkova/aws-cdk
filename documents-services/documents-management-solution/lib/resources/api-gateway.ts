@@ -6,6 +6,7 @@ import { isProduction } from "../../helpers/utilities";
 import { SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
 import { workflowDocumentUploadBase64, workflowGetDocumentDetails } from "./state-machines";
 import { auditGetEventsLambda, documentGetListByStatusLambda } from "./lambdas";
+import { CfnOutput } from "aws-cdk-lib";
 
 interface ApiNodes {
     document: Resource;
@@ -53,7 +54,7 @@ export default function configureApiGatewayResources(scope: Construct ) {
         description: `API Key for Documents Management Solution API`,
     });
     usageplan.addApiKey(apiKey);
-
+    
     const requestValidatorInstance = new RequestValidator(scope, 
         ResourceName.apiGateway.DOCUMENTS_SERVCIE_API_REQUEST_VALIDATOR, 
         {

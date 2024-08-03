@@ -44,9 +44,9 @@ export const handler = async (event: any): Promise<any> => {
         documentId: key,
         version,
         ...(({
-          documentContent,      // Extract `content` to exclude it
-          metadata,     // Extract `metadata` to exclude it
-          ...rest       // Rest of the properties
+          documentContent,      // Exclude documentContent for passing further
+          metadata,             // Exclude metadata object for passing further
+          ...rest               // Pass rest of the properties
         }) => rest)(event.body),
         ...event.body.metadata,
         uploadedAt: getCurrentTime(),

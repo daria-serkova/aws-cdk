@@ -20,6 +20,7 @@ export default function configureDynamoDbResources(scope: Construct ) {
     documentsMetadataTable.addGlobalSecondaryIndex({
         indexName: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_STATUS,
         partitionKey: { name: 'documentStatus', type: AttributeType.STRING },
+        sortKey: { name: "documentOwnerId", type: AttributeType.STRING },
         projectionType: ProjectionType.ALL,
     });
     // documentsMetadataTable.addGlobalSecondaryIndex({
