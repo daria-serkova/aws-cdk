@@ -158,6 +158,9 @@ export const DocumentStatuses = {
     UNDER_REVIEW: "Under Review",               // The document is currently being reviewed for accuracy and validity.
     VERIFIED: "Verified",                       // The document has been reviewed and verified as authentic and accurate.
     REJECTED: "Rejected",                       // The document has been reviewed and found to be invalid, incomplete, or fraudulent.
+    
+    // TBD Cleanup below
+    
     EXPIRED: "Expired",                         // The document has passed its expiry date and is no longer considered valid.
     RENEWAL_REQUIRED: "Renewal Required",       // The document is nearing its expiry date and needs to be renewed.
     IN_PROGRESS: "In Progress",                 // The document is in the process of being uploaded or processed.

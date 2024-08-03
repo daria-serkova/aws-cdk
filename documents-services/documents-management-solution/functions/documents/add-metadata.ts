@@ -29,8 +29,7 @@ export const handler = async (event: any): Promise<any> => {
         requestorId,         // Extract `requestorId` to exclude it
         initiatorSystemCode, // Extract `initiatorSystemCode` to exclude it
         ...rest              // Rest of the properties
-      }) => rest)(event.body),
-      documentStatus: determineDocumentStatus(documentCategory) // Add additional properties
+      }) => rest)(event.body)
     };
     
     await dynamoDb.send(new PutItemCommand({ TableName: TABLE_NAME, Item: marshall(metadata) }));
