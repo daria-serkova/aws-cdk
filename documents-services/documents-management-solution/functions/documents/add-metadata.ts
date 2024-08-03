@@ -1,5 +1,6 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
+import { formSuccessBody } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const TABLE_NAME = process.env.TABLE_NAME!;
@@ -14,7 +15,7 @@ const TABLE_NAME = process.env.TABLE_NAME!;
 export const handler = async (event: any): Promise<any> => {
   if (event.statusCode && event.statusCode !== 200) return event;
 
-  const { documentId } =  event.body;
+  const { documentId } = event.body;
   if (!documentId) {
     return {
       statusCode: 400,
@@ -32,12 +33,18 @@ export const handler = async (event: any): Promise<any> => {
         ...rest              // Include rest of the properties to DynamoDB record
       }) => rest)(event.body)}
     )}));
+    const resultFields = [
+      'requestorId', 
+      'initiatorSystemCode', 
+      'action', 
+      'documentId', 
+      'version', 
+      'documentOwnerId'
+    ];
     return {
       statusCode: 200,
-      body: {
-        ...event.body
-      }
-    };
+      body: formSuccessBody(event.body, resultFields)
+    } 
   } catch (error) {
     console.error('Error adding document metadata to DynamoDB:', error);
     return {

@@ -21,7 +21,6 @@ const TABLE_NAME = process.env.TABLE_NAME!;
       statusCode: 400,
       body: {
         error: `Can't store audit event. Required data is not provided`,
-        event
       }
     }
   }
@@ -32,11 +31,8 @@ const TABLE_NAME = process.env.TABLE_NAME!;
     return {
       statusCode: 200,
       body: {
-        audit: {
-          auditAction: action,
-          auditEvent: auditEvent.auditId
-        },
-        ...event.body
+        ...event.body,
+        auditEvent: auditEvent.auditId
       }
     }
   } catch (error) {

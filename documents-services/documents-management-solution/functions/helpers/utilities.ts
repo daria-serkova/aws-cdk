@@ -212,5 +212,17 @@ export const getAuditEvent = (
 }
 
 export const getCurrentTime = () => new Date().getTime().toString();
+interface Body {
+    [key: string]: any;
+}
+export const formSuccessBody = (body: Body, resultFields: string[]) => {
+    return Object.keys(body)
+            .filter(key => resultFields.includes(key))
+            .reduce((obj, key) => { 
+                obj[key] = body[key];
+                return obj;
+            }, {} as Body)
+};
+  
 
 
