@@ -1,7 +1,7 @@
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PreSignUrlsExpirationConfigs } from "../helpers/utilities";
-import { EventCodes } from "../../helpers/utilities";
+import { EventCodes } from "../helpers/utilities";
 
 const s3Client = new S3Client({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;

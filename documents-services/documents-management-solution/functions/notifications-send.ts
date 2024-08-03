@@ -1,10 +1,15 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
-import fetch from 'node-fetch'; // Make sure to include 'node-fetch' in your dependencies
-import { EmailNotification } from './helpers/types';
+import fetch from 'node-fetch'; 
 
 const EMS_SERVICE_URL = process.env.EMS_SERVICE_URL!;
 const EMS_SERVICE_TOKEN = process.env.EMS_SERVICE_TOKEN!;
 
+export interface EmailNotification {
+    templateId: string;
+    locale: string; 
+    recipient: string;
+    emailData: object;
+    initiatorSystemCode: string
+}
 /**
  * Lambda function handler for uploading a document to an S3 bucket.
  * The function processes a document object, which is expected to be passed in the event payload in the base64-encoded format.

@@ -1,11 +1,11 @@
 import { Role } from "aws-cdk-lib/aws-iam";
 import { LogGroup } from "aws-cdk-lib/aws-logs";
-import { Choice, Condition, Fail, JsonPath, LogLevel, StateMachine, StateMachineType, TaskInput } from "aws-cdk-lib/aws-stepfunctions";
+import { Choice, Condition, Fail, LogLevel, StateMachine, StateMachineType } from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
 import { ResourceName } from "../../resource-reference";
 import { auditStoreEventLambda, documentValidateBase64Lambda, documentUploadBase64Lambda, documentUploadMetadataLambda } from "../lambdas";
 import { addCloudWatchPutPolicy, addStateMachineExecutionPolicy, createStateMachineRole } from "../iam";
-import { createLambdaInvokeTask, EventCodes } from "../../../helpers/utilities";
+import { createLambdaInvokeTask } from "../../../helpers/utilities";
 
 /**
  * Configuration of State Machine for 'Get Document Details' workflow
@@ -18,14 +18,6 @@ export const configureWorkflow = (scope: Construct, apiGatewayRole: Role, logGro
     ResourceName.stateMachines.WF_UPLOAD_TASK_ADD_BASE64_DOCUMENT, documentUploadBase64Lambda);
   const uploadDocumentMetadataTask = createLambdaInvokeTask(scope,
     ResourceName.stateMachines.WF_UPLOAD_TASK_ADD_METADATA, documentUploadMetadataLambda);
-  // const storeAuditEventTask = createLambdaInvokeTask(scope, 
-  //   ResourceName.stateMachines.WF_UPLOAD_TASK_STORE_AUDIT_EVENT, auditStoreEventLambda, {
-  //   inputPath: '$',
-  //   payload: TaskInput.fromObject({
-  //     action: EventCodes.UPLOAD,
-  //     body: JsonPath.stringAt('$.body')
-  //   })
-  // });
   const storeAuditEventTask = createLambdaInvokeTask(scope, 
     ResourceName.stateMachines.WF_UPLOAD_TASK_STORE_AUDIT_EVENT,
     auditStoreEventLambda)

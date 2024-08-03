@@ -1,12 +1,11 @@
 import { Role } from "aws-cdk-lib/aws-iam";
 import { LogGroup } from "aws-cdk-lib/aws-logs";
-import { JsonPath, LogLevel, StateMachine, StateMachineType, TaskInput } from "aws-cdk-lib/aws-stepfunctions";
-import { LambdaInvoke } from "aws-cdk-lib/aws-stepfunctions-tasks";
+import { LogLevel, StateMachine, StateMachineType } from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
 import { ResourceName } from "../../resource-reference";
 import { auditStoreEventLambda, documentGetMetadataLambda, documentGeneratePreSignedLambda } from "../lambdas";
 import { addCloudWatchPutPolicy, addStateMachineExecutionPolicy, createStateMachineRole } from "../iam";
-import { createLambdaInvokeTask, EventCodes } from "../../../helpers/utilities";
+import { createLambdaInvokeTask } from "../../../helpers/utilities";
 
 /**
  * Configuration of State Machine for 'Get Document Details' workflow
