@@ -30,7 +30,8 @@ export const handler = async (event: any): Promise<any> => {
       ExpressionAttributeValues: {
           ":documentStatus": { S: documentStatus },
           ...(documentOwnerId !== '*' ? { ":documentOwnerId": { S: documentOwnerId } } : {})
-      }
+      },
+      ProjectionExpression: "documentId, documentOwnerId, documentCategory, documentStatus"
   }
   try {
     const data = await client.send(new QueryCommand(params));
