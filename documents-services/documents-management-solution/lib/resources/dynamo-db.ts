@@ -23,12 +23,6 @@ export default function configureDynamoDbResources(scope: Construct ) {
         sortKey: { name: "documentOwnerId", type: AttributeType.STRING },
         projectionType: ProjectionType.ALL,
     });
-    // documentsMetadataTable.addGlobalSecondaryIndex({
-    //     indexName: 'StatusIndex-StatusDocumentOwnerIndex-DocumentOwnerIndex',
-    //     partitionKey: { name: 'documentStatus', type: AttributeType.STRING },
-    //     sortKey: { name: 'documentOwnerId', type: AttributeType.STRING },
-    //     projectionType: ProjectionType.ALL,
-    // });
     documentsMetadataTable.addGlobalSecondaryIndex({
         indexName: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER,
         partitionKey: { name: 'documentOwnerId', type: AttributeType.STRING },
