@@ -9,7 +9,7 @@ import { ResourceName } from "../resource-reference";
  * @param scope 
  */
 export default function configureDynamoDbResources(scope: Construct ) {
-    new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_METADATA, {
+    const documentsMetadataTable = new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_METADATA, {
         tableName: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
         partitionKey: { name: "documentId", type: AttributeType.STRING },
         billingMode: BillingMode.PAY_PER_REQUEST,
@@ -17,6 +17,23 @@ export default function configureDynamoDbResources(scope: Construct ) {
         encryption: TableEncryption.DEFAULT,
         removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
     });
+    documentsMetadataTable.addGlobalSecondaryIndex({
+        indexName: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_STATUS,
+        partitionKey: { name: 'documentStatus', type: AttributeType.STRING },
+        projectionType: ProjectionType.ALL,
+    });
+    // documentsMetadataTable.addGlobalSecondaryIndex({
+    //     indexName: 'StatusIndex-StatusDocumentOwnerIndex-DocumentOwnerIndex',
+    //     partitionKey: { name: 'documentStatus', type: AttributeType.STRING },
+    //     sortKey: { name: 'documentOwnerId', type: AttributeType.STRING },
+    //     projectionType: ProjectionType.ALL,
+    // });
+    documentsMetadataTable.addGlobalSecondaryIndex({
+        indexName: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER,
+        partitionKey: { name: 'documentOwnerId', type: AttributeType.STRING },
+        projectionType: ProjectionType.ALL,
+    });
+
     const documentsAuditTable = new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT, {
         tableName: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT,
         partitionKey: { name: "auditId", type: AttributeType.STRING },

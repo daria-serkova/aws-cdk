@@ -25,11 +25,13 @@ let documentUploadBase64LambdaInstance: NodejsFunction;
 let documentUploadMetadataLambdaInstance: NodejsFunction;
 let documentGeneratePreSignedLambdaInstance: NodejsFunction;
 let documentGetMetadataLambdaInstance: NodejsFunction;
+let documentGetListByStatusLambdaInstance: NodejsFunction;
 export const documentValidateBase64Lambda = () => documentValidateBase64LambdaInstance;
 export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstance;
 export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaInstance;
 export const documentGetMetadataLambda = () => documentGetMetadataLambdaInstance;
 export const documentGeneratePreSignedLambda = () => documentGeneratePreSignedLambdaInstance;
+export const documentGetListByStatusLambda = () => documentGetListByStatusLambdaInstance;
 
 /**
  * Lambdas, related to Communication functionality
@@ -63,7 +65,8 @@ export default function configureLambdaResources(
     documentUploadMetadataLambdaInstance = configureLambdaUploadDocumentMetadata(scope, logGroups.documentOperations);
     documentGeneratePreSignedLambdaInstance = configureLambdaDocumentGeneratePreSignedUrl(scope, logGroups.documentOperations);
     documentGetMetadataLambdaInstance = configureLambdaGetDocumentMetadata(scope, logGroups.documentOperations);
-    
+    documentGetListByStatusLambdaInstance = configureLambdaGetListByStatus(scope, logGroups.documentOperations);
+
     notificationsSendLambdaInstance = configureLambdaSendNotifications(scope, logGroups.documentOperations);
     errorsHandlingLambdaInstance = configureLambdaErrorHandling(scope, logGroups.documentOperations);
 
@@ -340,6 +343,30 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
             REGION: process.env.AWS_REGION || '',
             TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
 
+        },
+    });
+    return lambda;   
+}
+
+const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_LIST_BY_STATUS);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    addDynamoDbIndexReadPolicy(iamRole, 
+        ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+        ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_STATUS);
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS, {
+        functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS,
+        description: 'Retrieves list of documents by Status',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-list-by-status.ts`),
+        memorySize: 256,
+        timeout: Duration.minutes(3),
+        handler: 'handler',
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+            INDEX: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_STATUS
         },
     });
     return lambda;   

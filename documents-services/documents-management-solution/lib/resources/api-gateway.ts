@@ -5,7 +5,7 @@ import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
 import { SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
 import { workflowDocumentUploadBase64, workflowGetDocumentDetails } from "./state-machines";
-import { auditGetEventsLambda } from "./lambdas";
+import { auditGetEventsLambda, documentGetListByStatusLambda } from "./lambdas";
 
 interface ApiNodes {
     document: Resource;
@@ -71,6 +71,7 @@ export default function configureApiGatewayResources(scope: Construct ) {
     /* Documents endpoints */
     configureDocumentUploadBase64Endpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentDetailsEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
+    configureGetDocumentsListByStatusEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     /* Audit endpoints */
     configureAuditGetEventsEndpoint(apiGatewayInstance, apiNodesInstance.audit, requestValidatorInstance);
 }
@@ -206,3 +207,43 @@ function configureAuditGetEventsEndpoint(apiGateway: RestApi, node: Resource, re
         requestValidator: requestValidatorInstance,
     });
 }
+function configureGetDocumentsListByStatusEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+    const modelName = ResourceName.apiGateway.DOCUMENTS_REQUEST_MODEL_GET_LIST_STATUS;
+    let requestModel = {
+        contentType: "application/json",
+        description: "Audit: Get List of events",
+        modelName: modelName,
+        modelId: modelName,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                initiatorSystemCode: {
+                    type: JsonSchemaType.STRING,
+                    enum: SupportedInitiatorSystemCodes
+                },
+                requestorId: {
+                    type: JsonSchemaType.STRING,
+                },
+                documentStatus: {
+                    type: JsonSchemaType.STRING,
+                },
+                documentOwnerId: {
+                    type: JsonSchemaType.STRING,
+                },
+            },
+            required: [
+                "initiatorSystemCode",
+                "requestorId",
+                "documentStatus",
+                "documentOwnerId"
+            ],
+        },
+    };
+    apiGateway.addModel(modelName, requestModel);
+    node.addResource('get-list-by-status').addMethod("POST", new LambdaIntegration(documentGetListByStatusLambda()), {
+        apiKeyRequired: true,
+        requestModels: { "application/json": requestModel },
+        requestValidator: requestValidatorInstance,
+    });
+}
+

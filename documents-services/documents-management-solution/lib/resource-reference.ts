@@ -41,6 +41,7 @@ export const ResourceName = {
         
         DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentUploadBase64`,
         DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_GET_DETAILS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetDetails`,
+        DOCUMENTS_REQUEST_MODEL_GET_LIST_STATUS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetListStatus`,
 
         AUDIT_REQUEST_MODEL_GET_EVENTS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}AuditGetEvents`,
     },
@@ -51,6 +52,7 @@ export const ResourceName = {
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd-role'),
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd-role'),
         DOCUMENT_GET_METADATA: resourceName('document-get-metadata-lbd-role'),
+        DOCUMENT_GET_LIST_BY_STATUS: resourceName('document-get-list-status-lbd-role'),
 
         AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd-role'),
         AUDIT_GET_EVENTS: resourceName('get-audit-events-lbd-role'),
@@ -70,6 +72,7 @@ export const ResourceName = {
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd'),
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd'),
         DOCUMENT_GET_METADATA: resourceName('document-get-metadata-lbd'),
+        DOCUMENT_GET_LIST_BY_STATUS: resourceName('document-get-list-status-lbd'),
         
         NOTIFICATIONS_SEND: resourceName('notifications-send-lbd'),
         ERRORS_HANDLING: resourceName('errors-handling-lbd'),
@@ -79,6 +82,9 @@ export const ResourceName = {
     },
     dynamoDbTables: {
         DOCUMENTS_METADATA: resourceName('documents-metadata'),
+        DOCUMENTS_METADATA_INDEX_STATUS: resourceName('documents-metadata-by-status'),
+        DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER: resourceName('documents-metadata-by-owner'),
+        
         DOCUMENTS_AUDIT: resourceName('documents-audit'),
         DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR: resourceName('documents-audit-by-event-initiator'),
         DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID: resourceName('documents-audit-by-document-id'),
