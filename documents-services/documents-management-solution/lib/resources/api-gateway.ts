@@ -139,6 +139,56 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
         requestValidator: requestValidatorInstance,
     })
 }
+function configureDocumentUploadEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+    const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD;
+    let requestModel = {
+        contentType: "application/json",
+        description: "Document upload API endpoint body validation",
+        modelName: modelName,
+        modelId: modelName,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                initiatorSystemCode: {
+                    type: JsonSchemaType.STRING,
+                    enum: SupportedInitiatorSystemCodes
+                },
+                requestorId: {
+                    type: JsonSchemaType.STRING
+                },
+                documentOwnerId: {
+                    type: JsonSchemaType.STRING,
+                },
+                documentFormat: {
+                    type: JsonSchemaType.STRING,
+                    enum: SupportedDocumentsFormats
+                },
+                documentCategory: {
+                    type: JsonSchemaType.STRING,
+                    enum: SupportedDocumentsCategories, 
+                }, 
+                documentSize: {
+                    type: JsonSchemaType.NUMBER,
+                }
+            },
+            required: [
+               "initiatorSystemCode",
+               "requestorId",
+               "documentOwnerId",
+               "documentFormat",
+               "documentCategory",
+               "documentSize",
+            ],
+        },
+    };
+    apiGateway.addModel(modelName, requestModel);
+    node.addResource("upload").addMethod('POST', 
+        StepFunctionsIntegration.startExecution(workflows.workflowDocumentUpload()), {
+        apiKeyRequired: true,
+        requestModels: { "application/json": requestModel },
+        requestValidator: requestValidatorInstance,
+    })
+}
 function configureVerifyUpdateTrailEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.VERIFY_REQUEST_MODEL_UPDATE_TRAIL;
     let requestModel = {
