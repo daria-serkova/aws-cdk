@@ -79,6 +79,12 @@ const VERIFICATION_TABLE_NAME = process.env.VERIFICATION_TABLE_NAME!;
 const validateStatusTransition = (newStatus: string, currentStatus: string): 
     { isValid: boolean; errorDetails?: string } => {
   const errorDetails: string[] = [];
+  if (newStatus === currentStatus) {
+    return {
+      isValid: false,
+      errorDetails: `Error: attempt to update status to the same value as current document status [${currentStatus}]`
+    }
+  }
   switch (newStatus) {
       case DocumentStatuses.UNDER_REVIEW:
           if (currentStatus !== DocumentStatuses.PENDING_REVIEW) {
@@ -87,7 +93,7 @@ const validateStatusTransition = (newStatus: string, currentStatus: string):
           break;
       case DocumentStatuses.VERIFIED:
       case DocumentStatuses.REJECTED:
-          if (!DocumentStatuses.UNDER_REVIEW) {
+          if (currentStatus !== DocumentStatuses.UNDER_REVIEW) {
               errorDetails.push(`Error: '${newStatus}' can only be transitioned from ${DocumentStatuses.UNDER_REVIEW} status. Current status is '${currentStatus}`);
           }
           break;
