@@ -51,11 +51,14 @@ export const ResourceName = {
     },
     iam: {
         // Lambdas roles
+        DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS: resourceName('document-generate-upload-urls-lbd-role'),
+        // CLEANUP
+
+
         DOCUMENT_VALIDATE_BASE64_DOCUMENT: resourceName('document-validate-b64-lbd-role'),
-        DOCUMENT_VALIDATE_DOCUMENT: resourceName('document-validate-lbd-role'),
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64-lbd-role'),
-        DOCUMENT_VALIDATE: resourceName('document-validate-lbd-role'),
-        DOCUMENT_UPLOAD: resourceName('document-upload-lbd-role'),
+    
+       
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd-role'),
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd-role'),
         DOCUMENT_GET_METADATA: resourceName('document-get-metadata-lbd-role'),
@@ -79,11 +82,15 @@ export const ResourceName = {
         API_GATEWAY_ROLE: resourceName('api-gateway-role'),
     },
     lambdas: {
+        DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS: resourceName('document-generate-upload-urls-lbd'),
+        //CLEANUP
+        
         DOCUMENT_VALIDATE_BASE64_DOCUMENT: resourceName('document-validate-b64-lbd'),
-        DOCUMENT_VALIDATE_DOCUMENT: resourceName('document-validate-lbd'),
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64-lbd'),
-        DOCUMENT_VALIDATE: resourceName('document-validate-lbd'),
-        DOCUMENT_UPLOAD: resourceName('document-upload-lbd'),
+        
+
+
+
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd'),
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd'),
         DOCUMENT_GET_METADATA: resourceName('document-get-metadata-lbd'),
@@ -121,14 +128,7 @@ export const ResourceName = {
         WF_UPLOAD_B64_FAILED_STATE_VALIDATION: resourceName('wf-upload-b64-failed-state-validation'),
         WF_UPLOAD_B64_CHOICE_IS_VALID: resourceName('wf-upload-b64-choice-is-valid'),
 
-        WORKFLOW_DOCUMENT_UPLOAD: resourceName('workflow-upload-document-sm'),
-        WF_UPLOAD_TASK_VALIDATE_DOCUMENT_DATA: resourceName('wf-upload-task-validate-doc-data'),
-        WF_UPLOAD_TASK_GENERATE_PRESIGNED_URL: resourceName('wf-upload-task-generate-url'),
-        WF_UPLOAD_TASK_STORE_AUDIT_EVENT: resourceName('wf-upload-task-record-audit'),
-        WF_UPLOAD_FAILED_STATE_VALIDATION: resourceName('wf-upload-failed-state-validation'),
-        WF_UPLOAD_CHOICE_IS_VALID: resourceName('wf-upload-choice-is-valid'),
-
-
+       
 
         WORKFLOW_DOCUMENT_GET_DETAILS: resourceName('workflow-get-document-details-sm'),
         WF_GET_DETAILS_TASK_GET_METADATA: resourceName('wf-get-details-task-get-metadata'),

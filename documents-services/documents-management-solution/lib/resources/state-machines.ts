@@ -6,12 +6,11 @@ import { LogGroup } from "aws-cdk-lib/aws-logs";
 import * as verifyDocument from './state-machines/verify-document';
 import * as getDocumentDetails from './state-machines/get-document-details';
 import * as uploadBase64Document from './state-machines/upload-base64-document';
-import * as uploadDocument from './state-machines/upload-document';
 
 let workflowDocumentUploadBase64Instance: StateMachine;
 export const workflowDocumentUploadBase64 = () => workflowDocumentUploadBase64Instance;
-let workflowDocumentUploadInstance: StateMachine;
-export const workflowDocumentUpload = () => workflowDocumentUploadInstance;
+
+
 let workflowGetDocumentDetailsInstance: StateMachine;
 export const workflowGetDocumentDetails = () => workflowGetDocumentDetailsInstance;
 let workflowVerifyDocumentInstance: StateMachine;
@@ -34,5 +33,4 @@ export default function configureStateMachines(scope: Construct, logGroup: LogGr
 
     // Configure and initialize the 'Verify Document' state machine
     workflowVerifyDocumentInstance = verifyDocument.configureWorkflow(scope, apiGatewayRole, logGroup);
-    workflowDocumentUploadInstance = uploadDocument.configureWorkflow(scope, apiGatewayRole, logGroup);
 }

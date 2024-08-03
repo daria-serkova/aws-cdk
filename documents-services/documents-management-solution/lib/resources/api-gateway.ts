@@ -5,7 +5,7 @@ import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
 import { AllowedDocumentSize, SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
 import * as workflows from "./state-machines";
-import { auditGetEventsLambda, documentGetListByOwnerLambda, documentGetListByStatusLambda } from "./lambdas";
+import { auditGetEventsLambda, documentGeneratePreSignedUploadUrlsLambda, documentGetListByOwnerLambda, documentGetListByStatusLambda } from "./lambdas";
 import { CfnOutput } from "aws-cdk-lib";
 
 interface ApiNodes {
@@ -183,7 +183,7 @@ function configureDocumentUploadEndpoint(apiGateway: RestApi, node: Resource, re
     };
     apiGateway.addModel(modelName, requestModel);
     node.addResource("upload").addMethod('POST', 
-        StepFunctionsIntegration.startExecution(workflows.workflowDocumentUpload()), {
+        new LambdaIntegration((documentGeneratePreSignedUploadUrlsLambda())), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },
         requestValidator: requestValidatorInstance,

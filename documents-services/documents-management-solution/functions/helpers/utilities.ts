@@ -9,7 +9,7 @@ export function generateUUID(): string {
 /**
  * Path inside S3 bucket where all new documents should be uploaded
  */
-export const uploadFolder = (param1: string, param2: string) => `documents/${param1}/uploaded`;
+export const uploadFolder = (param1: string) => `documents/${param1}/uploaded`;
 /**
  * Returns a list of supported document categories.
  * NOTE: cleanup for your application
@@ -256,7 +256,8 @@ export const EventCodes = {
     return categoryObj && categoryObj.reviewRequired ? DocumentStatuses.PENDING_REVIEW : DocumentStatuses.UPLOADED;
 };
 export const PreSignUrlsExpirationConfigs = {
-    DOCUMENT_VIEW_EXPIRATION_DURATION: 3600
+    DOCUMENT_VIEW_EXPIRATION_DURATION: 3600,
+    DOCUMENT_UPLOAD_EXPIRATION_DURATION: 300 // 5 mins
 }
   
 export const getAuditEvent = (

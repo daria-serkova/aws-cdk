@@ -1,4 +1,3 @@
-
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 import { Duration } from 'aws-cdk-lib';
@@ -20,16 +19,23 @@ const lambdaFilesLocation = '../../functions';
 /**
  * Lambdas, related to Documents operations functionality
  */
+ let documentGeneratePreSignedUploadUrlsLambdaInstance: NodejsFunction;
+ export const documentGeneratePreSignedUploadUrlsLambda = () => documentGeneratePreSignedUploadUrlsLambdaInstance;
+
+ 
+
 let documentValidateBase64LambdaInstance: NodejsFunction;
-let documentValidateLambdaInstance: NodejsFunction;
 let documentUploadBase64LambdaInstance: NodejsFunction;
 let documentUploadMetadataLambdaInstance: NodejsFunction;
 let documentGeneratePreSignedLambdaInstance: NodejsFunction;
 let documentGetMetadataLambdaInstance: NodejsFunction;
 let documentGetListByStatusLambdaInstance: NodejsFunction;
 let documentGetListByOwnerLambdaInstance: NodejsFunction;
+
+
+
+
 export const documentValidateBase64Lambda = () => documentValidateBase64LambdaInstance;
-export const documentValidateLambda = () => documentValidateLambdaInstance;
 export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstance;
 export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaInstance;
 export const documentGetMetadataLambda = () => documentGetMetadataLambdaInstance;
@@ -77,13 +83,15 @@ export default function configureLambdaResources(
             documentAudit: LogGroup    
 }) {
     documentValidateBase64LambdaInstance = configureLambdaValidateBase64Document(scope, logGroups.documentOperations);
-    documentValidateLambdaInstance = configureLambdaValidateDocument(scope, logGroups.documentOperations);
     documentUploadBase64LambdaInstance = configureLambdaUploadBase64Document(scope, logGroups.documentOperations);
     documentUploadMetadataLambdaInstance = configureLambdaUploadDocumentMetadata(scope, logGroups.documentOperations);
     documentGeneratePreSignedLambdaInstance = configureLambdaDocumentGeneratePreSignedUrl(scope, logGroups.documentOperations);
     documentGetMetadataLambdaInstance = configureLambdaGetDocumentMetadata(scope, logGroups.documentOperations);
     documentGetListByStatusLambdaInstance = configureLambdaGetListByStatus(scope, logGroups.documentOperations);
     documentGetListByOwnerLambdaInstance = configureLambdaGetListByOwner(scope, logGroups.documentOperations);
+
+
+    documentGeneratePreSignedUploadUrlsLambdaInstance = configureLambdaGeneratePreSignedUploadUrls(scope, logGroups.documentOperations);
 
     notificationsSendLambdaInstance = configureLambdaSendNotifications(scope, logGroups.documentOperations);
     errorsHandlingLambdaInstance = configureLambdaErrorHandling(scope, logGroups.documentOperations);
@@ -109,22 +117,6 @@ const configureLambdaValidateBase64Document = (scope: Construct, logGroup: LogGr
         functionName: ResourceName.lambdas.DOCUMENT_VALIDATE_BASE64_DOCUMENT,
         description: 'Checks if the document meets certain criteria before uploading.',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/validate-base64-document.ts`),
-        logGroup: logGroup,
-        role: iamRole,
-        environment: {
-            REGION: process.env.AWS_REGION || '',
-        },
-        ...defaultLambdaSettings
-    });
-    return lambda;   
-}
-const configureLambdaValidateDocument = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
-    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_VALIDATE_DOCUMENT);
-    addCloudWatchPutPolicy(iamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);
-    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_VALIDATE_DOCUMENT, {
-        functionName: ResourceName.lambdas.DOCUMENT_VALIDATE_DOCUMENT,
-        description: 'Checks if the document meets certain criteria before uploading.',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/validate-document.ts`),
         logGroup: logGroup,
         role: iamRole,
         environment: {
@@ -423,6 +415,23 @@ const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup):
             REGION: process.env.AWS_REGION || '',
             METADATA_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
             VERIFICATION_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION
+        },
+        ...defaultLambdaSettings
+    });
+    return lambda;   
+}
+
+const configureLambdaGeneratePreSignedUploadUrls = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS, {
+        functionName: ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS,
+        description: 'Updates verification history',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/generate-presigned-upload-urls.ts`),
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
         },
         ...defaultLambdaSettings
     });
