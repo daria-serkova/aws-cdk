@@ -13,6 +13,7 @@ const TABLE_NAME = process.env.TABLE_NAME!;
  * @throws - Throws an error if the metadata storage fails.
  */
  export const handler = async (event: any): Promise<any> => {
+  if (event.statusCode && event.statusCode !== 200) return event;
   const { action } = event;
   const { documentId, version, documentOwnerId, requestorId, initiatorSystemCode } = event.body;
   if (!action || !documentId || !version || !documentOwnerId || !requestorId || !initiatorSystemCode) {

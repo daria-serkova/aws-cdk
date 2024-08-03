@@ -409,9 +409,7 @@ const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): No
 const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.VERIFY_UPDATE_TRAIL);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbIndexReadPolicy(iamRole, 
-        ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION,
-        ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION_INDEX_DOCUMENT_ID);
+    addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.VERIFY_UPDATE_TRAIL, {
         functionName: ResourceName.lambdas.VERIFY_UPDATE_TRAIL,
         description: 'Updates verification history',
@@ -423,8 +421,7 @@ const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup):
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
-            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
-            INDEX: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER
+            METADATA_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
         },
     });
     return lambda;   

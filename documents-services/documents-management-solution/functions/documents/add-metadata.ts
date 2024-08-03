@@ -1,7 +1,5 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { DocumentMetadata } from '../helpers/types';
-import { determineDocumentStatus } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const TABLE_NAME = process.env.TABLE_NAME!;
@@ -14,31 +12,29 @@ const TABLE_NAME = process.env.TABLE_NAME!;
  * @throws - Throws an error if the metadata storage fails.
  */
 export const handler = async (event: any): Promise<any> => {
-  const { documentId, documentCategory, requestorId,initiatorSystemCode  } =  event.body;
-  if (!documentId || !documentCategory) {
+  if (event.statusCode && event.statusCode !== 200) return event;
+
+  const { documentId } =  event.body;
+  if (!documentId) {
     return {
       statusCode: 400,
       body: {
-        error: `Can't add metadata. Required data elements are missing`
+        error: `Can't add metadata. Required data elements (documentId) are missing`,
       }
     }
   }
-  try {
-    const metadata = {
+  try { 
+    await dynamoDb.send(new PutItemCommand({ TableName: TABLE_NAME, Item: marshall({
       ...(({
-        requestorId,         // Extract `requestorId` to exclude it
-        initiatorSystemCode, // Extract `initiatorSystemCode` to exclude it
-        ...rest              // Rest of the properties
-      }) => rest)(event.body)
-    };
-    
-    await dynamoDb.send(new PutItemCommand({ TableName: TABLE_NAME, Item: marshall(metadata) }));
+        requestorId,         // Extract `requestorId` to exclude it from DynamoDB record
+        initiatorSystemCode, // Extract `initiatorSystemCode` to exclude it from DynamoDB record
+        ...rest              // Include rest of the properties to DynamoDB record
+      }) => rest)(event.body)}
+    )}));
     return {
       statusCode: 200,
       body: {
-        ...metadata,
-        requestorId,
-        initiatorSystemCode
+        ...event.body
       }
     };
   } catch (error) {

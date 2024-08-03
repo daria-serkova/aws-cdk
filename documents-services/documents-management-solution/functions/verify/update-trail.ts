@@ -1,9 +1,10 @@
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { marshall } from '@aws-sdk/util-dynamodb';
-import { getAuditEvent, getCurrentTime } from '../helpers/utilities';
+import { DynamoDBClient, GetItemCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
+import { DocumentStatuses, generateUUID } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
-const TABLE_NAME = process.env.TABLE_NAME!;
+const METADATA_TABLE_NAME = process.env.METADATA_TABLE_NAME!;
+const VERIFICATION_TABLE_NAME = process.env.VERIFICATION_TABLE_NAME!;
 
 /**
  * Lambda function handler for storing audit events in DynamoDB.
@@ -13,38 +14,102 @@ const TABLE_NAME = process.env.TABLE_NAME!;
  * @throws - Throws an error if the metadata storage fails.
  */
  export const handler = async (event: any): Promise<any> => {
-  const { action } = event;
-  const { documentId, version, documentOwnerId, requestorId, initiatorSystemCode } = event.body;
-  if (!action || !documentId || !version || !documentOwnerId || !requestorId || !initiatorSystemCode) {
-    return {
-      statusCode: 400,
-      body: {
-        error: `Can't store audit event. Required data is not provided`,
-        data: event.body
+  const { documentId, requestorId, verificationStatus, comment } =  event.body;
+  if (!documentId) {
+      return {
+          statusCode: 400,
+          body: {
+              error: `Can't process request. Document Id is missing from event body`,
+          }
       }
-    }
   }
-  const auditEvent = getAuditEvent(documentId, version, documentOwnerId, action, 
-      getCurrentTime(), requestorId, initiatorSystemCode);
   try {
-    await dynamoDb.send(new PutItemCommand({TableName: TABLE_NAME, Item: marshall(auditEvent)}));
-    return {
-      statusCode: 200,
-      body: {
-        audit: {
-          auditAction: action,
-          auditEvent: auditEvent.auditId
+      const getMetadataResult = await dynamoDb.send(
+        new GetItemCommand({ TableName: METADATA_TABLE_NAME, Key: { documentId: { S: documentId }}
+      }));
+      if (!getMetadataResult.Item) 
+        return {
+          statusCode: 404,
+          body: {
+              error: `Can't process request. Document with Document Id was not found in the database`,
+          }
+      }
+      const metadataRecord = unmarshall(getMetadataResult.Item);
+      const isTransitionAllowed = validateStatusTransition(verificationStatus, metadataRecord.documentStatus);
+      if (!isTransitionAllowed.isValid) {
+        return {
+          statusCode: 400,
+          body: {
+              error: `Transition can't be performed. ${isTransitionAllowed.errorDetails}`,
+          }
+        }
+      }
+      const saveVerificationRecord = await dynamoDb.send(new PutItemCommand({ 
+          TableName: VERIFICATION_TABLE_NAME, 
+          Item: marshall({
+            verificationId: generateUUID(),
+            documentId,
+            verifierId: requestorId,
+            verificationStatus,
+            comment: getComment(verificationStatus, comment)
+
+          })
+      }));
+      metadataRecord.documentStatus = DocumentStatuses[verificationStatus as keyof typeof DocumentStatuses]
+      return {
+        statusCode: 200,
+        body: {
+          ...metadataRecord,
+          initiatorSystemCode: event.body.initiatorSystemCode,
+          requestorId: event.body.requestorId
         },
-        ...event.body
+        action:  metadataRecord.documentStatus
       }
-    }
   } catch (error) {
-    console.error('Error saving audit event to DynamoDB:', error);
-    return {
-      statusCode: 500,
-      body: {
-         error: `Request could not be processed. ${error.message}`
+      console.error(`Request could not be processed`, error);
+      return {
+          statusCode: 500,
+          body: {
+             error: `Request could not be processed. ${error.message}`
+          }
       }
-    }
   }
 };
+
+const validateStatusTransition = (newStatus: string, currentStatus: string): 
+    { isValid: boolean; errorDetails?: string } => {
+  const errorDetails: string[] = [];
+  switch (newStatus) {
+      case DocumentStatuses.UNDER_REVIEW:
+          if (currentStatus !== DocumentStatuses.UPLOADED) {
+              errorDetails.push(`Error: ${newStatus} can only be transitioned from ${DocumentStatuses.UPLOADED} status. Current status is '${currentStatus}'`);
+          }
+          break;
+      case DocumentStatuses.VERIFIED:
+      case DocumentStatuses.REJECTED:
+          if (DocumentStatuses.UNDER_REVIEW) {
+              errorDetails.push(`Error: '${newStatus}' can only be transitioned from ${DocumentStatuses.UNDER_REVIEW} status. Current status is '${currentStatus}`);
+          }
+          break;
+      default:
+        errorDetails.push(`Error: 'Usupported transition '${newStatus}'`);
+        break;
+  }
+  return {
+      isValid: errorDetails.length === 0,
+      errorDetails: errorDetails.join(" ")
+  };
+}
+const getComment = (status: string, comment: string): string => {
+  if (comment) return comment;
+  switch (status) {
+    case DocumentStatuses.UNDER_REVIEW:
+      return 'Verification process has been started'
+    case DocumentStatuses.VERIFIED:
+      return 'Verification process has been completed. Document is verified. No additional details were provided by verifier'
+    case DocumentStatuses.REJECTED:
+      return 'Verification process has been completed. Document is rejected. No additional details were provided by verifier'
+    default:
+    return `Unsupported status: ${status}`
+  }
+}

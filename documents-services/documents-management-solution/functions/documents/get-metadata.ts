@@ -10,7 +10,10 @@ const TABLE_NAME = process.env.TABLE_NAME!;
  * @returns {Promise<any>} - The response object containing the document metadata or an error message.
  */
  export const handler = async (event: any): Promise<any> => {
+    if (event.statusCode && event.statusCode !== 200) return event;
+    
     const { documentId } =  event.body;
+    
     if (!documentId) {
         return {
             statusCode: 400,
