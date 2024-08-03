@@ -15,7 +15,7 @@ const BUCKET_NAME = process.env.BUCKET_NAME!;
  * @throws - Throws an error if the upload fails, with the error message or 'Internal Server Error' as the default.
  */
 export const handler = async (event: any): Promise<any> => {
-  const { documentContent, documentOwnerId, documentCategory, documentFormat } =  event.body;
+  const { documentContent, documentOwnerId, documentCategory, documentFormat, documentNameSuffix } =  event.body;
   if (!documentContent) {
     return {
       statusCode: 400,
@@ -26,7 +26,8 @@ export const handler = async (event: any): Promise<any> => {
   }
   const buffer = Buffer.from(documentContent, 'base64');
   const uploadLocation = uploadFolder(documentOwnerId, documentCategory);
-  const key = `${uploadLocation}/${documentCategory}.${documentFormat}`;
+  const nameSuffix = documentNameSuffix ? `_${documentNameSuffix.toUpperCase().replace(/[\s\W]+/g, '_')}`: "";
+  const key = `${uploadLocation}/${documentCategory}${nameSuffix}.${documentFormat}`;
   let version: string;
   try {
     const uploadResult = await s3Client.send(new PutObjectCommand({
