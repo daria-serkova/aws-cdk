@@ -4,13 +4,14 @@ import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Reso
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
 import { SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
-import { workflowDocumentUploadBase64, workflowGetDocumentDetails } from "./state-machines";
+import * as workflows from "./state-machines";
 import { auditGetEventsLambda, documentGetListByOwnerLambda, documentGetListByStatusLambda } from "./lambdas";
 import { CfnOutput } from "aws-cdk-lib";
 
 interface ApiNodes {
     document: Resource;
     audit: Resource;
+    verify: Resource;
 }
 let apiNodesInstance: ApiNodes;
 
@@ -68,6 +69,7 @@ export default function configureApiGatewayResources(scope: Construct ) {
     apiNodesInstance = {
         document: version.addResource('document'),
         audit: version.addResource('audit'),
+        verify: version.addResource('verify'),
     }
     /* Documents endpoints */
     configureDocumentUploadBase64Endpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
@@ -76,6 +78,8 @@ export default function configureApiGatewayResources(scope: Construct ) {
     configureGetDocumentsListByOwnerEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     /* Audit endpoints */
     configureAuditGetEventsEndpoint(apiGatewayInstance, apiNodesInstance.audit, requestValidatorInstance);
+    /* Verify endpoints */
+    configureVerifyUpdateTrailEndpoint(apiGatewayInstance, apiNodesInstance.verify, requestValidatorInstance);
 }
 
 function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
@@ -128,7 +132,51 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
         },
     };
     apiGateway.addModel(modelName, requestModel);
-    node.addResource("upload-base64").addMethod('POST', StepFunctionsIntegration.startExecution(workflowDocumentUploadBase64()), {
+    node.addResource("upload-base64").addMethod('POST', 
+        StepFunctionsIntegration.startExecution(workflows.workflowDocumentUploadBase64()), {
+        apiKeyRequired: true,
+        requestModels: { "application/json": requestModel },
+        requestValidator: requestValidatorInstance,
+    })
+}
+function configureVerifyUpdateTrailEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+    const modelName = ResourceName.apiGateway.VERIFY_REQUEST_MODEL_UPDATE_TRAIL;
+    let requestModel = {
+        contentType: "application/json",
+        description: "Verify workflow: Update process trail",
+        modelName: modelName,
+        modelId: modelName,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                initiatorSystemCode: {
+                    type: JsonSchemaType.STRING,
+                    enum: SupportedInitiatorSystemCodes
+                },
+                requestorId: {
+                    type: JsonSchemaType.STRING
+                },
+                documentId: {
+                    type: JsonSchemaType.STRING
+                },
+                verificationStatus: {
+                    type: JsonSchemaType.STRING
+                },
+                comment: {
+                    type: JsonSchemaType.STRING
+                },
+            },
+            required: [
+               "initiatorSystemCode",
+               "requestorId",
+               "documentId",
+               "verificationStatus"
+            ],
+        },
+    };
+    apiGateway.addModel(modelName, requestModel);
+    node.addResource("update-trail").addMethod('POST',
+        StepFunctionsIntegration.startExecution(workflows.workflowVerifyDocument()), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },
         requestValidator: requestValidatorInstance,
@@ -163,7 +211,8 @@ function configureGetDocumentDetailsEndpoint(apiGateway: RestApi, node: Resource
         },
     };
     apiGateway.addModel(modelName, requestModel);
-    node.addResource("get-details").addMethod('POST', StepFunctionsIntegration.startExecution(workflowGetDocumentDetails()), {
+    node.addResource("get-details").addMethod('POST',
+        StepFunctionsIntegration.startExecution(workflows.workflowGetDocumentDetails()), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },
         requestValidator: requestValidatorInstance,

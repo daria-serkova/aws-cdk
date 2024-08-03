@@ -5,20 +5,23 @@ import { addCloudWatchPutPolicy, addStateMachineExecutionPolicy, createApiGatewa
 import { ResourceName } from "../resource-reference";
 import { Choice, Condition, Fail, JsonPath, LogLevel, StateMachine, StateMachineType, TaskInput, TaskStateBase } from "aws-cdk-lib/aws-stepfunctions";
 import { Role } from "aws-cdk-lib/aws-iam";
-import { Duration } from "aws-cdk-lib";
 import { LogGroup } from "aws-cdk-lib/aws-logs";
 import { EventCodes } from "../../helpers/utilities";
+import * as verifyDocument from './state-machines/verify-document';
 
 let workflowDocumentUploadBase64Instance: StateMachine;
 export const workflowDocumentUploadBase64 = () => workflowDocumentUploadBase64Instance;
 let workflowGetDocumentDetailsInstance: StateMachine;
 export const workflowGetDocumentDetails = () => workflowGetDocumentDetailsInstance;
+let workflowVerifyDocumentInstance: StateMachine;
+export const workflowVerifyDocument = () => workflowVerifyDocumentInstance;
 
 export default function configureStateMachines (scope: Construct, logGroup: LogGroup) {
     const apiGatewayRole = createApiGatewayRole(scope, ResourceName.iam.API_GATEWAY_ROLE);
     workflowDocumentUploadBase64Instance = configureWorkflowDocumentUploadBase64(scope, apiGatewayRole, logGroup);
     workflowGetDocumentDetailsInstance = configureWorkflowGetDocumentDetails(scope, apiGatewayRole, logGroup);
-}
+    workflowVerifyDocumentInstance = verifyDocument.configureWorkflow(scope, apiGatewayRole, logGroup);
+  }
 /**
  * Configuration of State Machine for 'Upload Base 64 Document' workflow
  * @param scope 

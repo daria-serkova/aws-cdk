@@ -44,6 +44,8 @@ export const ResourceName = {
         DOCUMENTS_REQUEST_MODEL_GET_LIST_STATUS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetListStatus`,
         DOCUMENTS_REQUEST_MODEL_GET_LIST_OWNER: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetListOwner`,
 
+        VERIFY_REQUEST_MODEL_UPDATE_TRAIL: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}VerifyUpdateTrail`,
+
         AUDIT_REQUEST_MODEL_GET_EVENTS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}AuditGetEvents`,
     },
     iam: {
@@ -59,10 +61,13 @@ export const ResourceName = {
         AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd-role'),
         AUDIT_GET_EVENTS: resourceName('get-audit-events-lbd-role'),
         
-        
+        VERIFY_UPDATE_TRAIL: resourceName('verify-update-trail-lbd-role'),
+
         NOTIFICATIONS_SEND: resourceName('notifications-send-lbd-role'),
         ERRORS_HANDLING: resourceName('errors-handling-lbd-role'),
         // ---------------- 
+        WORKFLOW_VERIFY: resourceName('workflow-verify-sm-role'),
+
         WORKFLOW_DOCUMENT_UPLOAD_BASE64: resourceName('workflow-upload-b64-document-sm-role'),
         WORKFLOW_DOCUMENT_GET_DETAILS: resourceName('workflow-get-document-details-sm-role'),
 
@@ -76,6 +81,8 @@ export const ResourceName = {
         DOCUMENT_GET_METADATA: resourceName('document-get-metadata-lbd'),
         DOCUMENT_GET_LIST_BY_STATUS: resourceName('document-get-list-status-lbd'),
         DOCUMENT_GET_LIST_BY_OWNER: resourceName('document-get-list-owner-lbd'),
+
+        VERIFY_UPDATE_TRAIL: resourceName('verify-update-trail-lbd'),
 
         
         NOTIFICATIONS_SEND: resourceName('notifications-send-lbd'),
@@ -112,6 +119,12 @@ export const ResourceName = {
         WF_GET_DETAILS_TASK_GET_METADATA: resourceName('wf-get-details-task-get-metadata'),
         WF_GET_DETAILS_TASK_GET_URL: resourceName('wf-get-details-task-get-url'),
         WF_GET_DETAILS_TASK_STORE_AUDIT_EVENT: resourceName('wf-get-details-task-record-audit'),
+
+        /* Verify document workflow */
+        WORKFLOW_VERIFY: resourceName('workflow-verify-doc-sm'),
+        WF_VERIFY_TASK_UPDATE_TRAIL: resourceName('wf-verify-doc-task-update-trail'),
+        WF_VERIFY_TASK_UPDATE_METADATA: resourceName('wf-verify-doc-task-update-metadata'),
+        WF_VERIFY_TASK_STORE_AUDIT_EVENT: resourceName('wf-verify-doc-task-record-audit'),
 
         
     }

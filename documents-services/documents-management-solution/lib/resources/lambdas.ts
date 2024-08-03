@@ -52,6 +52,12 @@ export const auditGetEventsLambda = () => auditGetEventsLambdaInstance;
  */
 let errorsHandlingLambdaInstance: NodejsFunction;
 export const errorsHandlingLambda = () => errorsHandlingLambdaInstance;
+
+/**
+ * Lambdas, related to Verification handling
+ */
+ let verifyUpdateTrailLambdaInstance: NodejsFunction;
+ export const verifyUpdateTrailLambda = () => verifyUpdateTrailLambdaInstance;
 /**
  * Configuration of Lambda functions
  * @param scope 
@@ -75,6 +81,8 @@ export default function configureLambdaResources(
 
     auditStoreEventLambdaInstance = configureLambdaStoreAuditEvent(scope, logGroups.documentAudit);
     auditGetEventsLambdaInstance = configureLambdaGetAuditEvents(scope, logGroups.documentAudit);
+
+    verifyUpdateTrailLambdaInstance = configureLambdaVerifyUpdateTrail(scope, logGroups.documentOperations);
 }
 
 /**
@@ -384,6 +392,30 @@ const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): No
         functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER,
         description: 'Retrieves list of documents by Owner ID',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-list-by-owner.ts`),
+        memorySize: 256,
+        timeout: Duration.minutes(3),
+        handler: 'handler',
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+            INDEX: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER
+        },
+    });
+    return lambda;   
+}
+
+const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.VERIFY_UPDATE_TRAIL);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    addDynamoDbIndexReadPolicy(iamRole, 
+        ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION,
+        ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION_INDEX_DOCUMENT_ID);
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.VERIFY_UPDATE_TRAIL, {
+        functionName: ResourceName.lambdas.VERIFY_UPDATE_TRAIL,
+        description: 'Updates verification history',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/verify/update-trail.ts`),
         memorySize: 256,
         timeout: Duration.minutes(3),
         handler: 'handler',
