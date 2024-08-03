@@ -1,6 +1,6 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import fetch from 'node-fetch'; // Make sure to include 'node-fetch' in your dependencies
-import { EmailNotification } from './helpers/types';
+
 
 const EMS_SERVICE_URL = process.env.EMS_SERVICE_URL!;
 const EMS_SERVICE_TOKEN = process.env.EMS_SERVICE_TOKEN!;
@@ -14,7 +14,7 @@ const EMS_SERVICE_TOKEN = process.env.EMS_SERVICE_TOKEN!;
  * @throws - Throws an error if the upload fails, with the error message or 'Internal Server Error' as the default.
  */
  export const handler = async (event: any): Promise<any> => {
-    const notifications: EmailNotification[] = event.notifications;
+    const notifications = event.notifications;
 
     try {
         for (let index = 0; index < notifications.length; index++) {
@@ -52,7 +52,7 @@ const EMS_SERVICE_TOKEN = process.env.EMS_SERVICE_TOKEN!;
  * @param notification - The notification object to be sent.
  * @returns - A promise that resolves when the fetch operation completes.
  */
-const fetchNotification = async (notification: EmailNotification): Promise<void> => {
+const fetchNotification = async (notification: any): Promise<void> => {
     const response = await fetch(`${EMS_SERVICE_URL}/delivery/send`, {
         method: 'POST',
         headers: {

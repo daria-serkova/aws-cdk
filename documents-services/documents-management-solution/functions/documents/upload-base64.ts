@@ -26,8 +26,8 @@ export const handler = async (event: any): Promise<any> => {
   }
   const buffer = Buffer.from(documentContent, 'base64');
   const uploadLocation = uploadFolder(documentOwnerId, documentCategory);
-  const nameSuffix = documentNameSuffix ? `_${documentNameSuffix.toUpperCase().replace(/[\s\W]+/g, '_')}`: "";
-  const key = `${uploadLocation}/${documentCategory}${nameSuffix}.${documentFormat}`;
+  const documentName = `${documentCategory}${documentNameSuffix ? `_${documentNameSuffix.toUpperCase().replace(/[\s\W]+/g, '_')}`: ""}`;
+  const key = `${uploadLocation}/${documentName}.${documentFormat}`;
   let version: string;
   try {
     const uploadResult = await s3Client.send(new PutObjectCommand({
@@ -45,9 +45,11 @@ export const handler = async (event: any): Promise<any> => {
       body: {
         documentId: key,
         version,
+        documentName,
         ...(({
-          documentContent,      // Exclude documentContent for passing further
-          metadata,             // Exclude metadata object for passing further
+          documentContent,      // Exclude documentContent from passing further
+          metadata,             // Exclude metadata object from passing further
+          documentNameSuffix,   // Exclude document name suffix from passing further
           ...rest               // Pass rest of the properties
         }) => rest)(event.body),
         ...event.body.metadata,
