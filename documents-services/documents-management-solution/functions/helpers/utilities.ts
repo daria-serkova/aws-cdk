@@ -211,6 +211,6 @@ export const getAuditEvent = (
       }
 }
 
-export const getCurrentTime = () => new Date().toISOString();
+export const getCurrentTime = () => new Date().getTime().toString();
 
 

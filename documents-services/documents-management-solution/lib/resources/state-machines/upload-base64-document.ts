@@ -18,14 +18,17 @@ export const configureWorkflow = (scope: Construct, apiGatewayRole: Role, logGro
     ResourceName.stateMachines.WF_UPLOAD_TASK_ADD_BASE64_DOCUMENT, documentUploadBase64Lambda);
   const uploadDocumentMetadataTask = createLambdaInvokeTask(scope,
     ResourceName.stateMachines.WF_UPLOAD_TASK_ADD_METADATA, documentUploadMetadataLambda);
+  // const storeAuditEventTask = createLambdaInvokeTask(scope, 
+  //   ResourceName.stateMachines.WF_UPLOAD_TASK_STORE_AUDIT_EVENT, auditStoreEventLambda, {
+  //   inputPath: '$',
+  //   payload: TaskInput.fromObject({
+  //     action: EventCodes.UPLOAD,
+  //     body: JsonPath.stringAt('$.body')
+  //   })
+  // });
   const storeAuditEventTask = createLambdaInvokeTask(scope, 
-    ResourceName.stateMachines.WF_UPLOAD_TASK_STORE_AUDIT_EVENT, auditStoreEventLambda, {
-    inputPath: '$',
-    payload: TaskInput.fromObject({
-      action: EventCodes.UPLOAD,
-      body: JsonPath.stringAt('$.body')
-    })
-  });
+    ResourceName.stateMachines.WF_UPLOAD_TASK_STORE_AUDIT_EVENT,
+    auditStoreEventLambda)
 
   const stateMachineRole = createStateMachineRole(scope, ResourceName.iam.WORKFLOW_DOCUMENT_UPLOAD_BASE64);
   addCloudWatchPutPolicy(stateMachineRole, ResourceName.cloudWatch.DOCUMENT_WORKFLOW_LOGS_GROUP);

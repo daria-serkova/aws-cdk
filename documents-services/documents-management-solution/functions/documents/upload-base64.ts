@@ -1,6 +1,7 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { determineDocumentStatus, getContentTypeByFormat, getCurrentTime, uploadFolder } from '../helpers/utilities';
 import { Buffer } from 'buffer';
+import { EventCodes } from '../../helpers/utilities';
 
 const s3Client = new S3Client({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
@@ -50,7 +51,8 @@ export const handler = async (event: any): Promise<any> => {
         }) => rest)(event.body),
         ...event.body.metadata,
         uploadedAt: getCurrentTime(),
-        documentStatus: determineDocumentStatus(documentCategory) // Add additional properties
+        documentStatus: determineDocumentStatus(documentCategory),
+        action: EventCodes.UPLOAD
       },
     } 
   } catch (error) {

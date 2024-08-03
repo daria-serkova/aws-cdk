@@ -14,14 +14,14 @@ const TABLE_NAME = process.env.TABLE_NAME!;
  */
  export const handler = async (event: any): Promise<any> => {
   if (event.statusCode && event.statusCode !== 200) return event;
-  const { action } = event;
-  const { documentId, version, documentOwnerId, requestorId, initiatorSystemCode } = event.body;
+  //const { action } = event;
+  const { action, documentId, version, documentOwnerId, requestorId, initiatorSystemCode } = event.body;
   if (!action || !documentId || !version || !documentOwnerId || !requestorId || !initiatorSystemCode) {
     return {
       statusCode: 400,
       body: {
         error: `Can't store audit event. Required data is not provided`,
-        data: event.body
+        event
       }
     }
   }

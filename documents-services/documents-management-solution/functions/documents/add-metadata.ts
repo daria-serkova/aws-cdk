@@ -28,6 +28,7 @@ export const handler = async (event: any): Promise<any> => {
       ...(({
         requestorId,         // Extract `requestorId` to exclude it from DynamoDB record
         initiatorSystemCode, // Extract `initiatorSystemCode` to exclude it from DynamoDB record
+        action,              // Extract `action` to exclude it from DynamoDB record
         ...rest              // Include rest of the properties to DynamoDB record
       }) => rest)(event.body)}
     )}));

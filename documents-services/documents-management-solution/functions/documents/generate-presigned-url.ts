@@ -1,6 +1,7 @@
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PreSignUrlsExpirationConfigs } from "../helpers/utilities";
+import { EventCodes } from "../../helpers/utilities";
 
 const s3Client = new S3Client({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
@@ -12,7 +13,6 @@ const BUCKET_NAME = process.env.BUCKET_NAME!;
  * @returns {Promise<any>} - The response object containing the document's url or an error message.
  */
 export const handler = async (event: any): Promise<any> => {
-   console.log(JSON.stringify(event.body))
    const { documentId } =  event.body;
    if (!documentId) {
        return {
@@ -32,7 +32,8 @@ export const handler = async (event: any): Promise<any> => {
             body: {
                ...event.body,
                url,
-               urlExpiresAt: new Date(Date.now() + PreSignUrlsExpirationConfigs.DOCUMENT_VIEW_EXPIRATION_DURATION * 1000)
+               urlExpiresAt: new Date(Date.now() + PreSignUrlsExpirationConfigs.DOCUMENT_VIEW_EXPIRATION_DURATION * 1000),
+               action: EventCodes.VIEW
             }
          } : {
             statusCode: 404,

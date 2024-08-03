@@ -55,15 +55,15 @@ const VERIFICATION_TABLE_NAME = process.env.VERIFICATION_TABLE_NAME!;
 
           })
       }));
-      metadataRecord.documentStatus = DocumentStatuses[verificationStatus as keyof typeof DocumentStatuses]
+      metadataRecord.documentStatus = verificationStatus;
       return {
         statusCode: 200,
         body: {
           ...metadataRecord,
           initiatorSystemCode: event.body.initiatorSystemCode,
-          requestorId: event.body.requestorId
+          requestorId: event.body.requestorId,
+          action: verificationStatus
         },
-        action:  metadataRecord.documentStatus
       }
   } catch (error) {
       console.error(`Request could not be processed`, error);
@@ -81,13 +81,13 @@ const validateStatusTransition = (newStatus: string, currentStatus: string):
   const errorDetails: string[] = [];
   switch (newStatus) {
       case DocumentStatuses.UNDER_REVIEW:
-          if (currentStatus !== DocumentStatuses.UPLOADED) {
-              errorDetails.push(`Error: ${newStatus} can only be transitioned from ${DocumentStatuses.UPLOADED} status. Current status is '${currentStatus}'`);
+          if (currentStatus !== DocumentStatuses.PENDING_REVIEW) {
+              errorDetails.push(`Error: ${newStatus} can only be transitioned from ${DocumentStatuses.PENDING_REVIEW} status. Current status is '${currentStatus}'`);
           }
           break;
       case DocumentStatuses.VERIFIED:
       case DocumentStatuses.REJECTED:
-          if (DocumentStatuses.UNDER_REVIEW) {
+          if (!DocumentStatuses.UNDER_REVIEW) {
               errorDetails.push(`Error: '${newStatus}' can only be transitioned from ${DocumentStatuses.UNDER_REVIEW} status. Current status is '${currentStatus}`);
           }
           break;
