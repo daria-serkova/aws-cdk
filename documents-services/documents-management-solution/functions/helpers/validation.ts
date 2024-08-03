@@ -62,10 +62,11 @@ import imageType from 'image-type';
             return await isPdfValid(fileBuffer, errors);
         
         case 'PNG':
-        case 'JPG':
-        case 'JPEG':
             return await isImageValid(fileBuffer, format, errors);
-        
+        case 'JPEG':
+            format = 'JPG';
+        case 'JPG':
+            return await isImageValid(fileBuffer, format, errors);
         default:
             errors.push('Validation failed: Attempted to validate integrity of unsupported format');
             return false;
