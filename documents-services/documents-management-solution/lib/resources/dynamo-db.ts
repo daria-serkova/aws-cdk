@@ -52,7 +52,7 @@ export default function configureDynamoDbResources(scope: Construct ) {
     });
 
     const documentsVerificationTable = new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION, {
-        tableName: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT,
+        tableName: ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION,
         partitionKey: { name: "verificationId", type: AttributeType.STRING },
         billingMode: BillingMode.PAY_PER_REQUEST,
         tableClass: TableClass.STANDARD,
