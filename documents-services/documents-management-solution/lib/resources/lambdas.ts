@@ -410,6 +410,7 @@ const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup):
     const iamRole = createLambdaRole(scope, ResourceName.iam.VERIFY_UPDATE_TRAIL);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);
+    addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION);
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.VERIFY_UPDATE_TRAIL, {
         functionName: ResourceName.lambdas.VERIFY_UPDATE_TRAIL,
         description: 'Updates verification history',
@@ -422,6 +423,7 @@ const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup):
         environment: {
             REGION: process.env.AWS_REGION || '',
             METADATA_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+            VERIFICATION_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION
         },
     });
     return lambda;   
