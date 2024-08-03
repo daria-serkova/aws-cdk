@@ -9,6 +9,7 @@ import { ResourceName } from "../resource-reference";
  * @param scope 
  */
 export default function configureDynamoDbResources(scope: Construct ) {
+    /* Documents Metadata */
     const documentsMetadataTable = new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_METADATA, {
         tableName: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
         partitionKey: { name: "documentId", type: AttributeType.STRING },
@@ -29,6 +30,7 @@ export default function configureDynamoDbResources(scope: Construct ) {
         projectionType: ProjectionType.ALL,
     });
 
+     /* Documents Audit */
     const documentsAuditTable = new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT, {
         tableName: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT,
         partitionKey: { name: "auditId", type: AttributeType.STRING },
@@ -51,6 +53,7 @@ export default function configureDynamoDbResources(scope: Construct ) {
         projectionType: ProjectionType.ALL,
     });
 
+     /* Documents Verification Trail */
     const documentsVerificationTable = new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION, {
         tableName: ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION,
         partitionKey: { name: "verificationId", type: AttributeType.STRING },
@@ -62,6 +65,7 @@ export default function configureDynamoDbResources(scope: Construct ) {
     documentsVerificationTable.addGlobalSecondaryIndex({
         indexName: ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION_INDEX_DOCUMENT_ID,
         partitionKey: { name: 'documentId', type: AttributeType.STRING },
+        sortKey: { name: "documentStatus", type: AttributeType.STRING },
         projectionType: ProjectionType.ALL,
     });
 }
