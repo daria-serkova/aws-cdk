@@ -25,14 +25,19 @@ export const createLambdaInvokeTask = (scope: Construct, id: string, lambdaFunct
 export const EventCodes = {
     UPLOAD: "Upload",                         // When a document is uploaded.
     VIEW: "View",                             // When a document is viewed.
-    
+    VERIFY: "Verified",                         // When a document is verified.
+    REJECT: "Rejected",                         // When a document is rejected.
     
     /*
+
+    PRINT: "Print",                           // When a document is printed.
+    IMPORT: "Import",                         // When a document is imported from another system.
+    EXPORT: "Export",                         // When a document is exported to another system.
+    DOWNLOAD: "Download",                     // When a document is downloaded.
     METADATA_UPDATE: "Metadata Update",       // When a document's metadata is updated.
     DELETE: "Delete",                         // When a document is deleted. 
-    DOWNLOAD: "Download",                     // When a document is downloaded.
-    VERIFY: "Verify",                         // When a document is verified.
-    REJECT: "Reject",                         // When a document is rejected.
+    
+    // Not supported in next app
     RENAME: "Rename",                         // When a document is renamed.
     MOVE: "Move",                             // When a document is moved to a different location.
     SHARE: "Share",                           // When a document is shared with another user.
@@ -59,9 +64,7 @@ export const EventCodes = {
     RETENTION_REMOVE: "Retention Remove",     // When a retention policy is removed from a document.
     EXPIRATION_SET: "Expiration Set",         // When an expiration date is set for a document.
     EXPIRATION_REMOVE: "Expiration Remove",   // When an expiration date is removed from a document.
-    PRINT: "Print",                           // When a document is printed.
-    IMPORT: "Import",                         // When a document is imported from another system.
-    EXPORT: "Export",                         // When a document is exported to another system.
+   
     ANNOTATE: "Annotate",                     // When a document is annotated.
     ANNOTATION_REMOVE: "Annotation Remove"    // When an annotation is removed from a document.
     */
