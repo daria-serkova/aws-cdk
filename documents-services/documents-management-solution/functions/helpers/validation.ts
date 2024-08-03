@@ -1,5 +1,5 @@
 import { Buffer } from 'buffer';
-import { SupportedDocumentsCategories, SupportedDocumentsFormats, AllowedBasicDocumentSize, supportedDocumentsTypes } from './utilities';
+import { SupportedDocumentsCategories, SupportedDocumentsFormats, AllowedDocumentSize } from './utilities';
 import { PDFDocument } from 'pdf-lib';
 import imageType from 'image-type';
 
@@ -42,8 +42,8 @@ import imageType from 'image-type';
  * @returns {boolean} - Returns true if the document size is within the allowed limit; otherwise, returns false.
  */
  export const isValidDocumentSize = (documentSize: number, errors: string[]): boolean => {
-    if (documentSize > AllowedBasicDocumentSize) {
-        errors.push(`Validation failed: document larger than ${AllowedBasicDocumentSize} bytes`);
+    if (documentSize > AllowedDocumentSize) {
+        errors.push(`Validation failed: document larger than ${AllowedDocumentSize} bytes`);
         return false;
     }
     return true;

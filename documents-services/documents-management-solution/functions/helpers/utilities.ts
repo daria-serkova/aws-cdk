@@ -168,7 +168,7 @@ export const getContentTypeByFormat = (format: string): string | null => {
     return formatObj ? formatObj.contentType : null;
 };
 
-export const AllowedBasicDocumentSize: number = 5 * 1024 * 1024; // 5 MB
+export const AllowedDocumentSize: number = 5 * 1024 * 1024; // 5 MB
 export const SupportedInitiatorSystemCodes: string[] = [
     "DHS_PP_WEB_APP",
     "DHS_PP_MBL_APP",

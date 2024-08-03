@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Resource, RestApi, StepFunctionsIntegration } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
-import { SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
+import { AllowedDocumentSize, SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
 import * as workflows from "./state-machines";
 import { auditGetEventsLambda, documentGetListByOwnerLambda, documentGetListByStatusLambda } from "./lambdas";
 import { CfnOutput } from "aws-cdk-lib";
@@ -73,6 +73,7 @@ export default function configureApiGatewayResources(scope: Construct ) {
     }
     /* Documents endpoints */
     configureDocumentUploadBase64Endpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
+    configureDocumentUploadEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentDetailsEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentsListByStatusEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentsListByOwnerEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
@@ -159,25 +160,24 @@ function configureDocumentUploadEndpoint(apiGateway: RestApi, node: Resource, re
                 documentOwnerId: {
                     type: JsonSchemaType.STRING,
                 },
-                documentFormat: {
-                    type: JsonSchemaType.STRING,
-                    enum: SupportedDocumentsFormats
-                },
-                documentCategory: {
-                    type: JsonSchemaType.STRING,
-                    enum: SupportedDocumentsCategories, 
-                }, 
-                documentSize: {
-                    type: JsonSchemaType.NUMBER,
+                files: {
+                    type: JsonSchemaType.ARRAY,
+                    items: {
+                        type: JsonSchemaType.OBJECT,
+                        properties: {
+                            documentFormat: { type: JsonSchemaType.STRING, enum: SupportedDocumentsFormats },
+                            documentCategory: { type: JsonSchemaType.STRING, enum: SupportedDocumentsCategories },
+                            documentSize: { type: JsonSchemaType.NUMBER , maximum: AllowedDocumentSize },
+                        },
+                        required: ["documentFormat", "documentCategory", "documentSize"],
+                    },
                 }
             },
             required: [
                "initiatorSystemCode",
                "requestorId",
                "documentOwnerId",
-               "documentFormat",
-               "documentCategory",
-               "documentSize",
+               "files"
             ],
         },
     };
