@@ -3,7 +3,7 @@ import { LogGroup } from "aws-cdk-lib/aws-logs";
 import { Choice, Condition, Fail, LogLevel, StateMachine, StateMachineType } from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
 import { ResourceName } from "../../resource-reference";
-import { auditStoreEventLambda, documentValidateBase64Lambda, documentUploadBase64Lambda, documentUploadMetadataLambda } from "../lambdas";
+import { auditStoreEventLambda, documentValidateLambda } from "../lambdas";
 import { addCloudWatchPutPolicy, addStateMachineExecutionPolicy, createStateMachineRole } from "../iam";
 import { createLambdaInvokeTask } from "../../../helpers/utilities";
 
@@ -14,10 +14,10 @@ import { createLambdaInvokeTask } from "../../../helpers/utilities";
 export const configureWorkflow = (scope: Construct, apiGatewayRole: Role, logGroup: LogGroup): StateMachine => {
   const validateDocumentParamsTask = createLambdaInvokeTask(scope,
       ResourceName.stateMachines.WF_UPLOAD_TASK_VALIDATE_DOCUMENT_DATA,
-      documentValidateBase64Lambda);
+      documentValidateLambda);
   const generatePreSignedUploadUrl = createLambdaInvokeTask(scope,
       ResourceName.stateMachines.WF_UPLOAD_TASK_GENERATE_PRESIGNED_URL,
-      documentUploadBase64Lambda);
+      documentValidateLambda);
   const storeAuditEventTask = createLambdaInvokeTask(scope, 
       ResourceName.stateMachines.WF_UPLOAD_TASK_STORE_AUDIT_EVENT,
       auditStoreEventLambda);
@@ -33,8 +33,8 @@ export const configureWorkflow = (scope: Construct, apiGatewayRole: Role, logGro
   const definition = validateDocumentParamsTask
     .next(new Choice(scope, ResourceName.stateMachines.WF_UPLOAD_CHOICE_IS_VALID)
       .when(Condition.numberEquals('$.statusCode', 200), 
-      generatePreSignedUploadUrl
-          .next(storeAuditEventTask)
+        generatePreSignedUploadUrl
+         // .next(storeAuditEventTask)
       )
       .otherwise(failState)
     );
@@ -54,3 +54,7 @@ export const configureWorkflow = (scope: Construct, apiGatewayRole: Role, logGro
 
   return stateMachine;
 };
+
+function configureLambdaValidateDocument(): () => any {
+  throw new Error("Function not implemented.");
+}

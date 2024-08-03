@@ -21,6 +21,7 @@ const lambdaFilesLocation = '../../functions';
  * Lambdas, related to Documents operations functionality
  */
 let documentValidateBase64LambdaInstance: NodejsFunction;
+let documentValidateLambdaInstance: NodejsFunction;
 let documentUploadBase64LambdaInstance: NodejsFunction;
 let documentUploadMetadataLambdaInstance: NodejsFunction;
 let documentGeneratePreSignedLambdaInstance: NodejsFunction;
@@ -28,6 +29,7 @@ let documentGetMetadataLambdaInstance: NodejsFunction;
 let documentGetListByStatusLambdaInstance: NodejsFunction;
 let documentGetListByOwnerLambdaInstance: NodejsFunction;
 export const documentValidateBase64Lambda = () => documentValidateBase64LambdaInstance;
+export const documentValidateLambda = () => documentValidateLambdaInstance;
 export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstance;
 export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaInstance;
 export const documentGetMetadataLambda = () => documentGetMetadataLambdaInstance;
@@ -58,6 +60,12 @@ export const errorsHandlingLambda = () => errorsHandlingLambdaInstance;
  */
  let verifyUpdateTrailLambdaInstance: NodejsFunction;
  export const verifyUpdateTrailLambda = () => verifyUpdateTrailLambdaInstance;
+
+ const defaultLambdaSettings = {
+    memorySize: 256,
+    timeout: Duration.minutes(3),
+    handler: 'handler',
+ }
 /**
  * Configuration of Lambda functions
  * @param scope 
@@ -69,6 +77,7 @@ export default function configureLambdaResources(
             documentAudit: LogGroup    
 }) {
     documentValidateBase64LambdaInstance = configureLambdaValidateBase64Document(scope, logGroups.documentOperations);
+    documentValidateLambdaInstance = configureLambdaValidateDocument(scope, logGroups.documentOperations);
     documentUploadBase64LambdaInstance = configureLambdaUploadBase64Document(scope, logGroups.documentOperations);
     documentUploadMetadataLambdaInstance = configureLambdaUploadDocumentMetadata(scope, logGroups.documentOperations);
     documentGeneratePreSignedLambdaInstance = configureLambdaDocumentGeneratePreSignedUrl(scope, logGroups.documentOperations);
@@ -94,20 +103,34 @@ export default function configureLambdaResources(
  * @returns {NodejsFunction} - The configured NodejsFunction instance.
  */
 const configureLambdaValidateBase64Document = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
-    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_VALIDATE_BASE64);
+    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_VALIDATE_BASE64_DOCUMENT);
     addCloudWatchPutPolicy(iamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);
-    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_VALIDATE_BASE64, {
-        functionName: ResourceName.lambdas.DOCUMENT_VALIDATE_BASE64,
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_VALIDATE_BASE64_DOCUMENT, {
+        functionName: ResourceName.lambdas.DOCUMENT_VALIDATE_BASE64_DOCUMENT,
         description: 'Checks if the document meets certain criteria before uploading.',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/validate-base64.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/validate-base64-document.ts`),
         logGroup: logGroup,
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
-        }
+        },
+        ...defaultLambdaSettings
+    });
+    return lambda;   
+}
+const configureLambdaValidateDocument = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_VALIDATE_DOCUMENT);
+    addCloudWatchPutPolicy(iamRole, ResourceName.cloudWatch.DOCUMENT_OPERATIONS_LOGS_GROUP);
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_VALIDATE_DOCUMENT, {
+        functionName: ResourceName.lambdas.DOCUMENT_VALIDATE_DOCUMENT,
+        description: 'Checks if the document meets certain criteria before uploading.',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/validate-document.ts`),
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+        },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }
@@ -130,15 +153,13 @@ const configureLambdaUploadBase64Document = (scope: Construct, logGroup: LogGrou
         functionName: ResourceName.lambdas.DOCUMENT_UPLOAD_BASE64,
         description: 'Uploads base64 document in S3 bucket',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/upload-base64.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
         logGroup: logGroup,
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
             BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
         },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }
@@ -161,15 +182,13 @@ const configureLambdaUploadDocumentMetadata = (scope: Construct, logGroup: LogGr
         functionName: ResourceName.lambdas.DOCUMENT_UPLOAD_METADATA,
         description: 'Saves metadata of the uploaded document in the DynamoDB',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/add-metadata.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
         logGroup: logGroup,
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
             TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA
         },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }
@@ -190,9 +209,6 @@ const configureLambdaSendNotifications = (scope: Construct, logGroup: LogGroup):
         functionName: ResourceName.lambdas.NOTIFICATIONS_SEND,
         description: 'Sends list of email notifications to stakeholders',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/notifications-send.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
         logGroup: logGroup,
         role: iamRole,
         environment: {
@@ -200,6 +216,7 @@ const configureLambdaSendNotifications = (scope: Construct, logGroup: LogGroup):
             EMS_SERVICE_URL: process.env.EMS_SERVICE_URL || '',
             EMS_SERVICE_TOKEN: process.env.EMS_SERVICE_TOKEN || ''
         },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }
@@ -223,9 +240,6 @@ const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup:
         functionName: ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGNED_URL,
         description: 'Retrieves the S3 object pre-signed URL and returns it to the end-user',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/generate-presigned-url.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
         logGroup: logGroup,
         role: iamRole,
         environment: {
@@ -233,6 +247,7 @@ const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup:
             BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
             TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA
         },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }
@@ -257,14 +272,12 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
         functionName: ResourceName.lambdas.ERRORS_HANDLING,
         description: 'Processes errors from State Machines',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/errors-handling.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
         logGroup: logGroup,
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
         },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }
@@ -287,15 +300,13 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
         functionName: ResourceName.lambdas.AUDIT_STORE_EVENT,
         description: 'Stores audit events in the DynamoDB',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/audit/audit-store-event.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
         logGroup: logGroup,
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
             TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT
         },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }
@@ -322,9 +333,6 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
         functionName: ResourceName.lambdas.AUDIT_GET_EVENTS,
         description: 'Get list of audit events',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/audit/audit-get-events.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
         logGroup: logGroup,
         role: iamRole,
         environment: {
@@ -333,6 +341,7 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
             INDEX_DOCUMENT_ID_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID,
             INDEX_USER_ID_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR,
         },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }
@@ -345,16 +354,13 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
         functionName: ResourceName.lambdas.DOCUMENT_GET_METADATA,
         description: 'Retrieves information about document metadata',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-metadata.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
         logGroup: logGroup,
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
             TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
-
         },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }
@@ -369,9 +375,6 @@ const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): N
         functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS,
         description: 'Retrieves list of documents by Status',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-list-by-status.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
         logGroup: logGroup,
         role: iamRole,
         environment: {
@@ -379,6 +382,7 @@ const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): N
             TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
             INDEX: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_STATUS
         },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }
@@ -392,9 +396,6 @@ const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): No
         functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER,
         description: 'Retrieves list of documents by Owner ID',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-list-by-owner.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
         logGroup: logGroup,
         role: iamRole,
         environment: {
@@ -402,6 +403,7 @@ const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): No
             TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
             INDEX: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER
         },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }
@@ -415,9 +417,6 @@ const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup):
         functionName: ResourceName.lambdas.VERIFY_UPDATE_TRAIL,
         description: 'Updates verification history',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/verify/update-trail.ts`),
-        memorySize: 256,
-        timeout: Duration.minutes(3),
-        handler: 'handler',
         logGroup: logGroup,
         role: iamRole,
         environment: {
@@ -425,6 +424,7 @@ const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup):
             METADATA_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
             VERIFICATION_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION
         },
+        ...defaultLambdaSettings
     });
     return lambda;   
 }

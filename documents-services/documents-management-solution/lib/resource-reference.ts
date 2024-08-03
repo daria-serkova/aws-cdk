@@ -51,7 +51,8 @@ export const ResourceName = {
     },
     iam: {
         // Lambdas roles
-        DOCUMENT_VALIDATE_BASE64: resourceName('document-validate-base64-lbd-role'),
+        DOCUMENT_VALIDATE_BASE64_DOCUMENT: resourceName('document-validate-b64-lbd-role'),
+        DOCUMENT_VALIDATE_DOCUMENT: resourceName('document-validate-lbd-role'),
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64-lbd-role'),
         DOCUMENT_VALIDATE: resourceName('document-validate-lbd-role'),
         DOCUMENT_UPLOAD: resourceName('document-upload-lbd-role'),
@@ -78,7 +79,8 @@ export const ResourceName = {
         API_GATEWAY_ROLE: resourceName('api-gateway-role'),
     },
     lambdas: {
-        DOCUMENT_VALIDATE_BASE64: resourceName('document-validate-base64-lbd'),
+        DOCUMENT_VALIDATE_BASE64_DOCUMENT: resourceName('document-validate-b64-lbd'),
+        DOCUMENT_VALIDATE_DOCUMENT: resourceName('document-validate-lbd'),
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64-lbd'),
         DOCUMENT_VALIDATE: resourceName('document-validate-lbd'),
         DOCUMENT_UPLOAD: resourceName('document-upload-lbd'),

@@ -7,8 +7,8 @@ import * as validation from '../helpers/validation';
  * @returns 
  */
 export const handler = async (event: any): Promise<any> => {
-  const { documentFormat, documentCategory, documentSize, documentContent} =  event.body;
-  if (!documentFormat || !documentCategory || !documentSize || !documentContent) {
+  const { documentFormat, documentCategory, documentSize } =  event.body;
+  if (!documentFormat || !documentCategory || !documentSize) {
     return {
       statusCode: 400,
       body: {
@@ -19,8 +19,7 @@ export const handler = async (event: any): Promise<any> => {
   const errors: string[] = [];
   const isValid = validation.isValidDocumentFormat(documentFormat, errors)
       && validation.isValidDocumentCategory(documentCategory, errors)
-      && validation.isValidDocumentSize(documentSize, errors)
-      && await validation.isFileIntegrityConfirmed(documentContent, documentFormat, errors);
+      && validation.isValidDocumentSize(documentSize, errors);
   return isValid 
   ? {
       statusCode: 200,
