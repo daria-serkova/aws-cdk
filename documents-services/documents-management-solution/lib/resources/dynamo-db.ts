@@ -50,4 +50,18 @@ export default function configureDynamoDbResources(scope: Construct ) {
         sortKey: { name: 'eventInitiator', type: AttributeType.STRING },
         projectionType: ProjectionType.ALL,
     });
+
+    const documentsVerificationTable = new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION, {
+        tableName: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT,
+        partitionKey: { name: "verificationId", type: AttributeType.STRING },
+        billingMode: BillingMode.PAY_PER_REQUEST,
+        tableClass: TableClass.STANDARD,
+        encryption: TableEncryption.DEFAULT,
+        removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
+    });
+    documentsVerificationTable.addGlobalSecondaryIndex({
+        indexName: ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION_INDEX_DOCUMENT_ID,
+        partitionKey: { name: 'documentId', type: AttributeType.STRING },
+        projectionType: ProjectionType.ALL,
+    });
 }

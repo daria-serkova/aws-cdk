@@ -92,6 +92,9 @@ export const ResourceName = {
         DOCUMENTS_AUDIT: resourceName('documents-audit'),
         DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR: resourceName('documents-audit-by-event-initiator'),
         DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID: resourceName('documents-audit-by-document-id'),
+
+        DOCUMENTS_VERIFICATION: resourceName('documents-verification'),
+        DOCUMENTS_VERIFICATION_INDEX_DOCUMENT_ID: resourceName('documents-verification-by-document-id'),
     },
     stateMachines: {
         
