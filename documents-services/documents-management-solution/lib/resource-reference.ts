@@ -42,6 +42,7 @@ export const ResourceName = {
         DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentUploadBase64`,
         DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_GET_DETAILS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetDetails`,
         DOCUMENTS_REQUEST_MODEL_GET_LIST_STATUS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetListStatus`,
+        DOCUMENTS_REQUEST_MODEL_GET_LIST_OWNER: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetListOwner`,
 
         AUDIT_REQUEST_MODEL_GET_EVENTS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}AuditGetEvents`,
     },
@@ -53,6 +54,7 @@ export const ResourceName = {
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd-role'),
         DOCUMENT_GET_METADATA: resourceName('document-get-metadata-lbd-role'),
         DOCUMENT_GET_LIST_BY_STATUS: resourceName('document-get-list-status-lbd-role'),
+        DOCUMENT_GET_LIST_BY_OWNER: resourceName('document-get-list-owner-lbd-role'),
 
         AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd-role'),
         AUDIT_GET_EVENTS: resourceName('get-audit-events-lbd-role'),
@@ -73,6 +75,8 @@ export const ResourceName = {
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd'),
         DOCUMENT_GET_METADATA: resourceName('document-get-metadata-lbd'),
         DOCUMENT_GET_LIST_BY_STATUS: resourceName('document-get-list-status-lbd'),
+        DOCUMENT_GET_LIST_BY_OWNER: resourceName('document-get-list-owner-lbd'),
+
         
         NOTIFICATIONS_SEND: resourceName('notifications-send-lbd'),
         ERRORS_HANDLING: resourceName('errors-handling-lbd'),

@@ -5,7 +5,7 @@ import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
 import { SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
 import { workflowDocumentUploadBase64, workflowGetDocumentDetails } from "./state-machines";
-import { auditGetEventsLambda, documentGetListByStatusLambda } from "./lambdas";
+import { auditGetEventsLambda, documentGetListByOwnerLambda, documentGetListByStatusLambda } from "./lambdas";
 import { CfnOutput } from "aws-cdk-lib";
 
 interface ApiNodes {
@@ -73,6 +73,7 @@ export default function configureApiGatewayResources(scope: Construct ) {
     configureDocumentUploadBase64Endpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentDetailsEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentsListByStatusEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
+    configureGetDocumentsListByOwnerEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     /* Audit endpoints */
     configureAuditGetEventsEndpoint(apiGatewayInstance, apiNodesInstance.audit, requestValidatorInstance);
 }
@@ -247,4 +248,38 @@ function configureGetDocumentsListByStatusEndpoint(apiGateway: RestApi, node: Re
         requestValidator: requestValidatorInstance,
     });
 }
-
+function configureGetDocumentsListByOwnerEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+    const modelName = ResourceName.apiGateway.DOCUMENTS_REQUEST_MODEL_GET_LIST_OWNER;
+    let requestModel = {
+        contentType: "application/json",
+        description: "Document: Get List by Owner ID",
+        modelName: modelName,
+        modelId: modelName,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                initiatorSystemCode: {
+                    type: JsonSchemaType.STRING,
+                    enum: SupportedInitiatorSystemCodes
+                },
+                requestorId: {
+                    type: JsonSchemaType.STRING,
+                },
+                documentOwnerId: {
+                    type: JsonSchemaType.STRING,
+                },
+            },
+            required: [
+                "initiatorSystemCode",
+                "requestorId",
+                "documentOwnerId"
+            ],
+        },
+    };
+    apiGateway.addModel(modelName, requestModel);
+    node.addResource('get-list-by-owner').addMethod("POST", new LambdaIntegration(documentGetListByOwnerLambda()), {
+        apiKeyRequired: true,
+        requestModels: { "application/json": requestModel },
+        requestValidator: requestValidatorInstance,
+    });
+}

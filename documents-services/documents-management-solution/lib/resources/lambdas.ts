@@ -26,12 +26,14 @@ let documentUploadMetadataLambdaInstance: NodejsFunction;
 let documentGeneratePreSignedLambdaInstance: NodejsFunction;
 let documentGetMetadataLambdaInstance: NodejsFunction;
 let documentGetListByStatusLambdaInstance: NodejsFunction;
+let documentGetListByOwnerLambdaInstance: NodejsFunction;
 export const documentValidateBase64Lambda = () => documentValidateBase64LambdaInstance;
 export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstance;
 export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaInstance;
 export const documentGetMetadataLambda = () => documentGetMetadataLambdaInstance;
 export const documentGeneratePreSignedLambda = () => documentGeneratePreSignedLambdaInstance;
 export const documentGetListByStatusLambda = () => documentGetListByStatusLambdaInstance;
+export const documentGetListByOwnerLambda = () => documentGetListByOwnerLambdaInstance;
 
 /**
  * Lambdas, related to Communication functionality
@@ -66,6 +68,7 @@ export default function configureLambdaResources(
     documentGeneratePreSignedLambdaInstance = configureLambdaDocumentGeneratePreSignedUrl(scope, logGroups.documentOperations);
     documentGetMetadataLambdaInstance = configureLambdaGetDocumentMetadata(scope, logGroups.documentOperations);
     documentGetListByStatusLambdaInstance = configureLambdaGetListByStatus(scope, logGroups.documentOperations);
+    documentGetListByOwnerLambdaInstance = configureLambdaGetListByOwner(scope, logGroups.documentOperations);
 
     notificationsSendLambdaInstance = configureLambdaSendNotifications(scope, logGroups.documentOperations);
     errorsHandlingLambdaInstance = configureLambdaErrorHandling(scope, logGroups.documentOperations);
@@ -367,6 +370,29 @@ const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): N
             REGION: process.env.AWS_REGION || '',
             TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
             INDEX: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_STATUS
+        },
+    });
+    return lambda;   
+}
+const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_LIST_BY_OWNER);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    addDynamoDbIndexReadPolicy(iamRole, 
+        ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+        ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER);
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER, {
+        functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER,
+        description: 'Retrieves list of documents by Owner ID',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-list-by-owner.ts`),
+        memorySize: 256,
+        timeout: Duration.minutes(3),
+        handler: 'handler',
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+            INDEX: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER
         },
     });
     return lambda;   
