@@ -1,15 +1,35 @@
+import { LambdaInvoke } from 'aws-cdk-lib/aws-stepfunctions-tasks';
+import { Construct } from 'constructs';
 import { config } from 'dotenv';
 config();
 /**
  * Identifies envrironment of the deployment to minimize AWS cost for non-production environments.
  */
 export const isProduction = process.env.TAG_ENVIRONMENT === 'production';
+/**
+* Creates a LambdaInvoke task.
+* @param scope 
+* @param id 
+* @param lambdaFunction 
+* @param additionalProps 
+*/
+export const createLambdaInvokeTask = (scope: Construct, id: string, lambdaFunction: () => any, additionalProps = {}): LambdaInvoke => (
+ new LambdaInvoke(scope, id, {
+   lambdaFunction: lambdaFunction(),
+   outputPath: '$.Payload',
+   ...additionalProps
+ })
+);
+
 
 export const EventCodes = {
     UPLOAD: "Upload",                         // When a document is uploaded.
-    METADATA_UPDATE: "Metadata Update",       // When a document's metadata is updated.
-    DELETE: "Delete",                         // When a document is deleted.
     VIEW: "View",                             // When a document is viewed.
+    
+    
+    /*
+    METADATA_UPDATE: "Metadata Update",       // When a document's metadata is updated.
+    DELETE: "Delete",                         // When a document is deleted. 
     DOWNLOAD: "Download",                     // When a document is downloaded.
     VERIFY: "Verify",                         // When a document is verified.
     REJECT: "Reject",                         // When a document is rejected.
@@ -44,4 +64,6 @@ export const EventCodes = {
     EXPORT: "Export",                         // When a document is exported to another system.
     ANNOTATE: "Annotate",                     // When a document is annotated.
     ANNOTATION_REMOVE: "Annotation Remove"    // When an annotation is removed from a document.
+    */
 };
+

@@ -1,24 +1,11 @@
 import { Role } from "aws-cdk-lib/aws-iam";
 import { LogGroup } from "aws-cdk-lib/aws-logs";
 import { LogLevel, StateMachine, StateMachineType } from "aws-cdk-lib/aws-stepfunctions";
-import { LambdaInvoke } from "aws-cdk-lib/aws-stepfunctions-tasks";
 import { Construct } from "constructs";
 import { ResourceName } from "../../resource-reference";
 import { verifyUpdateTrailLambda, documentUploadMetadataLambda, auditStoreEventLambda } from "../lambdas";
 import { addCloudWatchPutPolicy, addStateMachineExecutionPolicy, createStateMachineRole } from "../iam";
-
-/**
- * Creates a LambdaInvoke task.
- * @param scope 
- * @param id 
- * @param lambdaFunction 
- */
-const createLambdaInvokeTask = (scope: Construct, id: string, lambdaFunction: () => any): LambdaInvoke => (
-  new LambdaInvoke(scope, id, {
-    lambdaFunction: lambdaFunction(),
-    outputPath: '$.Payload',
-  })
-);
+import { createLambdaInvokeTask } from "../../../helpers/utilities";
 
 /**
  * Configuration of State Machine for 'Verify Document' workflow
