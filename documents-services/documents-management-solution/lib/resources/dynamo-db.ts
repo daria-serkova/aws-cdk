@@ -3,7 +3,6 @@ import { Construct } from "constructs";
 import { RemovalPolicy } from "aws-cdk-lib";
 import { isProduction } from "../../helpers/utilities";
 import { auditTables, metadataTables, ResourceName, verificationTables } from "../resource-reference";
-import { table } from "console";
 
 const defaultTablesSettings = {
     billingMode: BillingMode.PAY_PER_REQUEST,
@@ -17,7 +16,7 @@ const defaultTablesSettings = {
  * @param scope 
  */
 export default function configureDynamoDbResources(scope: Construct ) {
-    /* Documents Metadata per document type (Insurance, Billing, Providers, etc)*/
+    /* Documents Metadata per document type (Insurance, Billing, Patients, Legal, etc) */
     let tables = metadataTables();
     tables.forEach((tableName) => {
         const table = new Table(scope, tableName, {
@@ -38,6 +37,7 @@ export default function configureDynamoDbResources(scope: Construct ) {
             projectionType: ProjectionType.ALL,
         });
     });
+    /* Documents Audit per document type (Insurance, Billing, Patients, Legal, etc) */
     tables = auditTables();
     tables.forEach((tableName) => {
         const table = new Table(scope, tableName, {
@@ -63,6 +63,7 @@ export default function configureDynamoDbResources(scope: Construct ) {
             projectionType: ProjectionType.ALL,
         });
     });
+    /* Documents Verification records per document type (Insurance, Billing, Patients, Legal, etc) */
     tables = verificationTables();
     tables.forEach((tableName) => {
         const table = new Table(scope, tableName, {
@@ -75,7 +76,6 @@ export default function configureDynamoDbResources(scope: Construct ) {
             partitionKey: { name: 'documentid', type: AttributeType.STRING },
             sortKey: { name: "documentstatus", type: AttributeType.STRING },
             projectionType: ProjectionType.ALL,
-        });
-        
+        });     
     });
 }
