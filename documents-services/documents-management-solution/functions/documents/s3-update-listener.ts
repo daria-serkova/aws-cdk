@@ -40,7 +40,7 @@ const AUDIT_TABLE_NAME = process.env.AUDIT_TABLE_NAME!;
 export const handler = async (event: any): Promise<any> => {
     const record = event.Records[0];
     if (!record?.s3?.bucket?.name || !record?.s3?.object?.key || !record?.s3?.object?.size
-          || !record?.s3?.object?.versionId || !record?.eventTime || record?.requestParameters?.sourceIPAddress) {
+          || !record?.s3?.object?.versionId || !record?.eventTime || !record?.requestParameters?.sourceIPAddress) {
         console.error(`Missing S3 event details.`);
         return {
             statusCode: 400,
