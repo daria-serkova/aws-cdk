@@ -33,6 +33,29 @@ export const ResourceName = {
     s3Buckets: {
         DOCUMENTS_BUCKET: resourceName('documents-bucket').toLowerCase(),
     },
+    dynamoDbTables: {
+        DOCUMENTS_METADATA: {
+            PROVIDERS: resourceName('providers-documents-metadata'),
+            INSURANCE: resourceName('insurance-documents-metadata'),
+            BILLING: resourceName('billing-documents-metadata'),
+            CONSENT_FORMS: resourceName('consent-forms-documents-metadata'),
+            PATIENTS: resourceName('patients-documents-metadata'),
+        },
+        DOCUMENTS_AUDIT: {
+            PROVIDERS: resourceName('providers-documents-audit'),
+            INSURANCE: resourceName('insurance-documents-audit'),
+            BILLING: resourceName('billing-documents-audit'),
+            CONSENT_FORMS: resourceName('consent-forms-documents-audit'),
+            PATIENTS: resourceName('patients-documents-audit'),
+        },
+        DOCUMENTS_VERIFICATION: {
+            PROVIDERS: resourceName('providers-documents-verification'),
+            INSURANCE: resourceName('insurance-documents-verification'),
+            BILLING: resourceName('billing-documents-verification'),
+            CONSENT_FORMS: resourceName('consent-forms-documents-verification'),
+            PATIENTS: resourceName('patients-documents-verification'),
+        },
+    },
     apiGateway: {
         DOCUMENTS_SERVCIE_GATEWAY: resourceName('documents-api'),
         DOCUMENTS_SERVCIE_API_USAGE_PLAN: resourceName('documents-api-usage-plan'),
@@ -111,25 +134,7 @@ export const ResourceName = {
         AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd'),
         AUDIT_GET_EVENTS: resourceName('get-audit-events-lbd'),
     },
-    dynamoDbTables: {
-        DOCUMENTS_METADATA: {
-            PROVIDERS: resourceName('providers-documents-metadata'),
-            INSURANCE: resourceName('insurance-documents-metadata'),
-            BILLING: resourceName('billing-documents-metadata'),
-            CONSENT_FORMS: resourceName('consent-forms-documents-metadata'),
-            PATIENTS: resourceName('patients-documents-metadata'),
-        },
-        DOCUMENTS_AUDIT: {
-            PROVIDERS: resourceName('providers-documents-audit'),
-            INSURANCE: resourceName('insurance-documents-audit'),
-            BILLING: resourceName('billing-documents-audit'),
-            CONSENT_FORMS: resourceName('consent-forms-documents-audit'),
-            PATIENTS: resourceName('patients-documents-audit'),
-        },
-
-        DOCUMENTS_VERIFICATION: resourceName('documents-verification'),
-        DOCUMENTS_VERIFICATION_INDEX_DOCUMENT_ID: resourceName('documents-verification-by-document-id'),
-    },
+    
     stateMachines: {
         
         WORKFLOW_DOCUMENT_UPLOAD_BASE64: resourceName('workflow-upload-b64-document-sm'),
@@ -162,4 +167,7 @@ export const metadataTables = (): string[] => {
 }
 export const auditTables = (): string[] => {
     return Object.values(ResourceName.dynamoDbTables.DOCUMENTS_AUDIT);
+}
+export const verificationTables = (): string[] => {
+    return Object.values(ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION);
 }

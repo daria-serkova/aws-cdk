@@ -11,7 +11,7 @@ import {
     addS3ReadPolicy,
     addDynamoDbIndexReadPolicy
 } from './iam';
-import { auditTables, metadataTables, ResourceName } from '../resource-reference';
+import { auditTables, metadataTables, ResourceName, verificationTables } from '../resource-reference';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 
 const lambdaFilesLocation = '../../functions';
@@ -24,6 +24,11 @@ export const documentGeneratePreSignedUploadUrlsLambda = () => documentGenerateP
 let documentS3UploadListenerLambdaInstance: NodejsFunction;
 export const documentS3UploadListenerLambda = () => documentS3UploadListenerLambdaInstance;
  
+
+
+
+
+
 
 let documentValidateBase64LambdaInstance: NodejsFunction;
 let documentUploadBase64LambdaInstance: NodejsFunction;
@@ -87,6 +92,11 @@ export default function configureLambdaResources(
     documentS3UploadListenerLambdaInstance = configureLambdaS3UploadListener(scope, logGroups.documentOperations);
 
 
+
+
+
+
+
     documentValidateBase64LambdaInstance = configureLambdaValidateBase64Document(scope, logGroups.documentOperations);
     documentUploadBase64LambdaInstance = configureLambdaUploadBase64Document(scope, logGroups.documentOperations);
     documentUploadMetadataLambdaInstance = configureLambdaUploadDocumentMetadata(scope, logGroups.documentOperations);
@@ -106,6 +116,64 @@ export default function configureLambdaResources(
 
     verifyUpdateTrailLambdaInstance = configureLambdaVerifyUpdateTrail(scope, logGroups.documentOperations);
 }
+
+const configureLambdaGeneratePreSignedUploadUrls = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    addS3WritePolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS, {
+        functionName: ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS,
+        description: 'Updates verification history',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/generate-presigned-upload-urls.ts`),
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
+            BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
+        },
+        ...defaultLambdaSettings
+    });
+    return lambda;   
+}
+const configureLambdaS3UploadListener = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_S3_UPLOAD_LISTENER);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    addS3ReadPolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
+    let tables = metadataTables();
+    tables.forEach((tableName) => {
+        addDynamoDbWritePolicy(iamRole, tableName);
+    });
+    tables = auditTables();
+    tables.forEach((tableName) => {
+        addDynamoDbWritePolicy(iamRole, tableName);
+    });
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_S3_UPLOAD_LISTENER, {
+        functionName: ResourceName.lambdas.DOCUMENT_S3_UPLOAD_LISTENER,
+        description: 'Listens upload to S3 bucket events and store metadata / audit data into DynamoDB',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/s3-update-listener.ts`),
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
+        },
+        ...defaultLambdaSettings
+    });
+    return lambda;   
+}
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Configures an AWS Lambda function to validate base64-encoded documents.
@@ -439,9 +507,14 @@ const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): No
 const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.VERIFY_UPDATE_TRAIL);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    const tables = metadataTables();
-    addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS);
-    addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION);
+    let tables = metadataTables();
+    tables.forEach((tableName) => {
+        addDynamoDbReadPolicy(iamRole, tableName);
+    });
+    tables = verificationTables();
+    tables.forEach((tableName) => {
+        addDynamoDbWritePolicy(iamRole, tableName);
+    });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.VERIFY_UPDATE_TRAIL, {
         functionName: ResourceName.lambdas.VERIFY_UPDATE_TRAIL,
         description: 'Updates verification history',
@@ -452,59 +525,11 @@ const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup):
             REGION: process.env.AWS_REGION || '',
             AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
             TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
-            METADATA_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS,
-            VERIFICATION_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION
         },
         ...defaultLambdaSettings
     });
     return lambda;   
 }
 
-const configureLambdaGeneratePreSignedUploadUrls = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
-    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS);
-    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addS3WritePolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
-    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS, {
-        functionName: ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS,
-        description: 'Updates verification history',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/generate-presigned-upload-urls.ts`),
-        logGroup: logGroup,
-        role: iamRole,
-        environment: {
-            REGION: process.env.AWS_REGION || '',
-            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
-            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
-            BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
-        },
-        ...defaultLambdaSettings
-    });
-    return lambda;   
-}
-const configureLambdaS3UploadListener = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
-    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_S3_UPLOAD_LISTENER);
-    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addS3ReadPolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
-    let tables = metadataTables();
-    tables.forEach((tableName) => {
-        addDynamoDbWritePolicy(iamRole, tableName);
-    });
-    tables = auditTables();
-    tables.forEach((tableName) => {
-        addDynamoDbWritePolicy(iamRole, tableName);
-    });
-    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_S3_UPLOAD_LISTENER, {
-        functionName: ResourceName.lambdas.DOCUMENT_S3_UPLOAD_LISTENER,
-        description: 'Listens upload to S3 bucket events and store metadata / audit data into DynamoDB',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/s3-update-listener.ts`),
-        logGroup: logGroup,
-        role: iamRole,
-        environment: {
-            REGION: process.env.AWS_REGION || '',
-            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
-            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
-        },
-        ...defaultLambdaSettings
-    });
-    return lambda;   
-}
+
 
