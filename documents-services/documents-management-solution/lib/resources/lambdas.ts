@@ -424,6 +424,7 @@ const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup):
 const configureLambdaGeneratePreSignedUploadUrls = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    addS3WritePolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS, {
         functionName: ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS,
         description: 'Updates verification history',
@@ -432,6 +433,7 @@ const configureLambdaGeneratePreSignedUploadUrls = (scope: Construct, logGroup: 
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
+            BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
         },
         ...defaultLambdaSettings
     });

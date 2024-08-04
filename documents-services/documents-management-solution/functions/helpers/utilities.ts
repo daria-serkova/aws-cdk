@@ -162,12 +162,11 @@ export const SupportedDocumentsFormats: string[] = supportedDocumentsTypes().map
  * @param {string} format - The document format for which to find the content type.
  * @returns {string | null} - The corresponding MIME content type, or null if the format is not supported.
  */
-export const getContentTypeByFormat = (format: string): string | null => {
-    const documentsTypes = supportedDocumentsTypes();
-    const formatObj = documentsTypes.find(f => f.format.toUpperCase() === format.toUpperCase());
-    return formatObj ? formatObj.contentType : null;
+ export const getContentTypeByFormat = (format: string): string | undefined => {
+    const supportedTypes = supportedDocumentsTypes();
+    const documentType = supportedTypes.find(docType => docType.format.toUpperCase() === format.toUpperCase());
+    return documentType ? documentType.contentType : undefined;
 };
-
 export const AllowedDocumentSize: number = 5 * 1024 * 1024; // 5 MB
 export const SupportedInitiatorSystemCodes: string[] = [
     "DHS_PP_WEB_APP",
