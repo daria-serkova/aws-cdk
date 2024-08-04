@@ -9,7 +9,10 @@ export function generateUUID(): string {
 /**
  * Path inside S3 bucket where all new documents should be uploaded
  */
-export const uploadFolder = (param1: string) => `documents/uploaded/${param1}`;
+
+export const uploadFolder = (documentType: string, uuid: string) => {
+    return `${getDocumentsFolderByType(documentType)}/upload/${uuid}`;
+}
 /**
  * Returns a list of supported document categories.
  * NOTE: cleanup for your application
@@ -134,7 +137,7 @@ export const SupportedDocumentsCategories: string[] = supportedDocumentsCategori
  * 
  * @returns {Array<{format: string, contentType: string}>} - An array of objects, each containing a document format and its MIME content type.
  */
- export const supportedDocumentsTypes = (): Array<{ format: string; contentType: string; }> => [
+export const supportedDocumentsFormatsConentTypeMapping = (): Array<{ format: string; contentType: string; }> => [
     { format: 'PDF', contentType: 'application/pdf' },
     { format: 'JPG', contentType: 'image/jpeg' },
     { format: 'JPEG', contentType: 'image/jpeg' },
@@ -155,7 +158,26 @@ export const SupportedDocumentsCategories: string[] = supportedDocumentsCategori
     { format: 'DICOM', contentType: 'application/dicom' }
     */
 ];
-export const SupportedDocumentsFormats: string[] = supportedDocumentsTypes().map(f => f.format);
+export const SupportedDocumentsFormats: string[] = supportedDocumentsFormatsConentTypeMapping().map(f => f.format);
+
+
+export const supportedDocumentsTypesFolderMapping = (): Array<{ type: string; folder: string; }> => [
+    { type: 'PROVIDER_DOCUMENT', folder: 'providers' },
+    { type: 'CONSENT_PROCEDURE', folder: 'consent-forms/procedure' },
+    { type: 'CONSENT_MEDICAL_INFO_RELEASE', folder: 'consent-forms/medical-info-release' },
+    { type: 'CONSENT_RESEARCH_PARTICIPATION', folder: 'consent-forms/research-participation' },
+    { type: 'INSURANCE_CLAIM', folder: 'insurance-and-billing/insurance-claims' },
+    { type: 'BILLING_STATEMENT', folder: 'insurance-and-billing/billing-statements' },
+    { type: 'PAYMENT_RECEIPT', folder: 'insurance-and-billing/payment-receipts' },
+    { type: 'PRE-AUTH-REQUEST', folder: 'insurance-and-billing/pre-authorization-requests' },
+]
+export const SupportedDocumentsTypes: string[] = supportedDocumentsTypesFolderMapping().map(f => f.type);
+export const getDocumentsFolderByType = (type: string): string | undefined => {
+    const supportedTypes = supportedDocumentsTypesFolderMapping();
+    const documentType = supportedTypes.find(docType => docType.type.toUpperCase() === type.toUpperCase());
+    return documentType ? documentType.folder : undefined;
+};
+
 /**
  * Finds and returns the MIME content type for a given document format.
  * 
@@ -163,7 +185,7 @@ export const SupportedDocumentsFormats: string[] = supportedDocumentsTypes().map
  * @returns {string | null} - The corresponding MIME content type, or null if the format is not supported.
  */
  export const getContentTypeByFormat = (format: string): string | undefined => {
-    const supportedTypes = supportedDocumentsTypes();
+    const supportedTypes = supportedDocumentsFormatsConentTypeMapping();
     const documentType = supportedTypes.find(docType => docType.format.toUpperCase() === format.toUpperCase());
     return documentType ? documentType.contentType : undefined;
 };

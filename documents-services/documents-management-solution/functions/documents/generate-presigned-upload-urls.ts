@@ -9,16 +9,17 @@ interface DocumentMetadata {
    [key: string]: string | number | boolean;
 }
 interface DocumentFile {
-    documentFormat: string;
-    documentSize: number;
-    documentCategory: string;
-    documentIdentifier?: string;
-    metadata?: DocumentMetadata;
+   documentOwnerId: string;
+   documentFormat: string;
+   documentSize: number;
+   documentCategory: string;
+   documentType: string;
+   documentIdentifier?: string;
+   metadata?: DocumentMetadata;
 }
 interface DocumentUploadRequest {
     initiatorSystemCode: string;
     requestorId: string;
-    documentOwnerId: string;
     files: DocumentFile[];
 }
 
@@ -36,7 +37,7 @@ export const handler = async (event: any): Promise<any> => {
        documentId: string
    }[] = [];
     for (const file of request.files) {
-      const uploadLocation = uploadFolder(request.documentOwnerId);
+      const uploadLocation = uploadFolder(file.documentType, file.documentOwnerId);
       const documentName = `${file.documentCategory}${file.documentIdentifier 
             ? `_${file.documentIdentifier.toUpperCase().replace(/[\s\W]+/g, '_')}`
             : ""}`;
@@ -55,13 +56,14 @@ export const handler = async (event: any): Promise<any> => {
          Key: key,
          ContentType: getContentTypeByFormat(file.documentFormat),
          Metadata: {
-            documentOwnerId: request.documentOwnerId,
+            documentOwnerId: file.documentOwnerId,
             uploadInitiatedBySystemCode: request.initiatorSystemCode,
             uploadedBy: request.requestorId,
             uploadedAt: getCurrentTime(),
-            documentCategory: file.documentCategory,
             documentName,
+            documentCategory: file.documentCategory,
             documentFormat: file.documentFormat,
+            documentType: file.documentType,
             documentSize: file.documentSize.toString(),
             metadata: metadata
          },
