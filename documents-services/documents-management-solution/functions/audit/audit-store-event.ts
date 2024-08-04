@@ -25,7 +25,7 @@ const TABLE_NAME = process.env.TABLE_NAME!;
     }
   }
   const auditEvent = getAuditEvent(documentId, version, documentOwnerId, action, 
-      getCurrentTime(), requestorId, initiatorSystemCode);
+      getCurrentTime(), requestorId, initiatorSystemCode, 'ipTBD');
   try {
     await dynamoDb.send(new PutItemCommand({TableName: TABLE_NAME, Item: marshall(auditEvent)}));
     return {

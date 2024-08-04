@@ -9,7 +9,6 @@ export function generateUUID(): string {
 /**
  * Path inside S3 bucket where all new documents should be uploaded
  */
-
 export const uploadFolder = (documentType: string, uuid: string) => {
     return `${getDocumentsFolderByType(documentType)}/upload/${uuid}`;
 }
@@ -172,6 +171,8 @@ export const supportedDocumentsTypesFolderMapping = (): Array<{ type: string; fo
     { type: 'PRE-AUTH-REQUEST', folder: 'insurance-and-billing/pre-authorization-requests' },
 ]
 export const SupportedDocumentsTypes: string[] = supportedDocumentsTypesFolderMapping().map(f => f.type);
+export const SupportedS3Directories: string[] = supportedDocumentsTypesFolderMapping().map(f => f.folder);
+
 export const getDocumentsFolderByType = (type: string): string | undefined => {
     const supportedTypes = supportedDocumentsTypesFolderMapping();
     const documentType = supportedTypes.find(docType => docType.type.toUpperCase() === type.toUpperCase());
@@ -288,7 +289,8 @@ export const getAuditEvent = (
         event: string, 
         eventTime: string, 
         eventInitiator: string, 
-        initiatorSystemCode: string) => {
+        initiatorSystemCode: string,
+        eventInitiatorIp: string) => {
     return  {
         auditId: generateUUID(),
         documentId,
@@ -297,6 +299,7 @@ export const getAuditEvent = (
         event,
         eventTime,
         eventInitiator,
+        eventInitiatorIp,
         initiatorSystemCode
       }
 }

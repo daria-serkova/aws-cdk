@@ -52,6 +52,7 @@ export const ResourceName = {
     iam: {
         // Lambdas roles
         DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS: resourceName('document-generate-upload-urls-lbd-role'),
+        DOCUMENT_S3_UPLOAD_LISTENER: resourceName('document-s3-upload-listener-lbd-role'),
         // CLEANUP
 
 
@@ -83,6 +84,7 @@ export const ResourceName = {
     },
     lambdas: {
         DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS: resourceName('document-generate-upload-urls-lbd'),
+        DOCUMENT_S3_UPLOAD_LISTENER: resourceName('document-s3-upload-listener-lbd'),
         //CLEANUP
         
         DOCUMENT_VALIDATE_BASE64_DOCUMENT: resourceName('document-validate-b64-lbd'),

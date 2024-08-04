@@ -16,9 +16,9 @@ export class DocumentsManagementSolutionStack extends cdk.Stack {
       documentNotifications: LogGroup,
       documentAudit: LogGroup
     } = configureCloudWatchResources(this);
+    configureLambdaResources(this, logGroups);
     configureS3Resources(this);
     configureDynamoDbResources(this);
-    configureLambdaResources(this, logGroups);
     configureStateMachines(this, logGroups.documentWorkflow);
     configureApiGatewayResources(this);
   }

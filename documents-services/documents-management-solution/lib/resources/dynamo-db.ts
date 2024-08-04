@@ -12,7 +12,7 @@ export default function configureDynamoDbResources(scope: Construct ) {
     /* Documents Metadata */
     const documentsMetadataTable = new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_METADATA, {
         tableName: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
-        partitionKey: { name: "documentId", type: AttributeType.STRING },
+        partitionKey: { name: "documentid", type: AttributeType.STRING },
         billingMode: BillingMode.PAY_PER_REQUEST,
         tableClass: TableClass.STANDARD,
         encryption: TableEncryption.DEFAULT,
@@ -20,13 +20,13 @@ export default function configureDynamoDbResources(scope: Construct ) {
     });
     documentsMetadataTable.addGlobalSecondaryIndex({
         indexName: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_STATUS,
-        partitionKey: { name: 'documentStatus', type: AttributeType.STRING },
-        sortKey: { name: "documentOwnerId", type: AttributeType.STRING },
+        partitionKey: { name: 'documentstatus', type: AttributeType.STRING },
+        sortKey: { name: "documentownerid", type: AttributeType.STRING },
         projectionType: ProjectionType.ALL,
     });
     documentsMetadataTable.addGlobalSecondaryIndex({
         indexName: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER,
-        partitionKey: { name: 'documentOwnerId', type: AttributeType.STRING },
+        partitionKey: { name: 'documentownerid', type: AttributeType.STRING },
         projectionType: ProjectionType.ALL,
     });
 

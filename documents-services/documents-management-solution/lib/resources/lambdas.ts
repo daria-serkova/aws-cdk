@@ -19,9 +19,10 @@ const lambdaFilesLocation = '../../functions';
 /**
  * Lambdas, related to Documents operations functionality
  */
- let documentGeneratePreSignedUploadUrlsLambdaInstance: NodejsFunction;
- export const documentGeneratePreSignedUploadUrlsLambda = () => documentGeneratePreSignedUploadUrlsLambdaInstance;
-
+let documentGeneratePreSignedUploadUrlsLambdaInstance: NodejsFunction;
+export const documentGeneratePreSignedUploadUrlsLambda = () => documentGeneratePreSignedUploadUrlsLambdaInstance;
+let documentS3UploadListenerLambdaInstance: NodejsFunction;
+export const documentS3UploadListenerLambda = () => documentS3UploadListenerLambdaInstance;
  
 
 let documentValidateBase64LambdaInstance: NodejsFunction;
@@ -82,6 +83,10 @@ export default function configureLambdaResources(
             documentOperations: LogGroup, 
             documentAudit: LogGroup    
 }) {
+    documentGeneratePreSignedUploadUrlsLambdaInstance = configureLambdaGeneratePreSignedUploadUrls(scope, logGroups.documentOperations);
+    documentS3UploadListenerLambdaInstance = configureLambdaS3UploadListener(scope, logGroups.documentOperations);
+
+
     documentValidateBase64LambdaInstance = configureLambdaValidateBase64Document(scope, logGroups.documentOperations);
     documentUploadBase64LambdaInstance = configureLambdaUploadBase64Document(scope, logGroups.documentOperations);
     documentUploadMetadataLambdaInstance = configureLambdaUploadDocumentMetadata(scope, logGroups.documentOperations);
@@ -91,7 +96,7 @@ export default function configureLambdaResources(
     documentGetListByOwnerLambdaInstance = configureLambdaGetListByOwner(scope, logGroups.documentOperations);
 
 
-    documentGeneratePreSignedUploadUrlsLambdaInstance = configureLambdaGeneratePreSignedUploadUrls(scope, logGroups.documentOperations);
+    
 
     notificationsSendLambdaInstance = configureLambdaSendNotifications(scope, logGroups.documentOperations);
     errorsHandlingLambdaInstance = configureLambdaErrorHandling(scope, logGroups.documentOperations);
@@ -439,3 +444,25 @@ const configureLambdaGeneratePreSignedUploadUrls = (scope: Construct, logGroup: 
     });
     return lambda;   
 }
+const configureLambdaS3UploadListener = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_S3_UPLOAD_LISTENER);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    addS3ReadPolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
+    addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);
+    addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT);
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_S3_UPLOAD_LISTENER, {
+        functionName: ResourceName.lambdas.DOCUMENT_S3_UPLOAD_LISTENER,
+        description: 'Listens upload to S3 bucket events and store metadata / audit data into DynamoDB',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/s3-update-listener.ts`),
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+            METADATA_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+            AUDIT_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT,
+        },
+        ...defaultLambdaSettings
+    });
+    return lambda;   
+}
+

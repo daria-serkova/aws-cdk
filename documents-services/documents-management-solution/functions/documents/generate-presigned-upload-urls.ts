@@ -42,15 +42,6 @@ export const handler = async (event: any): Promise<any> => {
             ? `_${file.documentIdentifier.toUpperCase().replace(/[\s\W]+/g, '_')}`
             : ""}`;
       const key = `${uploadLocation}/${documentName}.${file.documentFormat}`;
-      const metadata =  file.metadata 
-         ? Buffer.from(JSON.stringify(file.metadata)).toString('base64')
-         : '';
-      if (metadata.length > 2048) {
-        return {
-          statusCode: 500,
-          body: JSON.stringify({ message: 'Encoded metadata exceeds the S3 metadata size limit.' }),
-        };
-      }
       const command = new PutObjectCommand({
          Bucket: BUCKET_NAME,
          Key: key,
@@ -65,7 +56,7 @@ export const handler = async (event: any): Promise<any> => {
             documentFormat: file.documentFormat,
             documentType: file.documentType,
             documentSize: file.documentSize.toString(),
-            metadata: metadata
+            ...file.metadata
          },
       });
       try {
