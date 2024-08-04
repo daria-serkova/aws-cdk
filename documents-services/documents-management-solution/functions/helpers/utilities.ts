@@ -49,8 +49,7 @@ export const SupportedRejectFolders = [
  export const supportedDocumentsCategories = (): Array<{ 
         category: string;
         reviewRequired: boolean;
-        folder: string;
-        metadataTable: string;
+        folder: string
     }> => {
         const providersPersonalFolder = 'providers/$status/$id/personal';
         const providersEducationFolder = 'providers/$status/$id/education';
@@ -65,151 +64,157 @@ export const SupportedRejectFolders = [
     // Providers Documents
     { 
         category: 'PROFESSIONAL_PHOTO', reviewRequired: true, 
-        folder: providersPersonalFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersPersonalFolder 
     },
     { 
         category: 'AADHAAR_CARD', reviewRequired: true, 
-        folder: providersPersonalFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersPersonalFolder
     },
     { 
         category: 'PAN_CARD', reviewRequired: true, 
-        folder: providersPersonalFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersPersonalFolder 
     },
     { 
         category: 'BACHELOR_DEGREE', reviewRequired: true, 
-        folder: providersEducationFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersEducationFolder
     },
     { 
         category: 'MASTER_DEGREE', reviewRequired: true,
-        folder: providersEducationFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersEducationFolder 
     },
     { 
         category: 'PHD_DEGREE', reviewRequired: true,
-        folder: providersEducationFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersEducationFolder
     },
     { 
         category: 'MEDICAL_REGISTRATION_CERTIFICATE', reviewRequired: true,
-        folder: providersMedicalFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersMedicalFolder
     },
     { 
         category: 'BUSINESS_REGISTRATION_CERTIFICATE', reviewRequired: true,
-        folder: providersBusinessFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersBusinessFolder 
     },
     { 
         category: 'BUSINESS_INSURANCE_CERTIFICATE', reviewRequired: true,
-        folder: providersBusinessFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersBusinessFolder 
     },
     { 
         category: 'BUSINESS_GST_IN', reviewRequired: true,
-        folder: providersBusinessFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersBusinessFolder 
     },
     { 
         category: 'BUSINESS_PHOTO', reviewRequired: true,
-        folder: providersBusinessFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersBusinessFolder
     },
     { 
         category: 'BUSINESS_ADDITIONAL_PROOF_OF_ADDRESS', reviewRequired: true,
-        folder: providersBusinessFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+        folder: providersBusinessFolder
     },
 
     // Insurance documents
     { 
         category: 'INSURANCE_CLAIM', reviewRequired: true,
-        folder: `${insuranceDocumentsFolder}/claims`,
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.INSURANCE 
+        folder: `${insuranceDocumentsFolder}/claims`
     },
     { 
         category: 'PRE-AUTH-REQUEST', reviewRequired: true,
-        folder: `${insuranceDocumentsFolder}/pre-auth-requests`,
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.INSURANCE 
+        folder: `${insuranceDocumentsFolder}/pre-auth-requests`
     },
     
     // Billing Documents
     { 
         category: 'BILLING_STATEMENT', reviewRequired: true,
-        folder: `${billingDocumentsFolder}/statements`,
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.BILLING 
+        folder: `${billingDocumentsFolder}/statements` 
     },
     { 
         category: 'PAYMENT_RECEIPT', reviewRequired: true,
-        folder: `${billingDocumentsFolder}/payment-receipts`,
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.BILLING 
+        folder: `${billingDocumentsFolder}/payment-receipts`
     },
     
     // Consent Forms
     { 
         category: 'INFORMED_CONSENT_FOR_PROCEDURE', reviewRequired: true,
-        folder: `${consentFormsDocumentsFolder}/procedures`,
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS 
+        folder: `${consentFormsDocumentsFolder}/procedures`
     },
     { 
         category: 'CONSENT_FOR_MEDICAL_INFO_RELEASE', reviewRequired: true,
-        folder: `${consentFormsDocumentsFolder}/medical-info-release`,
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS 
+        folder: `${consentFormsDocumentsFolder}/medical-info-release`
     },
     { 
         category: 'CONSENT_FOR_RESEARCH_PARTICIPATION', reviewRequired: true,
-        folder: `${consentFormsDocumentsFolder}/research-participation`,
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS 
+        folder: `${consentFormsDocumentsFolder}/research-participation` 
     },
 
     // Patient Documents
     { 
         category: 'PRESCRIPTION', reviewRequired: true,
-        folder: `${patientsDocumentsFolder}/perscriptions`, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+        folder: `${patientsDocumentsFolder}/perscriptions`
     },
     { 
         category: 'LAB_REPORT', reviewRequired: true,
-        folder: `${patientsDocumentsFolder}/lab-reports`, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+        folder: `${patientsDocumentsFolder}/lab-reports`
     },
     { 
         category: 'RADIOLOGY_IMAGE', reviewRequired: true,
-        folder: `${patientsDocumentsFolder}/radiology-images`, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+        folder: `${patientsDocumentsFolder}/radiology-images`
     },
     { 
         category: 'TREATMENT_PLAN', reviewRequired: true,
-        folder: `${patientsDocumentsFolder}/treatment-plans`, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+        folder: `${patientsDocumentsFolder}/treatment-plans`
     },
     { 
         category: 'REFERRAL_LETTER', reviewRequired: true,
-        folder: `${patientsDocumentsFolder}/referral-letters`, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+        folder: `${patientsDocumentsFolder}/referral-letters` 
     },
     { 
         category: 'IMMUNIZATION_RECORD', reviewRequired: true,
-        folder: `${patientsDocumentsFolder}/immunization-records`, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+        folder: `${patientsDocumentsFolder}/immunization-records`
     },
 ]}
-
+/**
+ * Returns a list of supported document categories.
+ * NOTE: cleanup for your application
+ * 
+ * @returns {Array<string>} - An array of supported document categories.
+ */
+ export const supportedDocumentsTypes = (): Array<{ 
+    type: string;
+    tablePattern: string;
+}> => [
+    { 
+        type: 'providers', 
+        tablePattern: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS.replace('metadata', '$'), 
+    },
+    { 
+        type: 'insurance', 
+        tablePattern: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS.replace('metadata', '$'), 
+    },
+    { 
+        type: 'billing', 
+        tablePattern: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS.replace('metadata', '$'), 
+    },
+    { 
+        type: 'patients', 
+        tablePattern: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS.replace('metadata', '$'), 
+    },
+    { 
+        type: 'consent-forms', 
+        tablePattern: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS.replace('metadata', '$'), 
+    },
+];
+export const SupportedDocumentTypes: string[] = supportedDocumentsTypes().map(f => f.type);
 export const SupportedDocumentS3Directories: string[] = supportedDocumentsCategories().map(f => f.folder);
 export const SupportedDocumentsCategories: string[] = supportedDocumentsCategories().map(f => f.category);
 
+export const getDocumentTableNamePatternByType = (type: string): string | undefined => {
+    const entries = supportedDocumentsTypes();
+    const entry = entries.find(result => result.type.toUpperCase() === type.toUpperCase());
+    return entry ? entry.tablePattern : undefined;
+};
 export const getDocumentS3Folder = (category: string): string | undefined => {
     const entries = supportedDocumentsCategories();
     const entry = entries.find(result => result.category.toUpperCase() === category.toUpperCase());
     return entry ? entry.folder : undefined;
-};
-export const getDocumentTableNamePattern = (category: string): string | undefined => {
-    const entries = supportedDocumentsCategories();
-    const entry = entries.find(result => result.category.toUpperCase() === category.toUpperCase());
-    return entry ? entry.metadataTable.replace('metadata', '$') : undefined;
 };
 
 
