@@ -1,7 +1,7 @@
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { marshall } from "@aws-sdk/util-dynamodb";
-import { determineDocumentStatus, EventCodes, getAuditEvent, getDocumentMetadataTable } from "../helpers/utilities";
+import { determineDocumentStatus, EventCodes, getAuditEvent, getDocumentTableNamePattern } from "../helpers/utilities";
 
 const s3Client = new S3Client({ region: process.env.REGION });
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
@@ -64,7 +64,7 @@ export const handler = async (event: any): Promise<any> => {
                 body: JSON.stringify({ message: `S3 object metadata not found.` }),
             };
         }
-        const metadataTable = getDocumentMetadataTable(metadata.documentcategory);
+        const metadataTable = `${getDocumentTableNamePattern(metadata.documentcategory)}`.replace('$', 'metadata');
         // Prepare metadata record for DynamoDB
         const metadataDbRecord = {
             documentid: documentId,
@@ -91,7 +91,7 @@ export const handler = async (event: any): Promise<any> => {
                 metadata.uploadinitiatedbysystemcode,
                 eventIp
             );
-            const auditTable = metadataTable.replace('metadata', 'audit');
+            const auditTable = `${getDocumentTableNamePattern(metadata.documentcategory)}`.replace('$', 'audit');
             await dynamoDb.send(new PutItemCommand({ TableName: auditTable, Item: marshall(auditEvent) }));
 
         } catch (error) {

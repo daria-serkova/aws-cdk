@@ -200,17 +200,16 @@ export const SupportedRejectFolders = [
 
 export const SupportedDocumentS3Directories: string[] = supportedDocumentsCategories().map(f => f.folder);
 export const SupportedDocumentsCategories: string[] = supportedDocumentsCategories().map(f => f.category);
-export const DocumentMetadataTables: string[] = supportedDocumentsCategories().map(f => f.metadataTable);
 
 export const getDocumentS3Folder = (category: string): string | undefined => {
     const entries = supportedDocumentsCategories();
     const entry = entries.find(result => result.category.toUpperCase() === category.toUpperCase());
     return entry ? entry.folder : undefined;
 };
-export const getDocumentMetadataTable = (category: string): string | undefined => {
+export const getDocumentTableNamePattern = (category: string): string | undefined => {
     const entries = supportedDocumentsCategories();
     const entry = entries.find(result => result.category.toUpperCase() === category.toUpperCase());
-    return entry ? entry.metadataTable : undefined;
+    return entry ? entry.metadataTable.replace('metadata', '$') : undefined;
 };
 
 
@@ -367,24 +366,24 @@ export const PreSignUrlsExpirationConfigs = {
 }
   
 export const getAuditEvent = (
-        documentId: string,
+        documentid: string,
         version: string,
-        documentOwner: string,
+        documentownerid: string,
         event: string, 
-        eventTime: string, 
-        eventInitiator: string, 
-        initiatorSystemCode: string,
-        eventInitiatorIp: string) => {
+        eventtime: string, 
+        eventinitiator: string, 
+        initiatorsystemcode: string,
+        eventinitiatorip: string) => {
     return  {
-        auditId: generateUUID(),
-        documentId,
+        auditid: generateUUID(),
+        documentid,
         version,
-        documentOwner,
+        documentownerid,
         event,
-        eventTime,
-        eventInitiator,
-        eventInitiatorIp,
-        initiatorSystemCode
+        eventtime,
+        eventinitiator,
+        eventinitiatorip,
+        initiatorsystemcode
       }
 }
 
