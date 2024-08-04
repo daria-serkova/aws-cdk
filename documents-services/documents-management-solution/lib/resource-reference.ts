@@ -117,12 +117,14 @@ export const ResourceName = {
             INSURANCE: resourceName('insurance-documents-metadata'),
             BILLING: resourceName('billing-documents-metadata'),
             CONSENT_FORMS: resourceName('consent-forms-documents-metadata'),
+            PATIENTS: resourceName('patients-documents-metadata'),
         },
         DOCUMENTS_AUDIT: {
             PROVIDERS: resourceName('providers-documents-audit'),
             INSURANCE: resourceName('insurance-documents-audit'),
             BILLING: resourceName('billing-documents-audit'),
             CONSENT_FORMS: resourceName('consent-forms-documents-audit'),
+            PATIENTS: resourceName('patients-documents-audit'),
         },
 
         DOCUMENTS_VERIFICATION: resourceName('documents-verification'),

@@ -24,6 +24,21 @@ export const SupportedUploadFolders = [
     'insurance/uploaded/',
     'billing/uploaded/',
     'consent-forms/uploaded/',
+    'patients/uploaded/',
+]
+export const SupportedVerifyFolders = [
+    'providers/verified/',
+    'insurance/verified/',
+    'billing/verified/',
+    'consent-forms/verified/',
+    'patients/verified/',
+];
+export const SupportedRejectFolders = [
+    'providers/rejected/',
+    'insurance/rejected/',
+    'billing/rejected/',
+    'consent-forms/rejected/',
+    'patients/rejected/',
 ]
 /**
  * Returns a list of supported document categories.
@@ -40,151 +55,149 @@ export const SupportedUploadFolders = [
         const providersPersonalFolder = 'providers/$status/$id/personal';
         const providersEducationFolder = 'providers/$status/$id/education';
         const providersMedicalFolder = 'providers/$status/$id/medical';
-        const providersBusinessFolder = 'providers/$status/$id/business';
-        const insuranceClaimsFolder = 'insurance/$status/$id/claims';
-        const insurancePreAuthRequestsFolder = 'insurance/$status/$id/pre-auth-requests';
-        const billingStatementsFolder = 'billing/$status/$id/statements';
-        const billingPaymentReceiptsFolder = 'billing/$status/$id/payment-receipts';
-        const consentFormsProceduresFolder = 'consent-forms/$status/$id/procedures';
-        const consentFormsMedicalInfoReleaseFolder = 'consent-forms/$status/$id/medical-info-release';
-        const consentFormsResearchParticipationFolder = 'consent-forms/$status/$id/research-participation';
+        const providersBusinessFolder = 'providers/$status/$id/business'
+        const insuranceDocumentsFolder = 'insurance/$status/$id';
+        const billingDocumentsFolder = 'billing/$status/$id';
+        const consentFormsDocumentsFolder = 'consent-forms/$status/$id';
+        const patientsDocumentsFolder = 'patients/$status/$id';
 
     return [
     // Providers Documents
-    { category: 'PROFESSIONAL_PHOTO', reviewRequired: true, 
+    { 
+        category: 'PROFESSIONAL_PHOTO', reviewRequired: true, 
         folder: providersPersonalFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
-    { category: 'AADHAAR_CARD', reviewRequired: true, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
+    { 
+        category: 'AADHAAR_CARD', reviewRequired: true, 
         folder: providersPersonalFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
-    { category: 'PAN_CARD', reviewRequired: true, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
+    { 
+        category: 'PAN_CARD', reviewRequired: true, 
         folder: providersPersonalFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
-    { category: 'BACHELOR_DEGREE', reviewRequired: true, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
+    { 
+        category: 'BACHELOR_DEGREE', reviewRequired: true, 
         folder: providersEducationFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
-    { category: 'MASTER_DEGREE', reviewRequired: true,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
+    { 
+        category: 'MASTER_DEGREE', reviewRequired: true,
         folder: providersEducationFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
-    { category: 'PHD_DEGREE', reviewRequired: true,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
+    { 
+        category: 'PHD_DEGREE', reviewRequired: true,
         folder: providersEducationFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
-    { category: 'MEDICAL_REGISTRATION_CERTIFICATE', reviewRequired: true,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
+    { 
+        category: 'MEDICAL_REGISTRATION_CERTIFICATE', reviewRequired: true,
         folder: providersMedicalFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
-    { category: 'BUSINESS_REGISTRATION_CERTIFICATE', reviewRequired: true,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
+    { 
+        category: 'BUSINESS_REGISTRATION_CERTIFICATE', reviewRequired: true,
         folder: providersBusinessFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
-    { category: 'BUSINESS_INSURANCE_CERTIFICATE', reviewRequired: true,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
+    { 
+        category: 'BUSINESS_INSURANCE_CERTIFICATE', reviewRequired: true,
         folder: providersBusinessFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
-    { category: 'BUSINESS_GST_IN', reviewRequired: true,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
+    { 
+        category: 'BUSINESS_GST_IN', reviewRequired: true,
         folder: providersBusinessFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
-    { category: 'BUSINESS_PHOTO', reviewRequired: true,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
+    { 
+        category: 'BUSINESS_PHOTO', reviewRequired: true,
         folder: providersBusinessFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
-    { category: 'BUSINESS_ADDITIONAL_PROOF_OF_ADDRESS', reviewRequired: true,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
+    { 
+        category: 'BUSINESS_ADDITIONAL_PROOF_OF_ADDRESS', reviewRequired: true,
         folder: providersBusinessFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS 
+    },
 
     // Insurance documents
-    { category: 'INSURANCE_CLAIM', reviewRequired: true,
-        folder: insuranceClaimsFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.INSURANCE },
-    { category: 'PRE-AUTH-REQUEST', reviewRequired: true,
-        folder: insurancePreAuthRequestsFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.INSURANCE },
+    { 
+        category: 'INSURANCE_CLAIM', reviewRequired: true,
+        folder: `${insuranceDocumentsFolder}/claims`,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.INSURANCE 
+    },
+    { 
+        category: 'PRE-AUTH-REQUEST', reviewRequired: true,
+        folder: `${insuranceDocumentsFolder}/pre-auth-requests`,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.INSURANCE 
+    },
     
-    // Billing documents
-    { category: 'BILLING_STATEMENT', reviewRequired: true,
-        folder: billingStatementsFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.BILLING },
-    { category: 'PAYMENT_RECEIPT', reviewRequired: true,
-        folder: billingPaymentReceiptsFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.BILLING },
+    // Billing Documents
+    { 
+        category: 'BILLING_STATEMENT', reviewRequired: true,
+        folder: `${billingDocumentsFolder}/statements`,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.BILLING 
+    },
+    { 
+        category: 'PAYMENT_RECEIPT', reviewRequired: true,
+        folder: `${billingDocumentsFolder}/payment-receipts`,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.BILLING 
+    },
     
-    // Consent forms
-    { category: 'INFORMED_CONSENT_FOR_PROCEDURE', reviewRequired: true,
-        folder: consentFormsProceduresFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS },
-    { category: 'CONSENT_FOR_MEDICAL_INFO_RELEASE', reviewRequired: true,
-        folder: consentFormsMedicalInfoReleaseFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS },
-    { category: 'CONSENT_FOR_RESEARCH_PARTICIPATION', reviewRequired: true,
-        folder: consentFormsResearchParticipationFolder, 
-        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS },
-    
+    // Consent Forms
+    { 
+        category: 'INFORMED_CONSENT_FOR_PROCEDURE', reviewRequired: true,
+        folder: `${consentFormsDocumentsFolder}/procedures`,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS 
+    },
+    { 
+        category: 'CONSENT_FOR_MEDICAL_INFO_RELEASE', reviewRequired: true,
+        folder: `${consentFormsDocumentsFolder}/medical-info-release`,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS 
+    },
+    { 
+        category: 'CONSENT_FOR_RESEARCH_PARTICIPATION', reviewRequired: true,
+        folder: `${consentFormsDocumentsFolder}/research-participation`,
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS 
+    },
 
-    /*
-    // HR Categories
-    { category: 'EMPLOYMENT_CONTRACT', reviewRequired: false },
-    { category: 'EMPLOYEE_ONBOARDING', reviewRequired: false },
-    { category: 'PERFORMANCE_REVIEW', reviewRequired: false },
-    { category: 'TRAINING_CERTIFICATE', reviewRequired: false },
-    { category: 'PAYROLL_RECORD', reviewRequired: false },
-    { category: 'RESIGNATION_LETTER', reviewRequired: false },
-    { category: 'TERMINATION_NOTICE', reviewRequired: false },
-    { category: 'NON_DISCLOSURE_AGREEMENT', reviewRequired: false },
-    { category: 'BENEFITS_ENROLLMENT_FORM', reviewRequired: false },
-    { category: 'TIME_OFF_REQUEST', reviewRequired: false },
+    // Patient Documents
+    { 
+        category: 'PRESCRIPTION', reviewRequired: true,
+        folder: `${patientsDocumentsFolder}/perscriptions`, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+    },
+    { 
+        category: 'LAB_REPORT', reviewRequired: true,
+        folder: `${patientsDocumentsFolder}/lab-reports`, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+    },
+    { 
+        category: 'RADIOLOGY_IMAGE', reviewRequired: true,
+        folder: `${patientsDocumentsFolder}/radiology-images`, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+    },
+    { 
+        category: 'TREATMENT_PLAN', reviewRequired: true,
+        folder: `${patientsDocumentsFolder}/treatment-plans`, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+    },
+    { 
+        category: 'REFERRAL_LETTER', reviewRequired: true,
+        folder: `${patientsDocumentsFolder}/referral-letters`, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+    },
+    { 
+        category: 'IMMUNIZATION_RECORD', reviewRequired: true,
+        folder: `${patientsDocumentsFolder}/immunization-records`, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PATIENTS 
+    },
+]}
 
-    // Healthcare Categories
-    
-    { category: 'PATIENT_RECORD', reviewRequired: true },
-    { category: 'INSURANCE_CLAIM', reviewRequired: true },
-    { category: 'PRESCRIPTION', reviewRequired: true },
-    { category: 'LAB_REPORT', reviewRequired: true },
-    { category: 'RADIOLOGY_IMAGE', reviewRequired: true },
-    { category: 'CONSENT_FORM', reviewRequired: true },
-    { category: 'TREATMENT_PLAN', reviewRequired: true },
-    { category: 'REFERRAL_LETTER', reviewRequired: true },
-    { category: 'IMMUNIZATION_RECORD', reviewRequired: true },
-
-    // Legal Categories
-    { category: 'CONTRACT', reviewRequired: true },
-    { category: 'CASE_FILE', reviewRequired: true },
-    { category: 'COURT_ORDER', reviewRequired: true },
-    { category: 'AFFIDAVIT', reviewRequired: true },
-    { category: 'LEGAL_OPINION', reviewRequired: true },
-    { category: 'PROPERTY_DEED', reviewRequired: true },
-    { category: 'WILL_AND_TESTAMENT', reviewRequired: true },
-    { category: 'INTELLECTUAL_PROPERTY', reviewRequired: true },
-    { category: 'BUSINESS_LICENSE', reviewRequired: true },
-    { category: 'LEGAL_NOTICE', reviewRequired: true },
-
-    // Finance Categories
-    { category: 'INVOICE', reviewRequired: false },
-    { category: 'RECEIPT', reviewRequired: false },
-    { category: 'TAX_RETURN', reviewRequired: false },
-    { category: 'FINANCIAL_STATEMENT', reviewRequired: false },
-    { category: 'EXPENSE_REPORT', reviewRequired: false },
-
-    // Real Estate Categories
-    { category: 'LEASE_AGREEMENT', reviewRequired: false },
-    { category: 'PURCHASE_AGREEMENT', reviewRequired: false },
-    { category: 'INSPECTION_REPORT', reviewRequired: false },
-    { category: 'APPRAISAL_REPORT', reviewRequired: false },
-    { category: 'CLOSING_DOCUMENT', reviewRequired: false },
-
-    // Education Categories
-    { category: 'TRANSCRIPT', reviewRequired: false },
-    { category: 'DIPLOMA', reviewRequired: false },
-    { category: 'ENROLLMENT_FORM', reviewRequired: false },
-    { category: 'COURSE_MATERIAL', reviewRequired: false },
-    { category: 'CERTIFICATE_OF_COMPLETION', reviewRequired: false },
-
-    // Identity Verification Categories
-    { category: 'DRIVING_LICENSE', reviewRequired: false },
-    { category: 'PASSPORT', reviewRequired: false },
-    { category: 'NATIONAL_ID_CARD', reviewRequired: false },
-    { category: 'SOCIAL_SECURITY_CARD', reviewRequired: false },
-    { category: 'VOTER_ID_CARD', reviewRequired: false },
-    { category: 'RESIDENCE_PERMIT', reviewRequired: false },
-    { category: 'BIRTH_CERTIFICATE', reviewRequired: false }
-    */
-    ];
-}
 export const SupportedDocumentS3Directories: string[] = supportedDocumentsCategories().map(f => f.folder);
 export const SupportedDocumentsCategories: string[] = supportedDocumentsCategories().map(f => f.category);
 export const DocumentMetadataTables: string[] = supportedDocumentsCategories().map(f => f.metadataTable);
