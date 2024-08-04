@@ -1,7 +1,7 @@
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { marshall } from "@aws-sdk/util-dynamodb";
-import { EventCodes, getAuditEvent, getDocumentMetadataTable } from "../helpers/utilities";
+import { determineDocumentStatus, EventCodes, getAuditEvent, getDocumentMetadataTable } from "../helpers/utilities";
 
 const s3Client = new S3Client({ region: process.env.REGION });
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
@@ -69,6 +69,7 @@ export const handler = async (event: any): Promise<any> => {
         const metadataDbRecord = {
             documentid: documentId,
             documentsize: documentSize,
+            documentstatus: determineDocumentStatus(metadata.documentcategory),
             version,
             ...(({
                 documentsize,                 // Exclude from metadata

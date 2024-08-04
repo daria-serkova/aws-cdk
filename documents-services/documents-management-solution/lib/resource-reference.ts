@@ -55,6 +55,14 @@ export const ResourceName = {
             CONSENT_FORMS: resourceName('consent-forms-documents-verification'),
             PATIENTS: resourceName('patients-documents-verification'),
         },
+        INDEX_NAMES_SUFFIXES: {
+            DOCUMENT_ID_AND_STATUS: 'index-doc-id-and-status',
+            DOCUMENT_ID: 'index-doc-id',
+            EVENT_INITIATOR_AND_ACTION: 'index-event-initiator-and-action',
+            EVENT_INITIATOR_AND_DOC_ID: 'index-event-initiator-and-doc-id',
+            STATUS: 'index-status',
+            OWNER: 'index-owner',
+        }
     },
     apiGateway: {
         DOCUMENTS_SERVCIE_GATEWAY: resourceName('documents-api'),

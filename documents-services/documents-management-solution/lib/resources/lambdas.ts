@@ -412,9 +412,12 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     const tables = auditTables();
     tables.forEach((tableName) => {
-        addDynamoDbIndexReadPolicy(iamRole, tableName, `${tableName}-by-event-initiator-doc-id`); 
-        addDynamoDbIndexReadPolicy(iamRole, tableName, `${tableName}-by-event-initiator-event-type`); 
-        addDynamoDbIndexReadPolicy(iamRole, tableName, `${tableName}-by-doc-id`); 
+        addDynamoDbIndexReadPolicy(iamRole, tableName, 
+            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_DOC_ID}`); 
+        addDynamoDbIndexReadPolicy(iamRole, tableName, 
+            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_ACTION}`);
+        addDynamoDbIndexReadPolicy(iamRole, tableName, 
+            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID}`); 
     });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.AUDIT_GET_EVENTS, {
         functionName: ResourceName.lambdas.AUDIT_GET_EVENTS,
@@ -462,7 +465,7 @@ const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): N
     tables.forEach((tableName) => {
         addDynamoDbIndexReadPolicy(iamRole, 
             tableName,
-            `${tableName}-by-status`);
+            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.STATUS}`);
     });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS, {
         functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS,
@@ -486,7 +489,7 @@ const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): No
     tables.forEach((tableName) => {
         addDynamoDbIndexReadPolicy(iamRole, 
             tableName,
-            `${tableName}-by-owner`);
+            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.OWNER}`);
     });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER, {
         functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER,

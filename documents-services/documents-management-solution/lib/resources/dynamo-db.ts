@@ -2,7 +2,8 @@ import { AttributeType, BillingMode, ProjectionType, Table, TableClass, TableEnc
 import { Construct } from "constructs";
 import { RemovalPolicy } from "aws-cdk-lib";
 import { isProduction } from "../../helpers/utilities";
-import { auditTables, metadataTables, ResourceName } from "../resource-reference";
+import { auditTables, metadataTables, ResourceName, verificationTables } from "../resource-reference";
+import { table } from "console";
 
 const defaultTablesSettings = {
     billingMode: BillingMode.PAY_PER_REQUEST,
@@ -25,14 +26,14 @@ export default function configureDynamoDbResources(scope: Construct ) {
             ...defaultTablesSettings
         });
         table.addGlobalSecondaryIndex({
-            indexName: `${tableName}-by-status`,
+            indexName: `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.STATUS}`,
             partitionKey: { name: 'documentstatus', type: AttributeType.STRING },
             sortKey: { name: "documentownerid", type: AttributeType.STRING },
             projectionType: ProjectionType.ALL,
         });
 
         table.addGlobalSecondaryIndex({
-            indexName: `${tableName}-by-owner`,
+            indexName: `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.OWNER}`,
             partitionKey: { name: 'documentownerid', type: AttributeType.STRING },
             projectionType: ProjectionType.ALL,
         });
@@ -41,38 +42,40 @@ export default function configureDynamoDbResources(scope: Construct ) {
     tables.forEach((tableName) => {
         const table = new Table(scope, tableName, {
             tableName: tableName,
-            partitionKey: { name: "auditId", type: AttributeType.STRING },
+            partitionKey: { name: "auditid", type: AttributeType.STRING },
             ...defaultTablesSettings
         });
         table.addGlobalSecondaryIndex({
-            indexName: `${tableName}-by-event-initiator-doc-id`,
+            indexName: `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_DOC_ID}`,
             partitionKey: { name: 'eventInitiator', type: AttributeType.STRING },
             sortKey: { name: 'documentId', type: AttributeType.STRING },
             projectionType: ProjectionType.ALL,
         });
         table.addGlobalSecondaryIndex({
-            indexName: `${tableName}-by-event-initiator-event-type`,
-            partitionKey: { name: 'eventInitiator', type: AttributeType.STRING },
+            indexName: `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_ACTION}`,
+            partitionKey: { name: 'eventinitiator', type: AttributeType.STRING },
             sortKey: { name: 'event', type: AttributeType.STRING },
             projectionType: ProjectionType.ALL,
         });
         table.addGlobalSecondaryIndex({
-            indexName:`${tableName}-by-doc-id`,
-            partitionKey: { name: 'documentId', type: AttributeType.STRING },
+            indexName:`${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID}`,
+            partitionKey: { name: 'documentid', type: AttributeType.STRING },
             projectionType: ProjectionType.ALL,
         });
     });
-
-     /* Documents Verification Trail */
-    const documentsVerificationTable = new Table(scope, ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION, {
-        tableName: ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION,
-        partitionKey: { name: "verificationId", type: AttributeType.STRING },
-        ...defaultTablesSettings
-    });
-    documentsVerificationTable.addGlobalSecondaryIndex({
-        indexName: ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION_INDEX_DOCUMENT_ID,
-        partitionKey: { name: 'documentId', type: AttributeType.STRING },
-        sortKey: { name: "documentStatus", type: AttributeType.STRING },
-        projectionType: ProjectionType.ALL,
+    tables = verificationTables();
+    tables.forEach((tableName) => {
+        const table = new Table(scope, tableName, {
+            tableName: tableName,
+            partitionKey: { name: "verificationid", type: AttributeType.STRING },
+            ...defaultTablesSettings
+        });
+        table.addGlobalSecondaryIndex({
+            indexName: `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID_AND_STATUS}`,
+            partitionKey: { name: 'documentid', type: AttributeType.STRING },
+            sortKey: { name: "documentstatus", type: AttributeType.STRING },
+            projectionType: ProjectionType.ALL,
+        });
+        
     });
 }
