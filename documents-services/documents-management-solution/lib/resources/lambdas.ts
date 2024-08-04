@@ -11,7 +11,7 @@ import {
     addS3ReadPolicy,
     addDynamoDbIndexReadPolicy
 } from './iam';
-import { ResourceName } from '../resource-reference';
+import { auditTables, metadataTables, ResourceName } from '../resource-reference';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 
 const lambdaFilesLocation = '../../functions';
@@ -68,11 +68,11 @@ export const errorsHandlingLambda = () => errorsHandlingLambdaInstance;
  let verifyUpdateTrailLambdaInstance: NodejsFunction;
  export const verifyUpdateTrailLambda = () => verifyUpdateTrailLambdaInstance;
 
- const defaultLambdaSettings = {
+const defaultLambdaSettings = {
     memorySize: 256,
     timeout: Duration.minutes(3),
     handler: 'handler',
- }
+}
 /**
  * Configuration of Lambda functions
  * @param scope 
@@ -126,6 +126,8 @@ const configureLambdaValidateBase64Document = (scope: Construct, logGroup: LogGr
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
         },
         ...defaultLambdaSettings
     });
@@ -154,6 +156,8 @@ const configureLambdaUploadBase64Document = (scope: Construct, logGroup: LogGrou
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
             BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
         },
         ...defaultLambdaSettings
@@ -174,7 +178,10 @@ const configureLambdaUploadBase64Document = (scope: Construct, logGroup: LogGrou
 const configureLambdaUploadDocumentMetadata = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_UPLOAD_METADATA);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA); 
+    const tables = metadataTables();
+    tables.forEach((tableName) => {
+        addDynamoDbWritePolicy(iamRole, tableName); 
+    })
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_UPLOAD_METADATA, {
         functionName: ResourceName.lambdas.DOCUMENT_UPLOAD_METADATA,
         description: 'Saves metadata of the uploaded document in the DynamoDB',
@@ -183,7 +190,8 @@ const configureLambdaUploadDocumentMetadata = (scope: Construct, logGroup: LogGr
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
-            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
         },
         ...defaultLambdaSettings
     });
@@ -210,6 +218,8 @@ const configureLambdaSendNotifications = (scope: Construct, logGroup: LogGroup):
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
             EMS_SERVICE_URL: process.env.EMS_SERVICE_URL || '',
             EMS_SERVICE_TOKEN: process.env.EMS_SERVICE_TOKEN || ''
         },
@@ -231,7 +241,10 @@ const configureLambdaSendNotifications = (scope: Construct, logGroup: LogGroup):
 const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GENERATE_PRESIGNED_URL);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);
+    const tables = metadataTables();
+    tables.forEach((tableName) => {
+        addDynamoDbReadPolicy(iamRole, tableName);
+    });
     addS3ReadPolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGNED_URL, {
         functionName: ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGNED_URL,
@@ -241,8 +254,9 @@ const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup:
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
             BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
-            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA
         },
         ...defaultLambdaSettings
     });
@@ -273,6 +287,8 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
         },
         ...defaultLambdaSettings
     });
@@ -292,7 +308,10 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
  const configureLambdaStoreAuditEvent = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.AUDIT_STORE_EVENT);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT); 
+    const tables = auditTables();
+    tables.forEach((tableName) => {
+        addDynamoDbWritePolicy(iamRole, tableName); 
+    });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.AUDIT_STORE_EVENT, {
         functionName: ResourceName.lambdas.AUDIT_STORE_EVENT,
         description: 'Stores audit events in the DynamoDB',
@@ -301,7 +320,8 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
-            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
         },
         ...defaultLambdaSettings
     });
@@ -321,11 +341,13 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
  */
  const configureLambdaGetAuditEvents = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.AUDIT_GET_EVENTS);
-    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName); 
-    addDynamoDbIndexReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT, 
-        ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID); 
-    addDynamoDbIndexReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT, 
-        ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR); 
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    const tables = auditTables();
+    tables.forEach((tableName) => {
+        addDynamoDbIndexReadPolicy(iamRole, tableName, `${tableName}-by-event-initiator-doc-id`); 
+        addDynamoDbIndexReadPolicy(iamRole, tableName, `${tableName}-by-event-initiator-event-type`); 
+        addDynamoDbIndexReadPolicy(iamRole, tableName, `${tableName}-by-doc-id`); 
+    });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.AUDIT_GET_EVENTS, {
         functionName: ResourceName.lambdas.AUDIT_GET_EVENTS,
         description: 'Get list of audit events',
@@ -334,9 +356,8 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
-            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT,
-            INDEX_DOCUMENT_ID_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID,
-            INDEX_USER_ID_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR,
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
         },
         ...defaultLambdaSettings
     });
@@ -346,7 +367,10 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
  const configureLambdaGetDocumentMetadata = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_METADATA);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);
+    const tables = metadataTables();
+    tables.forEach((tableName) => {
+        addDynamoDbReadPolicy(iamRole, tableName);
+    });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_METADATA, {
         functionName: ResourceName.lambdas.DOCUMENT_GET_METADATA,
         description: 'Retrieves information about document metadata',
@@ -355,7 +379,8 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
-            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
         },
         ...defaultLambdaSettings
     });
@@ -365,9 +390,12 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
 const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_LIST_BY_STATUS);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbIndexReadPolicy(iamRole, 
-        ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
-        ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_STATUS);
+    const tables = metadataTables();
+    tables.forEach((tableName) => {
+        addDynamoDbIndexReadPolicy(iamRole, 
+            tableName,
+            `${tableName}-by-status`);
+    });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS, {
         functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS,
         description: 'Retrieves list of documents by Status',
@@ -376,8 +404,8 @@ const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): N
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
-            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
-            INDEX: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_STATUS
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
         },
         ...defaultLambdaSettings
     });
@@ -386,9 +414,12 @@ const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): N
 const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_LIST_BY_OWNER);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbIndexReadPolicy(iamRole, 
-        ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
-        ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER);
+    const tables = metadataTables();
+    tables.forEach((tableName) => {
+        addDynamoDbIndexReadPolicy(iamRole, 
+            tableName,
+            `${tableName}-by-owner`);
+    });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER, {
         functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER,
         description: 'Retrieves list of documents by Owner ID',
@@ -397,8 +428,8 @@ const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): No
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
-            TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
-            INDEX: ResourceName.dynamoDbTables.DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
         },
         ...defaultLambdaSettings
     });
@@ -408,7 +439,8 @@ const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): No
 const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.VERIFY_UPDATE_TRAIL);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);
+    const tables = metadataTables();
+    addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS);
     addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION);
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.VERIFY_UPDATE_TRAIL, {
         functionName: ResourceName.lambdas.VERIFY_UPDATE_TRAIL,
@@ -418,7 +450,9 @@ const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup):
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
-            METADATA_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
+            METADATA_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS,
             VERIFICATION_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION
         },
         ...defaultLambdaSettings
@@ -438,6 +472,8 @@ const configureLambdaGeneratePreSignedUploadUrls = (scope: Construct, logGroup: 
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
             BUCKET_NAME: ResourceName.s3Buckets.DOCUMENTS_BUCKET,
         },
         ...defaultLambdaSettings
@@ -448,8 +484,14 @@ const configureLambdaS3UploadListener = (scope: Construct, logGroup: LogGroup): 
     const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_S3_UPLOAD_LISTENER);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     addS3ReadPolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
-    addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_METADATA);
-    addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDbTables.DOCUMENTS_AUDIT);
+    let tables = metadataTables();
+    tables.forEach((tableName) => {
+        addDynamoDbWritePolicy(iamRole, tableName);
+    });
+    tables = auditTables();
+    tables.forEach((tableName) => {
+        addDynamoDbWritePolicy(iamRole, tableName);
+    });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_S3_UPLOAD_LISTENER, {
         functionName: ResourceName.lambdas.DOCUMENT_S3_UPLOAD_LISTENER,
         description: 'Listens upload to S3 bucket events and store metadata / audit data into DynamoDB',
@@ -458,8 +500,8 @@ const configureLambdaS3UploadListener = (scope: Construct, logGroup: LogGroup): 
         role: iamRole,
         environment: {
             REGION: process.env.AWS_REGION || '',
-            METADATA_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_METADATA,
-            AUDIT_TABLE_NAME: ResourceName.dynamoDbTables.DOCUMENTS_AUDIT,
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
         },
         ...defaultLambdaSettings
     });

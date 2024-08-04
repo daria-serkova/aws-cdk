@@ -3,10 +3,9 @@ import { Construct } from "constructs";
 import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Resource, RestApi, StepFunctionsIntegration } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
-import { AllowedDocumentSize, SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedDocumentsTypes, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
+import { AllowedDocumentSize, SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
 import * as workflows from "./state-machines";
 import { auditGetEventsLambda, documentGeneratePreSignedUploadUrlsLambda, documentGetListByOwnerLambda, documentGetListByStatusLambda } from "./lambdas";
-import { CfnOutput } from "aws-cdk-lib";
 
 interface ApiNodes {
     document: Resource;
@@ -161,9 +160,8 @@ function configureDocumentUploadEndpoint(apiGateway: RestApi, node: Resource, re
                             documentFormat: { type: JsonSchemaType.STRING, enum: SupportedDocumentsFormats },
                             documentCategory: { type: JsonSchemaType.STRING, enum: SupportedDocumentsCategories },
                             documentSize: { type: JsonSchemaType.NUMBER , maximum: AllowedDocumentSize },
-                            documentType: { type: JsonSchemaType.STRING, enum: SupportedDocumentsTypes },
                         },
-                        required: ["documentOwnerId", "documentFormat", "documentCategory", "documentSize", "documentType"],
+                        required: ["documentOwnerId", "documentFormat", "documentCategory", "documentSize"],
                     },
                 }
             },

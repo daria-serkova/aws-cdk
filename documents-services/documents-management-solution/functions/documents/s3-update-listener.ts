@@ -1,12 +1,10 @@
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { marshall } from "@aws-sdk/util-dynamodb";
-import { EventCodes, getAuditEvent } from "../helpers/utilities";
+import { EventCodes, getAuditEvent, getDocumentMetadataTable } from "../helpers/utilities";
 
 const s3Client = new S3Client({ region: process.env.REGION });
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
-const METADATA_TABLE_NAME = process.env.METADATA_TABLE_NAME!;
-const AUDIT_TABLE_NAME = process.env.AUDIT_TABLE_NAME!;
 
 /**
  * Lambda function handler to process S3 events for file uploads.
@@ -66,6 +64,7 @@ export const handler = async (event: any): Promise<any> => {
                 body: JSON.stringify({ message: `S3 object metadata not found.` }),
             };
         }
+        const metadataTable = getDocumentMetadataTable(metadata.documentcategory);
         // Prepare metadata record for DynamoDB
         const metadataDbRecord = {
             documentid: documentId,
@@ -79,7 +78,7 @@ export const handler = async (event: any): Promise<any> => {
         };
         try {
             // Save metadata to DynamoDB
-            await dynamoDb.send(new PutItemCommand({ TableName: METADATA_TABLE_NAME, Item: marshall(metadataDbRecord) }));
+            await dynamoDb.send(new PutItemCommand({ TableName: metadataTable, Item: marshall(metadataDbRecord) }));
             // Create and save audit event
             const auditEvent = getAuditEvent(
                 documentId, 
@@ -91,7 +90,8 @@ export const handler = async (event: any): Promise<any> => {
                 metadata.uploadinitiatedbysystemcode,
                 eventIp
             );
-            await dynamoDb.send(new PutItemCommand({ TableName: AUDIT_TABLE_NAME, Item: marshall(auditEvent) }));
+            const auditTable = metadataTable.replace('metadata', 'audit');
+            await dynamoDb.send(new PutItemCommand({ TableName: auditTable, Item: marshall(auditEvent) }));
 
         } catch (error) {
             console.error(`Failed to save data to DynamoDB`, error);

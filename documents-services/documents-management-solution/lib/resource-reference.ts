@@ -53,6 +53,9 @@ export const ResourceName = {
         // Lambdas roles
         DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS: resourceName('document-generate-upload-urls-lbd-role'),
         DOCUMENT_S3_UPLOAD_LISTENER: resourceName('document-s3-upload-listener-lbd-role'),
+        
+        
+        
         // CLEANUP
 
 
@@ -109,13 +112,18 @@ export const ResourceName = {
         AUDIT_GET_EVENTS: resourceName('get-audit-events-lbd'),
     },
     dynamoDbTables: {
-        DOCUMENTS_METADATA: resourceName('documents-metadata'),
-        DOCUMENTS_METADATA_INDEX_STATUS: resourceName('documents-metadata-by-status'),
-        DOCUMENTS_METADATA_INDEX_DOCUMENT_OWNER: resourceName('documents-metadata-by-owner'),
-        
-        DOCUMENTS_AUDIT: resourceName('documents-audit'),
-        DOCUMENTS_AUDIT_INDEX_EVENT_INITIATOR: resourceName('documents-audit-by-event-initiator'),
-        DOCUMENTS_AUDIT_INDEX_DOCUMENT_ID: resourceName('documents-audit-by-document-id'),
+        DOCUMENTS_METADATA: {
+            PROVIDERS: resourceName('providers-documents-metadata'),
+            INSURANCE: resourceName('insurance-documents-metadata'),
+            BILLING: resourceName('billing-documents-metadata'),
+            CONSENT_FORMS: resourceName('consent-forms-documents-metadata'),
+        },
+        DOCUMENTS_AUDIT: {
+            PROVIDERS: resourceName('providers-documents-audit'),
+            INSURANCE: resourceName('insurance-documents-audit'),
+            BILLING: resourceName('billing-documents-audit'),
+            CONSENT_FORMS: resourceName('consent-forms-documents-audit'),
+        },
 
         DOCUMENTS_VERIFICATION: resourceName('documents-verification'),
         DOCUMENTS_VERIFICATION_INDEX_DOCUMENT_ID: resourceName('documents-verification-by-document-id'),
@@ -145,4 +153,11 @@ export const ResourceName = {
 
         
     }
+}
+
+export const metadataTables = (): string[] => {
+    return Object.values(ResourceName.dynamoDbTables.DOCUMENTS_METADATA);
+}
+export const auditTables = (): string[] => {
+    return Object.values(ResourceName.dynamoDbTables.DOCUMENTS_AUDIT);
 }

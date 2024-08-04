@@ -5,7 +5,7 @@ import { isProduction } from "../../helpers/utilities";
 import { RemovalPolicy } from "aws-cdk-lib";
 import { documentS3UploadListenerLambda } from "./lambdas";
 import { S3EventSource } from "aws-cdk-lib/aws-lambda-event-sources";
-import { SupportedS3Directories } from "../../functions/helpers/utilities";
+import { SupportedUploadFolders } from "../../functions/helpers/utilities";
 
 /**
  * Function creates and configure S3 buckets.
@@ -19,10 +19,11 @@ export default function configureS3Resources(scope: Construct) {
         removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
         blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
     });
-    SupportedS3Directories.forEach(folder => {
+    SupportedUploadFolders.forEach(folder => {
+        console.log(folder)
         documentS3UploadListenerLambda().addEventSource(new S3EventSource(bucket, {
             events: [EventType.OBJECT_CREATED],
-            filters: [{ prefix: `${folder}/upload` }]
+            filters: [{ prefix: `${folder}` }]
         }));
     });
 }

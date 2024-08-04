@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { ResourceName } from '../../lib/resource-reference';
 /**
  * Generates a unique UUID value.
  * @returns {string} - A UUID string representing a unique identifier for the dynamoDB record or for S3 object.
@@ -10,35 +11,110 @@ export function generateUUID(): string {
  * Path inside S3 bucket where all new documents should be uploaded
  */
 export const uploadFolder = (documentType: string, uuid: string) => {
-    return `${getDocumentsFolderByType(documentType)}/upload/${uuid}`;
+    return `${getDocumentS3Folder(documentType)}`.replace('$status', 'uploaded').replace('$id', uuid);
 }
+export const verifiedFolder = (documentType: string, uuid: string) => {
+    return `${getDocumentS3Folder(documentType)}`.replace('$status', 'verified').replace('$id', uuid);
+}
+export const rejectedFolder = (documentType: string, uuid: string) => {
+    return `${getDocumentS3Folder(documentType)}`.replace('$status', 'rejected').replace('$id', uuid);
+}
+export const SupportedUploadFolders = [
+    'providers/uploaded/',
+    'insurance/uploaded/',
+    'billing/uploaded/',
+    'consent-forms/uploaded/',
+]
 /**
  * Returns a list of supported document categories.
  * NOTE: cleanup for your application
  * 
  * @returns {Array<string>} - An array of supported document categories.
  */
- export const supportedDocumentsCategories = (): Array<{ category: string; reviewRequired: boolean; }> => [
-    // Other
-    { category: 'PROFESSIONAL_PHOTO', reviewRequired: true },
-    // Identity Verification Categories
-    { category: 'AADHAAR_CARD', reviewRequired: true },
-    { category: 'PAN_CARD', reviewRequired: true },
+ export const supportedDocumentsCategories = (): Array<{ 
+        category: string;
+        reviewRequired: boolean;
+        folder: string;
+        metadataTable: string;
+    }> => {
+        const providersPersonalFolder = 'providers/$status/$id/personal';
+        const providersEducationFolder = 'providers/$status/$id/education';
+        const providersMedicalFolder = 'providers/$status/$id/medical';
+        const providersBusinessFolder = 'providers/$status/$id/business';
+        const insuranceClaimsFolder = 'insurance/$status/$id/claims';
+        const insurancePreAuthRequestsFolder = 'insurance/$status/$id/pre-auth-requests';
+        const billingStatementsFolder = 'billing/$status/$id/statements';
+        const billingPaymentReceiptsFolder = 'billing/$status/$id/payment-receipts';
+        const consentFormsProceduresFolder = 'consent-forms/$status/$id/procedures';
+        const consentFormsMedicalInfoReleaseFolder = 'consent-forms/$status/$id/medical-info-release';
+        const consentFormsResearchParticipationFolder = 'consent-forms/$status/$id/research-participation';
 
-    // Education Categories
-    { category: 'BACHELOR_DEGREE', reviewRequired: true },
-    { category: 'MASTER_DEGREE', reviewRequired: true },
-    { category: 'PHD_DEGREE', reviewRequired: true },
+    return [
+    // Providers Documents
+    { category: 'PROFESSIONAL_PHOTO', reviewRequired: true, 
+        folder: providersPersonalFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+    { category: 'AADHAAR_CARD', reviewRequired: true, 
+        folder: providersPersonalFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+    { category: 'PAN_CARD', reviewRequired: true, 
+        folder: providersPersonalFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+    { category: 'BACHELOR_DEGREE', reviewRequired: true, 
+        folder: providersEducationFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+    { category: 'MASTER_DEGREE', reviewRequired: true,
+        folder: providersEducationFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+    { category: 'PHD_DEGREE', reviewRequired: true,
+        folder: providersEducationFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+    { category: 'MEDICAL_REGISTRATION_CERTIFICATE', reviewRequired: true,
+        folder: providersMedicalFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+    { category: 'BUSINESS_REGISTRATION_CERTIFICATE', reviewRequired: true,
+        folder: providersBusinessFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+    { category: 'BUSINESS_INSURANCE_CERTIFICATE', reviewRequired: true,
+        folder: providersBusinessFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+    { category: 'BUSINESS_GST_IN', reviewRequired: true,
+        folder: providersBusinessFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+    { category: 'BUSINESS_PHOTO', reviewRequired: true,
+        folder: providersBusinessFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
+    { category: 'BUSINESS_ADDITIONAL_PROOF_OF_ADDRESS', reviewRequired: true,
+        folder: providersBusinessFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS },
 
-     // Healthcare Categories
-    { category: 'MEDICAL_REGISTRATION_CERTIFICATE', reviewRequired: true },
-
-    // Business documents
-    { category: 'BUSINESS_REGISTRATION_CERTIFICATE', reviewRequired: true },
-    { category: 'BUSINESS_INSURANCE_CERTIFICATE', reviewRequired: true },
-    { category: 'BUSINESS_GST_IN', reviewRequired: true },
-    { category: 'BUSINESS_PHOTO', reviewRequired: true },
-    { category: 'BUSINESS_ADDITIONAL_PROOF_OF_ADDRESS', reviewRequired: true },
+    // Insurance documents
+    { category: 'INSURANCE_CLAIM', reviewRequired: true,
+        folder: insuranceClaimsFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.INSURANCE },
+    { category: 'PRE-AUTH-REQUEST', reviewRequired: true,
+        folder: insurancePreAuthRequestsFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.INSURANCE },
+    
+    // Billing documents
+    { category: 'BILLING_STATEMENT', reviewRequired: true,
+        folder: billingStatementsFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.BILLING },
+    { category: 'PAYMENT_RECEIPT', reviewRequired: true,
+        folder: billingPaymentReceiptsFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.BILLING },
+    
+    // Consent forms
+    { category: 'INFORMED_CONSENT_FOR_PROCEDURE', reviewRequired: true,
+        folder: consentFormsProceduresFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS },
+    { category: 'CONSENT_FOR_MEDICAL_INFO_RELEASE', reviewRequired: true,
+        folder: consentFormsMedicalInfoReleaseFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS },
+    { category: 'CONSENT_FOR_RESEARCH_PARTICIPATION', reviewRequired: true,
+        folder: consentFormsResearchParticipationFolder, 
+        metadataTable: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.CONSENT_FORMS },
+    
 
     /*
     // HR Categories
@@ -107,8 +183,23 @@ export const uploadFolder = (documentType: string, uuid: string) => {
     { category: 'RESIDENCE_PERMIT', reviewRequired: false },
     { category: 'BIRTH_CERTIFICATE', reviewRequired: false }
     */
-];
+    ];
+}
+export const SupportedDocumentS3Directories: string[] = supportedDocumentsCategories().map(f => f.folder);
 export const SupportedDocumentsCategories: string[] = supportedDocumentsCategories().map(f => f.category);
+export const DocumentMetadataTables: string[] = supportedDocumentsCategories().map(f => f.metadataTable);
+
+export const getDocumentS3Folder = (category: string): string | undefined => {
+    const entries = supportedDocumentsCategories();
+    const entry = entries.find(result => result.category.toUpperCase() === category.toUpperCase());
+    return entry ? entry.folder : undefined;
+};
+export const getDocumentMetadataTable = (category: string): string | undefined => {
+    const entries = supportedDocumentsCategories();
+    const entry = entries.find(result => result.category.toUpperCase() === category.toUpperCase());
+    return entry ? entry.metadataTable : undefined;
+};
+
 
 /**
  * Returns a list of supported document formats along with their corresponding MIME content types.
@@ -158,26 +249,6 @@ export const supportedDocumentsFormatsConentTypeMapping = (): Array<{ format: st
     */
 ];
 export const SupportedDocumentsFormats: string[] = supportedDocumentsFormatsConentTypeMapping().map(f => f.format);
-
-
-export const supportedDocumentsTypesFolderMapping = (): Array<{ type: string; folder: string; }> => [
-    { type: 'PROVIDER_DOCUMENT', folder: 'providers' },
-    { type: 'CONSENT_PROCEDURE', folder: 'consent-forms/procedure' },
-    { type: 'CONSENT_MEDICAL_INFO_RELEASE', folder: 'consent-forms/medical-info-release' },
-    { type: 'CONSENT_RESEARCH_PARTICIPATION', folder: 'consent-forms/research-participation' },
-    { type: 'INSURANCE_CLAIM', folder: 'insurance-and-billing/insurance-claims' },
-    { type: 'BILLING_STATEMENT', folder: 'insurance-and-billing/billing-statements' },
-    { type: 'PAYMENT_RECEIPT', folder: 'insurance-and-billing/payment-receipts' },
-    { type: 'PRE-AUTH-REQUEST', folder: 'insurance-and-billing/pre-authorization-requests' },
-]
-export const SupportedDocumentsTypes: string[] = supportedDocumentsTypesFolderMapping().map(f => f.type);
-export const SupportedS3Directories: string[] = supportedDocumentsTypesFolderMapping().map(f => f.folder);
-
-export const getDocumentsFolderByType = (type: string): string | undefined => {
-    const supportedTypes = supportedDocumentsTypesFolderMapping();
-    const documentType = supportedTypes.find(docType => docType.type.toUpperCase() === type.toUpperCase());
-    return documentType ? documentType.folder : undefined;
-};
 
 /**
  * Finds and returns the MIME content type for a given document format.

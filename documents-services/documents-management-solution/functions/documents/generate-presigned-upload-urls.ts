@@ -37,7 +37,7 @@ export const handler = async (event: any): Promise<any> => {
        documentId: string
    }[] = [];
     for (const file of request.files) {
-      const uploadLocation = uploadFolder(file.documentType, file.documentOwnerId);
+      const uploadLocation = uploadFolder(file.documentCategory, file.documentOwnerId);
       const documentName = `${file.documentCategory}${file.documentIdentifier 
             ? `_${file.documentIdentifier.toUpperCase().replace(/[\s\W]+/g, '_')}`
             : ""}`;
