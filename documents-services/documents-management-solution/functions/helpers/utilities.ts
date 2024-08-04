@@ -307,6 +307,8 @@ export const DocumentStatuses = {
     SUPERSEDED: "Superseded",                   // The document has been replaced by a newer version.
     */
 }
+export const SupportedDocumentStatuses = Object.values(DocumentStatuses);
+
 export const EventCodes = {
     VIEW: "View",                             // When a document is viewed.
     UPLOAD: "Upload",                         // When a document is uploaded.

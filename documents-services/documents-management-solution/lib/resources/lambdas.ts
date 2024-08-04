@@ -23,8 +23,8 @@ let documentGeneratePreSignedUploadUrlsLambdaInstance: NodejsFunction;
 export const documentGeneratePreSignedUploadUrlsLambda = () => documentGeneratePreSignedUploadUrlsLambdaInstance;
 let documentS3UploadListenerLambdaInstance: NodejsFunction;
 export const documentS3UploadListenerLambda = () => documentS3UploadListenerLambdaInstance;
- 
-
+let documentGetListByStatusLambdaInstance: NodejsFunction;
+export const documentGetListByStatusLambda = () => documentGetListByStatusLambdaInstance;
 
 
 
@@ -35,7 +35,7 @@ let documentUploadBase64LambdaInstance: NodejsFunction;
 let documentUploadMetadataLambdaInstance: NodejsFunction;
 let documentGeneratePreSignedLambdaInstance: NodejsFunction;
 let documentGetMetadataLambdaInstance: NodejsFunction;
-let documentGetListByStatusLambdaInstance: NodejsFunction;
+
 let documentGetListByOwnerLambdaInstance: NodejsFunction;
 
 
@@ -46,7 +46,7 @@ export const documentUploadBase64Lambda = () => documentUploadBase64LambdaInstan
 export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaInstance;
 export const documentGetMetadataLambda = () => documentGetMetadataLambdaInstance;
 export const documentGeneratePreSignedLambda = () => documentGeneratePreSignedLambdaInstance;
-export const documentGetListByStatusLambda = () => documentGetListByStatusLambdaInstance;
+
 export const documentGetListByOwnerLambda = () => documentGetListByOwnerLambdaInstance;
 
 /**
@@ -90,7 +90,7 @@ export default function configureLambdaResources(
 }) {
     documentGeneratePreSignedUploadUrlsLambdaInstance = configureLambdaGeneratePreSignedUploadUrls(scope, logGroups.documentOperations);
     documentS3UploadListenerLambdaInstance = configureLambdaS3UploadListener(scope, logGroups.documentOperations);
-
+    documentGetListByStatusLambdaInstance = configureLambdaGetListByStatus(scope, logGroups.documentOperations);
 
 
 
@@ -102,7 +102,7 @@ export default function configureLambdaResources(
     documentUploadMetadataLambdaInstance = configureLambdaUploadDocumentMetadata(scope, logGroups.documentOperations);
     documentGeneratePreSignedLambdaInstance = configureLambdaDocumentGeneratePreSignedUrl(scope, logGroups.documentOperations);
     documentGetMetadataLambdaInstance = configureLambdaGetDocumentMetadata(scope, logGroups.documentOperations);
-    documentGetListByStatusLambdaInstance = configureLambdaGetListByStatus(scope, logGroups.documentOperations);
+    
     documentGetListByOwnerLambdaInstance = configureLambdaGetListByOwner(scope, logGroups.documentOperations);
 
 
@@ -164,7 +164,29 @@ const configureLambdaS3UploadListener = (scope: Construct, logGroup: LogGroup): 
     });
     return lambda;   
 }
-
+const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_LIST_BY_STATUS);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    const tables = metadataTables();
+    tables.forEach((tableName) => {
+        addDynamoDbIndexReadPolicy(iamRole, tableName,
+            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.STATUS_AND_OWNER}`);
+    });
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS, {
+        functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS,
+        description: 'Retrieves list of documents by Status',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-list-by-status.ts`),
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
+        },
+        ...defaultLambdaSettings
+    });
+    return lambda;   
+}
 
 
 
@@ -458,30 +480,6 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
     return lambda;   
 }
 
-const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
-    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_LIST_BY_STATUS);
-    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    const tables = metadataTables();
-    tables.forEach((tableName) => {
-        addDynamoDbIndexReadPolicy(iamRole, 
-            tableName,
-            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.STATUS}`);
-    });
-    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS, {
-        functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS,
-        description: 'Retrieves list of documents by Status',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-list-by-status.ts`),
-        logGroup: logGroup,
-        role: iamRole,
-        environment: {
-            REGION: process.env.AWS_REGION || '',
-            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
-            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
-        },
-        ...defaultLambdaSettings
-    });
-    return lambda;   
-}
 const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_LIST_BY_OWNER);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);

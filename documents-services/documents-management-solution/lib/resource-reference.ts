@@ -60,7 +60,7 @@ export const ResourceName = {
             DOCUMENT_ID: 'index-doc-id',
             EVENT_INITIATOR_AND_ACTION: 'index-event-initiator-and-action',
             EVENT_INITIATOR_AND_DOC_ID: 'index-event-initiator-and-doc-id',
-            STATUS: 'index-status',
+            STATUS_AND_OWNER: 'index-status-and-owner',
             OWNER: 'index-owner',
         }
     },

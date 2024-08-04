@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Resource, RestApi, StepFunctionsIntegration } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
-import { AllowedDocumentSize, SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedDocumentTypes, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
+import { AllowedDocumentSize, SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedDocumentStatuses, SupportedDocumentTypes, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
 import * as workflows from "./state-machines";
 import { auditGetEventsLambda, documentGeneratePreSignedUploadUrlsLambda, documentGetListByOwnerLambda, documentGetListByStatusLambda } from "./lambdas";
 
@@ -72,19 +72,87 @@ export default function configureApiGatewayResources(scope: Construct ) {
     }
     /* Documents endpoints */
     configureDocumentUploadEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
-
+    configureGetDocumentsListByStatusEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
 
 
     //configureDocumentUploadBase64Endpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
    
     //configureGetDocumentDetailsEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
-    //configureGetDocumentsListByStatusEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
+    //
     //configureGetDocumentsListByOwnerEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     /* Audit endpoints */
     //configureAuditGetEventsEndpoint(apiGatewayInstance, apiNodesInstance.audit, requestValidatorInstance);
     /* Verify endpoints */
     //configureVerifyUpdateTrailEndpoint(apiGatewayInstance, apiNodesInstance.verify, requestValidatorInstance);
 }
+function configureDocumentUploadEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+    const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD;
+    let requestModel = {
+        contentType: "application/json",
+        description: "Document upload API endpoint body validation",
+        modelName: modelName,
+        modelId: modelName,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                initiatorSystemCode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
+                requestorId: { type: JsonSchemaType.STRING },
+                files: {
+                    type: JsonSchemaType.ARRAY,
+                    items: {
+                        type: JsonSchemaType.OBJECT,
+                        properties: {
+                            documentOwnerId: { type: JsonSchemaType.STRING },
+                            documentFormat: { type: JsonSchemaType.STRING, enum: SupportedDocumentsFormats },
+                            documentCategory: { type: JsonSchemaType.STRING, enum: SupportedDocumentsCategories },
+                            documentSize: { type: JsonSchemaType.NUMBER , maximum: AllowedDocumentSize },
+                        },
+                        required: ["documentOwnerId", "documentFormat", "documentCategory", "documentSize"],
+                    },
+                }
+            },
+            required: [
+               "initiatorSystemCode",
+               "requestorId",
+               "files"
+            ],
+        },
+    };
+    apiGateway.addModel(modelName, requestModel);
+    node.addResource("upload").addMethod('POST', 
+        new LambdaIntegration((documentGeneratePreSignedUploadUrlsLambda())), {
+        apiKeyRequired: true,
+        requestModels: { "application/json": requestModel },
+        requestValidator: requestValidatorInstance,
+    })
+}
+function configureGetDocumentsListByStatusEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+    const modelName = ResourceName.apiGateway.DOCUMENTS_REQUEST_MODEL_GET_LIST_STATUS;
+    let requestModel = {
+        contentType: "application/json",
+        description: "Get list of documents by status",
+        modelName: modelName,
+        modelId: modelName,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                initiatorSystemCode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
+                requestorId: { type: JsonSchemaType.STRING },
+                documentStatus: { type: JsonSchemaType.STRING, enum: SupportedDocumentStatuses },
+                documentType: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
+                documentOwnerId: { type: JsonSchemaType.STRING },
+            },
+            required: [ "initiatorSystemCode", "requestorId", "documentStatus", "documentOwnerId", "documentType"],
+        },
+    };
+    apiGateway.addModel(modelName, requestModel);
+    node.addResource('get-list-by-status').addMethod("POST", new LambdaIntegration(documentGetListByStatusLambda()), {
+        apiKeyRequired: true,
+        requestModels: { "application/json": requestModel },
+        requestValidator: requestValidatorInstance,
+    });
+}
+
 
 function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64;
@@ -143,47 +211,7 @@ function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resour
         requestValidator: requestValidatorInstance,
     })
 }
-function configureDocumentUploadEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
-    const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD;
-    let requestModel = {
-        contentType: "application/json",
-        description: "Document upload API endpoint body validation",
-        modelName: modelName,
-        modelId: modelName,
-        schema: {
-            type: JsonSchemaType.OBJECT,
-            properties: {
-                initiatorSystemCode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
-                requestorId: { type: JsonSchemaType.STRING },
-                files: {
-                    type: JsonSchemaType.ARRAY,
-                    items: {
-                        type: JsonSchemaType.OBJECT,
-                        properties: {
-                            documentOwnerId: { type: JsonSchemaType.STRING },
-                            documentFormat: { type: JsonSchemaType.STRING, enum: SupportedDocumentsFormats },
-                            documentCategory: { type: JsonSchemaType.STRING, enum: SupportedDocumentsCategories },
-                            documentSize: { type: JsonSchemaType.NUMBER , maximum: AllowedDocumentSize },
-                        },
-                        required: ["documentOwnerId", "documentFormat", "documentCategory", "documentSize"],
-                    },
-                }
-            },
-            required: [
-               "initiatorSystemCode",
-               "requestorId",
-               "files"
-            ],
-        },
-    };
-    apiGateway.addModel(modelName, requestModel);
-    node.addResource("upload").addMethod('POST', 
-        new LambdaIntegration((documentGeneratePreSignedUploadUrlsLambda())), {
-        apiKeyRequired: true,
-        requestModels: { "application/json": requestModel },
-        requestValidator: requestValidatorInstance,
-    })
-}
+
 function configureVerifyUpdateTrailEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.VERIFY_REQUEST_MODEL_UPDATE_TRAIL;
     let requestModel = {
@@ -303,45 +331,7 @@ function configureAuditGetEventsEndpoint(apiGateway: RestApi, node: Resource, re
         requestValidator: requestValidatorInstance,
     });
 }
-function configureGetDocumentsListByStatusEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
-    const modelName = ResourceName.apiGateway.DOCUMENTS_REQUEST_MODEL_GET_LIST_STATUS;
-    let requestModel = {
-        contentType: "application/json",
-        description: "Audit: Get List of events",
-        modelName: modelName,
-        modelId: modelName,
-        schema: {
-            type: JsonSchemaType.OBJECT,
-            properties: {
-                initiatorSystemCode: {
-                    type: JsonSchemaType.STRING,
-                    enum: SupportedInitiatorSystemCodes
-                },
-                requestorId: {
-                    type: JsonSchemaType.STRING,
-                },
-                documentStatus: {
-                    type: JsonSchemaType.STRING,
-                },
-                documentOwnerId: {
-                    type: JsonSchemaType.STRING,
-                },
-            },
-            required: [
-                "initiatorSystemCode",
-                "requestorId",
-                "documentStatus",
-                "documentOwnerId"
-            ],
-        },
-    };
-    apiGateway.addModel(modelName, requestModel);
-    node.addResource('get-list-by-status').addMethod("POST", new LambdaIntegration(documentGetListByStatusLambda()), {
-        apiKeyRequired: true,
-        requestModels: { "application/json": requestModel },
-        requestValidator: requestValidatorInstance,
-    });
-}
+
 function configureGetDocumentsListByOwnerEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.DOCUMENTS_REQUEST_MODEL_GET_LIST_OWNER;
     let requestModel = {

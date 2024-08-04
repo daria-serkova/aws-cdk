@@ -1,9 +1,9 @@
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
+import { getDocumentTableNamePatternByType } from '../helpers/utilities';
+import { ResourceName } from '../../lib/resource-reference';
 
 const client = new DynamoDBClient({ region: process.env.REGION });
-const TABLE_NAME = process.env.TABLE_NAME!;
-const INDEX = process.env.INDEX!;
 
 /**
  * Lambda function handler for retrieving list of documents
@@ -14,8 +14,8 @@ const INDEX = process.env.INDEX!;
  */
 export const handler = async (event: any): Promise<any> => {
   const body = JSON.parse(event.body!);
-  const { documentStatus, documentOwnerId } = body;
-  if (!documentStatus || !documentOwnerId) {
+  const { documentStatus, documentOwnerId, documentType } = body;
+  if (!documentStatus || !documentOwnerId || !documentType) {
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -23,15 +23,17 @@ export const handler = async (event: any): Promise<any> => {
       }),
     };
   }
+  const metadataTable = `${getDocumentTableNamePatternByType(documentType)}`.replace('$', 'metadata');
+  const metadataTableIndex = `${getDocumentTableNamePatternByType(documentType)}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID_AND_STATUS}`.replace('$', 'metadata');
   const params = {
-      TableName: TABLE_NAME,
-      IndexName: INDEX,
-      KeyConditionExpression: "documentStatus = :documentStatus" + (documentOwnerId !== '*' ? " AND documentOwnerId = :documentOwnerId" : ""),
+      TableName: metadataTable,
+      IndexName: metadataTableIndex,
+      KeyConditionExpression: "documentstatus = :documentstatus" + (documentOwnerId !== '*' ? " AND documentownerId = :documentownerid" : ""),
       ExpressionAttributeValues: {
-          ":documentStatus": { S: documentStatus },
-          ...(documentOwnerId !== '*' ? { ":documentOwnerId": { S: documentOwnerId } } : {})
+          ":documentstatus": { S: documentStatus },
+          ...(documentOwnerId !== '*' ? { ":documentownerid": { S: documentOwnerId } } : {})
       },
-      ProjectionExpression: "documentId, documentOwnerId, documentCategory, documentStatus"
+      ProjectionExpression: "documentid, documentownerid, documentcategory, documentstatus, expirydate"
   }
   try {
     const data = await client.send(new QueryCommand(params));

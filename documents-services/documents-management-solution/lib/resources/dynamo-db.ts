@@ -25,7 +25,7 @@ export default function configureDynamoDbResources(scope: Construct ) {
             ...defaultTablesSettings
         });
         table.addGlobalSecondaryIndex({
-            indexName: `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.STATUS}`,
+            indexName: `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.STATUS_AND_OWNER}`,
             partitionKey: { name: 'documentstatus', type: AttributeType.STRING },
             sortKey: { name: "documentownerid", type: AttributeType.STRING },
             projectionType: ProjectionType.ALL,
