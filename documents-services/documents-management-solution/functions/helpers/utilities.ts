@@ -9,7 +9,7 @@ export function generateUUID(): string {
 /**
  * Path inside S3 bucket where all new documents should be uploaded
  */
-export const uploadFolder = (param1: string) => `documents/${param1}/uploaded`;
+export const uploadFolder = (param1: string) => `documents/uploaded/${param1}`;
 /**
  * Returns a list of supported document categories.
  * NOTE: cleanup for your application
