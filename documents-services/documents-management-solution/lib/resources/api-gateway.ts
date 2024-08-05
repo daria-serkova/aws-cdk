@@ -193,7 +193,7 @@ function configureGetDocumentDetailsEndpoint(apiGateway: RestApi, node: Resource
         },
     };
     apiGateway.addModel(modelName, requestModel);
-    node.addResource("get-details").addMethod('POST',
+    node.addResource("get-document").addMethod('POST',
         StepFunctionsIntegration.startExecution(workflows.workflowGetDocumentDetails()), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },

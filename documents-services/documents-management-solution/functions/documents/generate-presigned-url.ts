@@ -36,7 +36,7 @@ export const handler = async (event: any): Promise<any> => {
             body: {
                ...event.body,
                url,
-               urlexpiresat: new Date(Date.now() + PreSignUrlsExpirationConfigs.DOCUMENT_VIEW_EXPIRATION_DURATION * 1000),
+               urlexpiresat: new Date(Date.now() + PreSignUrlsExpirationConfigs.DOCUMENT_VIEW_EXPIRATION_DURATION * 1000).getTime(),
                actions
             }
          } : {
