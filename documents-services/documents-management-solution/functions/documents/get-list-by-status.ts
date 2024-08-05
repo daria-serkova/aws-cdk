@@ -1,9 +1,10 @@
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
-import { getDocumentTableNamePatternByType } from '../helpers/utilities';
+import { resolveTableIndexName, resolveTableName } from '../helpers/utilities';
 import { ResourceName } from '../../lib/resource-reference';
 
 const client = new DynamoDBClient({ region: process.env.REGION });
+const tableType = 'metadata';
 
 /**
  * Lambda function handler for retrieving list of documents
@@ -14,8 +15,8 @@ const client = new DynamoDBClient({ region: process.env.REGION });
  */
 export const handler = async (event: any): Promise<any> => {
   const body = JSON.parse(event.body!);
-  const { documentStatus, documentOwnerId, documentType } = body;
-  if (!documentStatus || !documentOwnerId || !documentType) {
+  const { documentstatus, documentownerid, documenttype } = body;
+  if (!documentstatus || !documentownerid || !documenttype) {
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -23,15 +24,16 @@ export const handler = async (event: any): Promise<any> => {
       }),
     };
   }
-  const metadataTable = `${getDocumentTableNamePatternByType(documentType)}`.replace('$', 'metadata');
-  const metadataTableIndex = `${getDocumentTableNamePatternByType(documentType)}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.STATUS_AND_OWNER}`.replace('$', 'metadata');
+  const table = resolveTableName(documenttype, tableType);
+  const index = resolveTableIndexName(documenttype, tableType, ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.STATUS_AND_OWNER);
+
   const params = {
-      TableName: metadataTable,
-      IndexName: metadataTableIndex,
-      KeyConditionExpression: "documentstatus = :documentstatus" + (documentOwnerId !== '*' ? " AND documentownerid = :documentownerid" : ""),
+      TableName: table,
+      IndexName: index,
+      KeyConditionExpression: "documentstatus = :documentstatus" + (documentownerid !== '*' ? " AND documentownerid = :documentownerid" : ""),
       ExpressionAttributeValues: {
-          ":documentstatus": { S: documentStatus },
-          ...(documentOwnerId !== '*' ? { ":documentownerid": { S: documentOwnerId } } : {})
+          ":documentstatus": { S: documentstatus },
+          ...(documentownerid !== '*' ? { ":documentownerid": { S: documentownerid } } : {})
       },
       ProjectionExpression: "documentid, documentownerid, documentcategory, documentstatus, expirydate"
   }

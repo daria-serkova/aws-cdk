@@ -1,8 +1,9 @@
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { EventCodes, getDocumentTableNamePatternByType } from "../helpers/utilities";
+import { EventCodes, getDocumentTableNamePatternByType, resolveTableName } from "../helpers/utilities";
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
+const tableType = 'metadata';
 /**
  * Lambda handler function to retrieve document metadata from DynamoDB.
  * 
@@ -23,9 +24,9 @@ const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
         }
     }
     try {
-        const metadataTable = `${getDocumentTableNamePatternByType(documenttype)}`.replace('$', 'metadata');
+        const table = resolveTableName(documenttype, tableType);
         const { Item } = await dynamoDb.send(
-            new GetItemCommand({ TableName: metadataTable, Key: { documentid: { S: documentid } }})
+            new GetItemCommand({ TableName: table, Key: { documentid: { S: documentid } }})
         );
         return Item ? {
             statusCode: 200,

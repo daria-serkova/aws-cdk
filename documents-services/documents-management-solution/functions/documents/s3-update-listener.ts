@@ -1,10 +1,14 @@
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { marshall } from "@aws-sdk/util-dynamodb";
-import { determineDocumentStatus, EventCodes, getAuditEvent, getDocumentTableNamePatternByType } from "../helpers/utilities";
+import { determineDocumentStatus, EventCodes, getAuditEvent, getDocumentTableNamePatternByType, resolveTableName } from "../helpers/utilities";
 
 const s3Client = new S3Client({ region: process.env.REGION });
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
+const tableTypes = {
+    metadata: 'metadata',
+    audit: 'audit'
+}
 
 /**
  * Lambda function handler to process S3 events for file uploads.
@@ -65,7 +69,7 @@ export const handler = async (event: any): Promise<any> => {
                 body: JSON.stringify({ message: `S3 object metadata not found.` }),
             };
         }
-        const metadataTable = `${getDocumentTableNamePatternByType(documentType)}`.replace('$', 'metadata');
+        let table = resolveTableName(documentType, tableTypes.metadata);
         // Prepare metadata record for DynamoDB
         const metadataDbRecord = {
             documentid: documentId,
@@ -80,7 +84,7 @@ export const handler = async (event: any): Promise<any> => {
         };
         try {
             // Save metadata to DynamoDB
-            await dynamoDb.send(new PutItemCommand({ TableName: metadataTable, Item: marshall(metadataDbRecord) }));
+            await dynamoDb.send(new PutItemCommand({ TableName: table, Item: marshall(metadataDbRecord) }));
             // Create and save audit event
             const auditEvent = getAuditEvent(
                 documentId, 
@@ -91,8 +95,8 @@ export const handler = async (event: any): Promise<any> => {
                 metadata.uploadinitiatedbysystemcode,
                 eventIp
             );
-            const auditTable = `${getDocumentTableNamePatternByType(documentType)}`.replace('$', 'audit');
-            await dynamoDb.send(new PutItemCommand({ TableName: auditTable, Item: marshall(auditEvent) }));
+            table = resolveTableName(documentType, tableTypes.audit);
+            await dynamoDb.send(new PutItemCommand({ TableName: table, Item: marshall(auditEvent) }));
 
         } catch (error) {
             console.error(`Failed to save data to DynamoDB`, error);

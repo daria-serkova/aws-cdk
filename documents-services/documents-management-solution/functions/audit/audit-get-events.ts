@@ -1,14 +1,10 @@
-import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, QueryCommand, QueryCommandInput } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
+import { RequestOperations, resolveTableIndexName, resolveTableName } from '../helpers/utilities';
+import { ResourceName } from '../../lib/resource-reference';
 
 const client = new DynamoDBClient({ region: process.env.REGION });
-const TABLE_NAME = process.env.TABLE_NAME!;
-const INDEX_DOCUMENT_ID_NAME = process.env.INDEX_DOCUMENT_ID_NAME!;
-const INDEX_USER_ID_NAME = process.env.INDEX_USER_ID_NAME!;
-const actions = {
-  USER: "USER",
-  DOCUMENT: "DOCUMENT"
-}
+const tableType = 'audit';
 
 /**
  * Lambda function handler for retrieving list of audit events.
@@ -19,8 +15,11 @@ const actions = {
  */
 export const handler = async (event: any): Promise<any> => {
   const body = JSON.parse(event.body!);
-  const { documentId, userId, action } = body;
-  if ((action === actions.USER && userId === '*') || (action === actions.DOCUMENT && documentId === '*')) {
+  const { documenttype, operationtype, documentid, eventinitiator, eventaction} = body;
+  if ((operationtype === RequestOperations.USER && (!eventinitiator || eventinitiator === '*')) || 
+      (operationtype === RequestOperations.DOCUMENT && (!documentid || documentid === '*')) || 
+      (operationtype === RequestOperations.ACTION && (!eventaction || eventaction === '*')) || 
+      !documenttype) {
     return {
       statusCode: 500,
       body: JSON.stringify({
@@ -28,25 +27,53 @@ export const handler = async (event: any): Promise<any> => {
       }),
     };
   }
-  const params = action === actions.DOCUMENT
-  ? {
-      TableName: TABLE_NAME,
-      IndexName: INDEX_DOCUMENT_ID_NAME,
-      KeyConditionExpression: "documentId = :documentId" + (userId !== '*' ? " AND eventInitiator = :eventInitiator" : ""),
-      ExpressionAttributeValues: {
-          ":documentId": { S: documentId },
-          ...(userId !== '*' ? { ":eventInitiator": { S: userId } } : {})
+  const table = resolveTableName(documenttype, tableType);
+  const indexDocumentId = resolveTableIndexName(documenttype, tableType, ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID);
+  const indexUserDocumentId = resolveTableIndexName(documenttype, tableType, ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_DOC_ID);
+  const indexUserEvent = resolveTableIndexName(documenttype, tableType, ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID_AND_STATUS);
+  let params: QueryCommandInput;
+  switch (operationtype) {
+    case RequestOperations.DOCUMENT:
+      params = {
+        TableName: table,
+        IndexName: indexDocumentId,
+        KeyConditionExpression: "documentid = :documentid" + (eventinitiator !== '*' ? " AND eventinitiator = :eventinitiator" : ""),
+        ExpressionAttributeValues: {
+            ":documentid": { S: documentid },
+            ...(eventinitiator !== '*' ? { ":eventinitiator": { S: eventinitiator } } : {})
+        }
       }
+      break;
+    case RequestOperations.USER:
+      params =  {
+        TableName: table,
+        IndexName: indexUserDocumentId,
+        KeyConditionExpression: "eventinitiator = :eventinitiator" + (documentid !== '*' ? " AND documentid = :documentid" : ""),
+        ExpressionAttributeValues: {
+            ":eventinitiator": { S: eventinitiator },
+            ...(documentid !== '*' ? { ":documentid": { S: documentid } } : {})
+        }
+      }
+      break;
+    case RequestOperations.ACTION:
+      params =  {
+        TableName: table,
+        IndexName: indexUserEvent,
+        KeyConditionExpression: "eventinitiator = :eventinitiator" + (eventaction !== '*' ? " AND event = :event" : ""),
+        ExpressionAttributeValues: {
+            ":eventinitiator": { S: eventinitiator },
+            ...(event !== '*' ? { ":event": { S: eventaction } } : {})
+        }
+      }
+      break;
+    default:
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+          message: 'Unsupported operation requested. Please provide required data for the request',
+        }),
+      };
   }
-  : {
-      TableName: TABLE_NAME,
-      IndexName: INDEX_USER_ID_NAME,
-      KeyConditionExpression: "eventInitiator = :eventInitiator" + (documentId !== '*' ? " AND documentId = :documentId" : ""),
-      ExpressionAttributeValues: {
-          ":eventInitiator": { S: userId },
-          ...(documentId !== '*' ? { ":documentId": { S: documentId } } : {})
-      }
-  };
   try {
     const data = await client.send(new QueryCommand(params));
     const unmarshalledItems = data?.Items?.map(item => unmarshall(item));

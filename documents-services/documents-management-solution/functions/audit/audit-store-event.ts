@@ -1,8 +1,9 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { getAuditEvent, getCurrentTime, getDocumentTableNamePatternByType } from '../helpers/utilities';
+import { getAuditEvent, getCurrentTime, resolveTableName } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
+const tableType = 'audit';
 
 /**
  * Lambda function handler for storing audit events in DynamoDB.
@@ -25,7 +26,7 @@ const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
   }
   const actions = event.body.actions || [];
   try {
-    const table = `${getDocumentTableNamePatternByType(documenttype)}`.replace('$', 'audit');
+    const table = resolveTableName(documenttype, tableType);
     const auditEvents = [];
     for (let index = 0; index < actions.length; index++) {
       const action = actions[index];

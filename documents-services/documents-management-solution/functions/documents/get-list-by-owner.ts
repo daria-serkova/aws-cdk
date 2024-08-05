@@ -1,9 +1,10 @@
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
-import { getDocumentTableNamePatternByType } from '../helpers/utilities';
+import { resolveTableIndexName, resolveTableName } from '../helpers/utilities';
 import { ResourceName } from '../../lib/resource-reference';
 
 const client = new DynamoDBClient({ region: process.env.REGION });
+const tableType = 'metadata';
 
 /**
  * Lambda function handler for retrieving list of documents
@@ -12,8 +13,8 @@ const client = new DynamoDBClient({ region: process.env.REGION });
  */
 export const handler = async (event: any): Promise<any> => {
   const body = JSON.parse(event.body!);
-  const { documentOwnerId, documentType } = body;
-  if (!documentOwnerId || !documentType) {
+  const { documentownerid, documenttype } = body;
+  if (!documentownerid || !documenttype) {
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -21,14 +22,14 @@ export const handler = async (event: any): Promise<any> => {
       }),
     };
   }
-  const metadataTable = `${getDocumentTableNamePatternByType(documentType)}`.replace('$', 'metadata');
-  const metadataTableIndex = `${getDocumentTableNamePatternByType(documentType)}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.OWNER}`.replace('$', 'metadata');
+  const table = resolveTableName(documenttype, tableType);
+  const index = resolveTableIndexName(documenttype, tableType, ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.OWNER);
   const params = {
-      TableName: metadataTable,
-      IndexName: metadataTableIndex,
+      TableName: table,
+      IndexName: index,
       KeyConditionExpression: "documentownerid = :documentownerid",
       ExpressionAttributeValues: {
-          ":documentownerid": { S: documentOwnerId }
+          ":documentownerid": { S: documentownerid }
       },
       ProjectionExpression: "documentid, documentownerid, documentcategory, documentstatus, expirydate"
   }

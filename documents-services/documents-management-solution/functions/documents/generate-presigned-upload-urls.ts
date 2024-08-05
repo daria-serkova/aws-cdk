@@ -9,17 +9,17 @@ interface DocumentMetadata {
    [key: string]: string | number | boolean;
 }
 interface DocumentFile {
-   documentOwnerId: string;
-   documentFormat: string;
-   documentSize: number;
-   documentCategory: string;
-   documentType: string;
-   documentIdentifier?: string;
+   documentownerid: string;
+   documentformat: string;
+   documentsize: number;
+   documentcategory: string;
+   documenttype: string;
+   documentidentifier?: string;
    metadata?: DocumentMetadata;
 }
 interface DocumentUploadRequest {
-    initiatorSystemCode: string;
-    requestorId: string;
+    initiatorsystemcode: string;
+    requestorid: string;
     files: DocumentFile[];
 }
 
@@ -37,32 +37,32 @@ export const handler = async (event: any): Promise<any> => {
        documentId: string
    }[] = [];
     for (const file of request.files) {
-      const uploadLocation = uploadFolder(file.documentCategory, file.documentOwnerId);
-      const documentName = `${file.documentCategory}${file.documentIdentifier 
-            ? `_${file.documentIdentifier.toUpperCase().replace(/[\s\W]+/g, '_')}`
+      const uploadLocation = uploadFolder(file.documentcategory, file.documentownerid);
+      const documentName = `${file.documentcategory}${file.documentidentifier 
+            ? `_${file.documentidentifier.toUpperCase().replace(/[\s\W]+/g, '_')}`
             : ""}`;
-      const key = `${uploadLocation}/${documentName}.${file.documentFormat}`;
+      const key = `${uploadLocation}/${documentName}.${file.documentformat}`;
       const command = new PutObjectCommand({
          Bucket: BUCKET_NAME,
          Key: key,
-         ContentType: getContentTypeByFormat(file.documentFormat),
+         ContentType: getContentTypeByFormat(file.documentformat),
          Metadata: {
-            documentOwnerId: file.documentOwnerId,
-            uploadInitiatedBySystemCode: request.initiatorSystemCode,
-            uploadedBy: request.requestorId,
+            documentOwnerId: file.documentownerid,
+            uploadInitiatedBySystemCode: request.initiatorsystemcode,
+            uploadedBy: request.requestorid,
             uploadedAt: getCurrentTime(),
             documentName,
-            documentCategory: file.documentCategory,
-            documentFormat: file.documentFormat,
-            documentType: file.documentType,
-            documentSize: file.documentSize.toString(),
+            documentCategory: file.documentcategory,
+            documentFormat: file.documentformat,
+            documentType: file.documenttype,
+            documentSize: file.documentsize.toString(),
             ...file.metadata
          },
       });
       try {
          const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: PreSignUrlsExpirationConfigs.DOCUMENT_UPLOAD_EXPIRATION_DURATION });
          documentUploadUrls.push({ 
-            documentCategory: file.documentCategory, 
+            documentCategory: file.documentcategory, 
             uploadUrl: uploadUrl,
             documentId: key 
          });
@@ -71,7 +71,7 @@ export const handler = async (event: any): Promise<any> => {
          return {
             statusCode: 500,
             body: JSON.stringify({
-               message: `Failed to create presigned URL for ${file.documentCategory}`,
+               message: `Failed to create presigned URL for ${file.documentcategory}`,
                error: error.message
             }),
          };

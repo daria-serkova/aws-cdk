@@ -103,11 +103,13 @@ const configureLambdaS3UploadListener = (scope: Construct, logGroup: LogGroup): 
     addS3ReadPolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
     let tables = metadataTables();
     tables.forEach((tableName) => {
-        addDynamoDbWritePolicy(iamRole, tableName);
+        let name = tableName.replace('$2', '');
+        addDynamoDbWritePolicy(iamRole, name);
     });
     tables = auditTables();
     tables.forEach((tableName) => {
-        addDynamoDbWritePolicy(iamRole, tableName);
+        let name = tableName.replace('$2', '');
+        addDynamoDbWritePolicy(iamRole, name);
     });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_S3_UPLOAD_LISTENER, {
         functionName: ResourceName.lambdas.DOCUMENT_S3_UPLOAD_LISTENER,
@@ -129,8 +131,9 @@ const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): N
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     const tables = metadataTables();
     tables.forEach((tableName) => {
-        addDynamoDbIndexReadPolicy(iamRole, tableName,
-            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.STATUS_AND_OWNER}`);
+        let name = tableName.replace('$2', '');
+        let indexName = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.STATUS_AND_OWNER}`);
+        addDynamoDbIndexReadPolicy(iamRole, name, indexName);
     });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS, {
         functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS,
@@ -152,8 +155,9 @@ const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): No
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     const tables = metadataTables();
     tables.forEach((tableName) => {
-        addDynamoDbIndexReadPolicy(iamRole, tableName,
-            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.OWNER}`);
+        let name = tableName.replace('$2', '');
+        let indexName = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.OWNER}`);
+        addDynamoDbIndexReadPolicy(iamRole, name, indexName);
     });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER, {
         functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER,
@@ -186,7 +190,8 @@ const configureLambdaUploadDocumentMetadata = (scope: Construct, logGroup: LogGr
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     const tables = metadataTables();
     tables.forEach((tableName) => {
-        addDynamoDbWritePolicy(iamRole, tableName); 
+        let name = tableName.replace('$2', '');
+        addDynamoDbWritePolicy(iamRole, name); 
     })
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_UPLOAD_METADATA, {
         functionName: ResourceName.lambdas.DOCUMENT_UPLOAD_METADATA,
@@ -220,7 +225,8 @@ const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup:
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     const tables = metadataTables();
     tables.forEach((tableName) => {
-        addDynamoDbReadPolicy(iamRole, tableName);
+        let name = tableName.replace('$2', '');
+        addDynamoDbReadPolicy(iamRole, name);
     });
     addS3ReadPolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGNED_URL, {
@@ -256,7 +262,8 @@ const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup:
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     const tables = auditTables();
     tables.forEach((tableName) => {
-        addDynamoDbWritePolicy(iamRole, tableName); 
+        let name = tableName.replace('$2', '');
+        addDynamoDbWritePolicy(iamRole, name); 
     });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.AUDIT_STORE_EVENT, {
         functionName: ResourceName.lambdas.AUDIT_STORE_EVENT,
@@ -290,12 +297,14 @@ const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup:
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     const tables = auditTables();
     tables.forEach((tableName) => {
-        addDynamoDbIndexReadPolicy(iamRole, tableName, 
-            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_DOC_ID}`); 
-        addDynamoDbIndexReadPolicy(iamRole, tableName, 
-            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_ACTION}`);
-        addDynamoDbIndexReadPolicy(iamRole, tableName, 
-            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID}`); 
+        let name = tableName.replace('$2', '');
+        addDynamoDbReadPolicy(iamRole, name);
+        let indexName = tableName.replace('$2', `${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_DOC_ID}`);
+        addDynamoDbIndexReadPolicy(iamRole, name, indexName);
+        indexName = tableName.replace('$2', `${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_ACTION}`);
+        addDynamoDbIndexReadPolicy(iamRole, name, indexName);
+        indexName = tableName.replace('$2', `${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID}`);
+        addDynamoDbIndexReadPolicy(iamRole, name, indexName);
     });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.AUDIT_GET_EVENTS, {
         functionName: ResourceName.lambdas.AUDIT_GET_EVENTS,
@@ -318,7 +327,8 @@ const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup:
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     const tables = metadataTables();
     tables.forEach((tableName) => {
-        addDynamoDbReadPolicy(iamRole, tableName);
+        let name = tableName.replace('$2', '');
+        addDynamoDbReadPolicy(iamRole, name);
     });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_METADATA, {
         functionName: ResourceName.lambdas.DOCUMENT_GET_METADATA,
@@ -341,11 +351,13 @@ const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup):
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     let tables = metadataTables();
     tables.forEach((tableName) => {
-        addDynamoDbReadPolicy(iamRole, tableName);
+        let name = tableName.replace('$2', '');
+        addDynamoDbReadPolicy(iamRole, name);
     });
     tables = verificationTables();
     tables.forEach((tableName) => {
-        addDynamoDbWritePolicy(iamRole, tableName);
+        let name = tableName.replace('$2', '');
+        addDynamoDbWritePolicy(iamRole, name);
     });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.VERIFY_UPDATE_TRAIL, {
         functionName: ResourceName.lambdas.VERIFY_UPDATE_TRAIL,

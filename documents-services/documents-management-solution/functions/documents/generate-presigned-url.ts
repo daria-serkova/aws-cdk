@@ -39,7 +39,7 @@ export const handler = async (event: any): Promise<any> => {
          }
       }
       const url = await getSignedUrl(s3Client, 
-         new GetObjectCommand({Bucket: BUCKET_NAME, Key: documentid,  VersionId: latestVersion.VersionId }), 
+         new GetObjectCommand({Bucket: BUCKET_NAME, Key: documentid }), 
          { expiresIn: PreSignUrlsExpirationConfigs.DOCUMENT_VIEW_EXPIRATION_DURATION }
       );
       return url ? 

@@ -3,7 +3,16 @@ import { Construct } from "constructs";
 import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Resource, RestApi, StepFunctionsIntegration } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
-import { AllowedDocumentSize, SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedDocumentStatuses, SupportedDocumentTypes, SupportedInitiatorSystemCodes, SupportedParamsPatterns } from "../../functions/helpers/utilities";
+import { 
+    AllowedDocumentSize, 
+    SupportedDocumentsCategories, 
+    SupportedDocumentsFormats, 
+    SupportedDocumentStatuses, 
+    SupportedDocumentTypes, 
+    SupportedEventCodes, 
+    SupportedInitiatorSystemCodes, 
+    SupportedRequestOperations,
+     SupportedParamsPatterns } from "../../functions/helpers/utilities";
 import * as workflows from "./state-machines";
 import { auditGetEventsLambda, documentGeneratePreSignedUploadUrlsLambda, documentGetListByOwnerLambda, documentGetListByStatusLambda } from "./lambdas";
 
@@ -77,10 +86,8 @@ export default function configureApiGatewayResources(scope: Construct ) {
     configureGetDocumentDetailsEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentUrlEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentMetadataEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
-
-   
     /* Audit endpoints */
-    //configureAuditGetEventsEndpoint(apiGatewayInstance, apiNodesInstance.audit, requestValidatorInstance);
+    configureAuditGetEventsEndpoint(apiGatewayInstance, apiNodesInstance.audit, requestValidatorInstance);
     /* Verify endpoints */
     //configureVerifyUpdateTrailEndpoint(apiGatewayInstance, apiNodesInstance.verify, requestValidatorInstance);
 }
@@ -94,23 +101,23 @@ function configureDocumentUploadEndpoint(apiGateway: RestApi, node: Resource, re
         schema: {
             type: JsonSchemaType.OBJECT,
             properties: {
-                initiatorSystemCode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
-                requestorId: { type: JsonSchemaType.STRING },
+                initiatorsystemcode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
+                requestorid: { type: JsonSchemaType.STRING },
                 files: {
                     type: JsonSchemaType.ARRAY,
                     items: {
                         type: JsonSchemaType.OBJECT,
                         properties: {
-                            documentOwnerId: { type: JsonSchemaType.STRING },
-                            documentFormat: { type: JsonSchemaType.STRING, enum: SupportedDocumentsFormats },
-                            documentCategory: { type: JsonSchemaType.STRING, enum: SupportedDocumentsCategories },
-                            documentSize: { type: JsonSchemaType.NUMBER , maximum: AllowedDocumentSize },
+                            documentownerid: { type: JsonSchemaType.STRING },
+                            documentformat: { type: JsonSchemaType.STRING, enum: SupportedDocumentsFormats },
+                            documentcategory: { type: JsonSchemaType.STRING, enum: SupportedDocumentsCategories },
+                            documentsize: { type: JsonSchemaType.NUMBER , maximum: AllowedDocumentSize },
                         },
-                        required: ["documentOwnerId", "documentFormat", "documentCategory", "documentSize"],
+                        required: ["documentownerid", "documentformat", "documentcategory", "documentsize"],
                     },
                 }
             },
-            required: ["initiatorSystemCode", "requestorId", "files"],
+            required: ["initiatorsystemcode", "requestorid", "files"],
         },
     };
     apiGateway.addModel(modelName, requestModel);
@@ -131,13 +138,13 @@ function configureGetDocumentsListByStatusEndpoint(apiGateway: RestApi, node: Re
         schema: {
             type: JsonSchemaType.OBJECT,
             properties: {
-                initiatorSystemCode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
-                requestorId: { type: JsonSchemaType.STRING },
-                documentStatus: { type: JsonSchemaType.STRING, enum: SupportedDocumentStatuses },
-                documentType: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
-                documentOwnerId: { type: JsonSchemaType.STRING },
+                initiatorsystemcode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
+                requestorid: { type: JsonSchemaType.STRING },
+                documentstatus: { type: JsonSchemaType.STRING, enum: SupportedDocumentStatuses },
+                documenttype: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
+                documentownerid: { type: JsonSchemaType.STRING },
             },
-            required: [ "initiatorSystemCode", "requestorId", "documentStatus", "documentOwnerId", "documentType"],
+            required: [ "initiatorsystemcode", "requestorid", "documentstatus", "documentownerid", "documenttype"],
         },
     };
     apiGateway.addModel(modelName, requestModel);
@@ -157,12 +164,12 @@ function configureGetDocumentsListByOwnerEndpoint(apiGateway: RestApi, node: Res
         schema: {
             type: JsonSchemaType.OBJECT,
             properties: {
-                initiatorSystemCode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
-                requestorId: { type: JsonSchemaType.STRING },
-                documentType: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
-                documentOwnerId: { type: JsonSchemaType.STRING },
+                initiatorsystemcode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
+                requestorid: { type: JsonSchemaType.STRING },
+                documenttype: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
+                documentownerid: { type: JsonSchemaType.STRING },
             },
-            required: [ "initiatorSystemCode", "requestorId", "documentType", "documentOwnerId"],
+            required: [ "initiatorsystemcode", "requestorid", "documenttype", "documentownerid"],
         },
     };
     apiGateway.addModel(modelName, requestModel);
@@ -310,27 +317,16 @@ function configureAuditGetEventsEndpoint(apiGateway: RestApi, node: Resource, re
         schema: {
             type: JsonSchemaType.OBJECT,
             properties: {
-                initiatorSystemCode: {
-                    type: JsonSchemaType.STRING,
-                    enum: SupportedInitiatorSystemCodes
-                },
-                action: {
-                    type: JsonSchemaType.STRING,
-                    enum: [ 'USER', 'DOCUMENT']
-                },
-                userId: {
-                    type: JsonSchemaType.STRING,
-                },
-                documentId: {
-                    type: JsonSchemaType.STRING,
-                },
+                initiatorsystemcode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
+                requestorid: { type: JsonSchemaType.STRING },
+                requestorip: { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.IP },
+                documenttype: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
+                operationtype: { type: JsonSchemaType.STRING, enum: SupportedRequestOperations },
+                documentid: { type: JsonSchemaType.STRING },
+                eventinitiator: { type: JsonSchemaType.STRING },
+                eventaction: { type: JsonSchemaType.STRING,  enum: SupportedEventCodes || ['*']},
             },
-            required: [
-                "initiatorSystemCode",
-                "action",
-                "userId",
-                "documentId"
-            ],
+            required: ["initiatorsystemcode", "requestorid", "requestorip", "documenttype", "operationtype"],
         },
     };
     apiGateway.addModel(modelName, requestModel);

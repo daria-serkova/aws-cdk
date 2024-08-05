@@ -34,26 +34,17 @@ export const ResourceName = {
         DOCUMENTS_BUCKET: resourceName('documents-bucket').toLowerCase(),
     },
     dynamoDbTables: {
-        DOCUMENTS_METADATA: {
-            PROVIDERS: resourceName('providers-documents-metadata'),
-            INSURANCE: resourceName('insurance-documents-metadata'),
-            BILLING: resourceName('billing-documents-metadata'),
-            CONSENT_FORMS: resourceName('consent-forms-documents-metadata'),
-            PATIENTS: resourceName('patients-documents-metadata'),
-        },
-        DOCUMENTS_AUDIT: {
-            PROVIDERS: resourceName('providers-documents-audit'),
-            INSURANCE: resourceName('insurance-documents-audit'),
-            BILLING: resourceName('billing-documents-audit'),
-            CONSENT_FORMS: resourceName('consent-forms-documents-audit'),
-            PATIENTS: resourceName('patients-documents-audit'),
-        },
-        DOCUMENTS_VERIFICATION: {
-            PROVIDERS: resourceName('providers-documents-verification'),
-            INSURANCE: resourceName('insurance-documents-verification'),
-            BILLING: resourceName('billing-documents-verification'),
-            CONSENT_FORMS: resourceName('consent-forms-documents-verification'),
-            PATIENTS: resourceName('patients-documents-verification'),
+        /* 
+         * $1 and $2 will be dynamically replaced based on document type for which requests are conducted (insurance, billing, etc)
+         * $1 represents type of table (metadata, audit, etc). 
+         * $2 represents index suffix 
+         */
+        DOCUMENT_TYPES_TABLES: {
+            PROVIDERS: resourceName('providers-documents-$1$2'),
+            INSURANCE: resourceName('insurance-documents-$1$2'),
+            BILLING: resourceName('billing-documents-$1$2'),
+            CONSENT_FORMS: resourceName('consent-forms-documents-$1$2'),
+            PATIENTS: resourceName('patients-documents-$1$2'),
         },
         INDEX_NAMES_SUFFIXES: {
             DOCUMENT_ID_AND_STATUS: 'index-doc-id-and-status',
@@ -142,11 +133,12 @@ export const ResourceName = {
 }
 
 export const metadataTables = (): string[] => {
-    return Object.values(ResourceName.dynamoDbTables.DOCUMENTS_METADATA);
-}
+    return Object.values(ResourceName.dynamoDbTables.DOCUMENT_TYPES_TABLES).map(name => name.replace('$1', 'metadata'));
+};
+
 export const auditTables = (): string[] => {
-    return Object.values(ResourceName.dynamoDbTables.DOCUMENTS_AUDIT);
+    return Object.values(ResourceName.dynamoDbTables.DOCUMENT_TYPES_TABLES).map(name => name.replace('$1', 'audit'));
 }
 export const verificationTables = (): string[] => {
-    return Object.values(ResourceName.dynamoDbTables.DOCUMENTS_VERIFICATION);
+    return Object.values(ResourceName.dynamoDbTables.DOCUMENT_TYPES_TABLES).map(name => name.replace('$1', 'verification'));
 }

@@ -171,6 +171,12 @@ export const SupportedRejectFolders = [
         folder: `${patientsDocumentsFolder}/immunization-records`
     },
 ]}
+export const RequestOperations = {
+    DOCUMENT: 'DOCUMENT',
+    USER: 'USER',
+    ACTION: 'ACTION'
+}
+export const SupportedRequestOperations: string[]  = Object.values(RequestOperations);
 /**
  * Returns a list of supported document categories.
  * NOTE: cleanup for your application
@@ -183,23 +189,23 @@ export const SupportedRejectFolders = [
 }> => [
     { 
         type: 'providers', 
-        tablePattern: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS.replace('metadata', '$'), 
+        tablePattern: ResourceName.dynamoDbTables.DOCUMENT_TYPES_TABLES.PROVIDERS, 
     },
     { 
         type: 'insurance', 
-        tablePattern: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS.replace('metadata', '$'), 
+        tablePattern: ResourceName.dynamoDbTables.DOCUMENT_TYPES_TABLES.INSURANCE, 
     },
     { 
         type: 'billing', 
-        tablePattern: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS.replace('metadata', '$'), 
+        tablePattern: ResourceName.dynamoDbTables.DOCUMENT_TYPES_TABLES.BILLING, 
     },
     { 
         type: 'patients', 
-        tablePattern: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS.replace('metadata', '$'), 
+        tablePattern: ResourceName.dynamoDbTables.DOCUMENT_TYPES_TABLES.PATIENTS,  
     },
     { 
         type: 'consent-forms', 
-        tablePattern: ResourceName.dynamoDbTables.DOCUMENTS_METADATA.PROVIDERS.replace('metadata', '$'), 
+        tablePattern: ResourceName.dynamoDbTables.DOCUMENT_TYPES_TABLES.CONSENT_FORMS,  
     },
 ];
 export const SupportedDocumentTypes: string[] = supportedDocumentsTypes().map(f => f.type);
@@ -360,6 +366,7 @@ export const EventCodes = {
     ANNOTATION_REMOVE: "Annotation Remove"    // When an annotation is removed from a document.
     */
 };
+export const SupportedEventCodes: string[] = Object.values(EventCodes);
 
 /**
  * Determines the document status based on the category.
@@ -408,3 +415,22 @@ export const formSuccessBody = (body: Body, resultFields: string[]) => {
                 return obj;
             }, {} as Body)
 };
+/**
+ * Dynamically calculates name of the DynamoDB table based on document type for which operation is performed
+ * @param documentType 
+ * @returns 
+ */
+export const resolveTableName = (documentType: string, tableType: string): string  | undefined => {
+    const namePattern = getDocumentTableNamePatternByType(documentType);
+    return namePattern?.replace('$1', tableType).replace('$2', '');
+}
+/**
+ * Dynamically calculates name of the DynamoDB table index based on document type for which operation is performed
+ * @param documentType 
+ * @param indexSuffix 
+ * @returns 
+ */
+export const resolveTableIndexName = (documentType: string, tableType: string, indexSuffix: string): string | undefined => {
+    const namePattern = getDocumentTableNamePatternByType(documentType);
+    return namePattern?.replace('$1', tableType).replace('$2', `-${indexSuffix}`);
+}
