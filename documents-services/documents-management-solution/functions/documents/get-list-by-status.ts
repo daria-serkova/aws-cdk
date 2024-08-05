@@ -24,11 +24,11 @@ export const handler = async (event: any): Promise<any> => {
     };
   }
   const metadataTable = `${getDocumentTableNamePatternByType(documentType)}`.replace('$', 'metadata');
-  const metadataTableIndex = `${getDocumentTableNamePatternByType(documentType)}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID_AND_STATUS}`.replace('$', 'metadata');
+  const metadataTableIndex = `${getDocumentTableNamePatternByType(documentType)}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.STATUS_AND_OWNER}`.replace('$', 'metadata');
   const params = {
       TableName: metadataTable,
       IndexName: metadataTableIndex,
-      KeyConditionExpression: "documentstatus = :documentstatus" + (documentOwnerId !== '*' ? " AND documentownerId = :documentownerid" : ""),
+      KeyConditionExpression: "documentstatus = :documentstatus" + (documentOwnerId !== '*' ? " AND documentownerid = :documentownerid" : ""),
       ExpressionAttributeValues: {
           ":documentstatus": { S: documentStatus },
           ...(documentOwnerId !== '*' ? { ":documentownerid": { S: documentOwnerId } } : {})
