@@ -74,10 +74,10 @@ export default function configureApiGatewayResources(scope: Construct ) {
     configureDocumentUploadEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentsListByStatusEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentsListByOwnerEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
+    configureGetDocumentDetailsEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
 
-    //configureDocumentUploadBase64Endpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
    
-    //configureGetDocumentDetailsEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
+    //
     //
     //
     /* Audit endpoints */
@@ -86,7 +86,7 @@ export default function configureApiGatewayResources(scope: Construct ) {
     //configureVerifyUpdateTrailEndpoint(apiGatewayInstance, apiNodesInstance.verify, requestValidatorInstance);
 }
 function configureDocumentUploadEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
-    const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD;
+    const modelName = ResourceName.apiGateway.DOCUMENTS_REQUEST_MODEL_DOCUMENT_UPLOAD;
     let requestModel = {
         contentType: "application/json",
         description: "Document upload API endpoint body validation",
@@ -173,67 +173,35 @@ function configureGetDocumentsListByOwnerEndpoint(apiGateway: RestApi, node: Res
         requestValidator: requestValidatorInstance,
     });
 }
-
-
-
-
-function configureDocumentUploadBase64Endpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
-    const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64;
+function configureGetDocumentDetailsEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+    const modelName = ResourceName.apiGateway.DOCUMENTS_REQUEST_MODEL_DOCUMENT_GET_DETAILS;
     let requestModel = {
         contentType: "application/json",
-        description: "Document base64 upload API endpoint body validation",
+        description: "Request model: Get Document Details API endpoint",
         modelName: modelName,
         modelId: modelName,
         schema: {
             type: JsonSchemaType.OBJECT,
             properties: {
-                initiatorSystemCode: {
-                    type: JsonSchemaType.STRING,
-                    enum: SupportedInitiatorSystemCodes
-                },
-                requestorId: {
-                    type: JsonSchemaType.STRING
-                },
-                documentOwnerId: {
-                    type: JsonSchemaType.STRING,
-                },
-                documentFormat: {
-                    type: JsonSchemaType.STRING,
-                    enum: SupportedDocumentsFormats
-                },
-                documentCategory: {
-                    type: JsonSchemaType.STRING,
-                    enum: SupportedDocumentsCategories, 
-                }, 
-                documentSize: {
-                    type: JsonSchemaType.NUMBER,
-                },
-                documentContent: {
-                    type: JsonSchemaType.STRING,
-                },
-                metadata: {
-                    type: JsonSchemaType.OBJECT,
-                },
+                initiatorSystemCode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
+                requestorId: { type: JsonSchemaType.STRING },
+                documentType: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
+                documentId: { type: JsonSchemaType.STRING },
             },
-            required: [
-               "initiatorSystemCode",
-               "requestorId",
-               "documentOwnerId",
-               "documentFormat",
-               "documentCategory",
-               "documentSize",
-               "documentContent"
-            ],
+            required: [ "initiatorSystemCode", "requestorId", "documentType", "documentId"],
         },
     };
     apiGateway.addModel(modelName, requestModel);
-    node.addResource("upload-base64").addMethod('POST', 
-        StepFunctionsIntegration.startExecution(workflows.workflowDocumentUploadBase64()), {
+    node.addResource("get-details").addMethod('POST',
+        StepFunctionsIntegration.startExecution(workflows.workflowGetDocumentDetails()), {
         apiKeyRequired: true,
         requestModels: { "application/json": requestModel },
         requestValidator: requestValidatorInstance,
     })
 }
+
+
+
 
 function configureVerifyUpdateTrailEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.VERIFY_REQUEST_MODEL_UPDATE_TRAIL;
@@ -278,42 +246,7 @@ function configureVerifyUpdateTrailEndpoint(apiGateway: RestApi, node: Resource,
         requestValidator: requestValidatorInstance,
     })
 }
-function configureGetDocumentDetailsEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
-    const modelName = ResourceName.apiGateway.DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_GET_DETAILS;
-    let requestModel = {
-        contentType: "application/json",
-        description: "Request model: Get Document Details API endpoint",
-        modelName: modelName,
-        modelId: modelName,
-        schema: {
-            type: JsonSchemaType.OBJECT,
-            properties: {
-                initiatorSystemCode: {
-                    type: JsonSchemaType.STRING,
-                    enum: SupportedInitiatorSystemCodes
-                },
-                documentId: {
-                    type: JsonSchemaType.STRING,
-                },
-                requestorId: {
-                    type: JsonSchemaType.STRING,
-                },
-            },
-            required: [
-                "initiatorSystemCode", 
-                "documentId",
-                "requestorId"
-            ],
-        },
-    };
-    apiGateway.addModel(modelName, requestModel);
-    node.addResource("get-details").addMethod('POST',
-        StepFunctionsIntegration.startExecution(workflows.workflowGetDocumentDetails()), {
-        apiKeyRequired: true,
-        requestModels: { "application/json": requestModel },
-        requestValidator: requestValidatorInstance,
-    })
-}
+
 function configureAuditGetEventsEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.AUDIT_REQUEST_MODEL_GET_EVENTS;
     let requestModel = {

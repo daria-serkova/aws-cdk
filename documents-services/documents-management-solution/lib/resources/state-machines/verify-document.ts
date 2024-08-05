@@ -3,7 +3,7 @@ import { LogGroup } from "aws-cdk-lib/aws-logs";
 import { LogLevel, StateMachine, StateMachineType } from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
 import { ResourceName } from "../../resource-reference";
-import { verifyUpdateTrailLambda, documentUploadMetadataLambda, auditStoreEventLambda } from "../lambdas";
+import { verifyUpdateTrailLambda, auditStoreEventLambda, documentUploadMetadataLambda } from "../lambdas";
 import { addCloudWatchPutPolicy, addStateMachineExecutionPolicy, createStateMachineRole } from "../iam";
 import { createLambdaInvokeTask } from "../../../helpers/utilities";
 
@@ -12,7 +12,7 @@ import { createLambdaInvokeTask } from "../../../helpers/utilities";
  * @param scope 
  */
 export const configureWorkflow = (scope: Construct, apiGatewayRole: Role, logGroup: LogGroup): StateMachine => {
-  const stateMachineRole = createStateMachineRole(scope, ResourceName.iam.WORKFLOW_VERIFY);
+  const stateMachineRole = createStateMachineRole(scope, ResourceName.iam.WORKFLOW_VERIFY_DOCUMENT);
   addCloudWatchPutPolicy(stateMachineRole, ResourceName.cloudWatch.DOCUMENT_WORKFLOW_LOGS_GROUP);
 
   const definition = createLambdaInvokeTask(scope, 
@@ -25,8 +25,8 @@ export const configureWorkflow = (scope: Construct, apiGatewayRole: Role, logGro
       ResourceName.stateMachines.WF_VERIFY_TASK_STORE_AUDIT_EVENT,
       auditStoreEventLambda));
 
-  const stateMachine = new StateMachine(scope, ResourceName.stateMachines.WORKFLOW_VERIFY, {
-    stateMachineName: ResourceName.stateMachines.WORKFLOW_VERIFY,
+  const stateMachine = new StateMachine(scope, ResourceName.stateMachines.WORKFLOW_VERIFY_DOCUMENT, {
+    stateMachineName: ResourceName.stateMachines.WORKFLOW_VERIFY_DOCUMENT,
     stateMachineType: StateMachineType.EXPRESS,
     definition,
     role: stateMachineRole,

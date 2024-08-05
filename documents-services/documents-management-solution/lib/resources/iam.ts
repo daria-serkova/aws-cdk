@@ -1,9 +1,6 @@
-import { AnyPrincipal, Effect, IRole, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { AnyPrincipal, Effect, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Bucket } from "aws-cdk-lib/aws-s3";
-import { BucketDeployment } from "aws-cdk-lib/aws-s3-deployment";
 import { Construct } from "constructs";
-import { ResourceName } from "../resource-reference";
-import { StateMachine } from "aws-cdk-lib/aws-stepfunctions";
 
 export const createLambdaRole = (scope: Construct, name: string) => {
     return new Role(scope, name, {
@@ -95,8 +92,6 @@ export const  addPublicAccessPermissionsToS3Bucket = (bucket: Bucket) => {
         roleName: name,
         assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
       });
-  
-      // Add a policy to the role that allows it to deploy files
       deploymentRole.addToPolicy(new PolicyStatement({
         actions: ['s3:PutObject', 's3:GetObject'],
         resources: [`${bucket.bucketArn}/*`],
@@ -112,7 +107,7 @@ export const  addPublicAccessPermissionsToS3Bucket = (bucket: Bucket) => {
     });
     stateMachineRole.addToPolicy(new PolicyStatement({
         actions: ['states:StartExecution'],
-        resources: ['*'], // Specify more restrictive ARNs as needed
+        resources: ['*'], // Specify more restrictive ARNs
     }));
     return stateMachineRole;
   }
