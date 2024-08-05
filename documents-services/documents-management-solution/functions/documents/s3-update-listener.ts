@@ -84,8 +84,7 @@ export const handler = async (event: any): Promise<any> => {
             // Create and save audit event
             const auditEvent = getAuditEvent(
                 documentId, 
-                version, 
-                metadata.documentownerid, 
+                version,
                 EventCodes.UPLOAD, 
                 eventTime, 
                 metadata.uploadedby, 
