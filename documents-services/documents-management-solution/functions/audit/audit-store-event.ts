@@ -13,8 +13,8 @@ const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
  */
  export const handler = async (event: any): Promise<any> => {
   if (event.statusCode && event.statusCode !== 200) return event; // skip step if previos returned non success
-  const { documentid, version, documentownerid, requestorid, requestorip, initiatorsystemcode, documenttype } = event.body;
-  if (!documentid || !version || !documentownerid || !requestorid || !initiatorsystemcode || !documenttype || !requestorip) {
+  const { documentid, version, requestorid, requestorip, initiatorsystemcode, documenttype } = event.body;
+  if (!documentid || !version || !requestorid || !initiatorsystemcode || !documenttype || !requestorip) {
     return {
       statusCode: 400,
       body: {
@@ -29,7 +29,7 @@ const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
     const auditEvents = [];
     for (let index = 0; index < actions.length; index++) {
       const action = actions[index];
-      const auditEvent = getAuditEvent(documentid, version, documentownerid, action, getCurrentTime(), requestorid, initiatorsystemcode, requestorip);
+      const auditEvent = getAuditEvent(documentid, version, action, getCurrentTime(), requestorid, initiatorsystemcode, requestorip);
       await dynamoDb.send(new PutItemCommand({TableName: table, Item: marshall(auditEvent)}));
       auditEvents.push({
         action,
@@ -40,10 +40,11 @@ const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
       statusCode: 200,
       body: {
         ...(({
-          requestorid,         // Extract `requestorid` to exclude it from response
-          initiatorsystemcode, // Extract `initiatorsystemcode` to exclude it from response
+          requestorid,          // Extract `requestorid` to exclude it from response
+          requestorip,          // Extract `requestorip` to exclude it from response
+          initiatorsystemcode,  // Extract `initiatorsystemcode` to exclude it from response
           actions,              // Extract `actions` to exclude it from response
-          ...rest              // Include rest of the properties to response
+          ...rest               // Include rest of the properties to response
         }) => rest)(event.body),
         auditEvents
       }

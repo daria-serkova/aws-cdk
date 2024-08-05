@@ -379,7 +379,6 @@ export const PreSignUrlsExpirationConfigs = {
 export const getAuditEvent = (
         documentid: string,
         version: string,
-        documentownerid: string,
         event: string, 
         eventtime: string, 
         eventinitiator: string, 
@@ -389,7 +388,6 @@ export const getAuditEvent = (
         auditid: generateUUID(),
         documentid,
         version,
-        documentownerid,
         event,
         eventtime,
         eventinitiator,

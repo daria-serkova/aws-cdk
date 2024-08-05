@@ -1,4 +1,4 @@
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, GetObjectCommand, ListObjectVersionsCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PreSignUrlsExpirationConfigs } from "../helpers/utilities";
 import { EventCodes } from "../helpers/utilities";
@@ -26,8 +26,20 @@ export const handler = async (event: any): Promise<any> => {
        }
    }
    try {
+      const versionsResponse = await s3Client.send(
+        new ListObjectVersionsCommand({ Bucket: BUCKET_NAME, Prefix: documentid })
+      );
+      const latestVersion = versionsResponse.Versions && versionsResponse.Versions[0];
+      if (!latestVersion) {
+         return {
+            statusCode: 404,
+            body: {
+               error: `Latest version of document with documentID ${documentid} is not found`
+            }
+         }
+      }
       const url = await getSignedUrl(s3Client, 
-         new GetObjectCommand({Bucket: BUCKET_NAME, Key: documentid}), 
+         new GetObjectCommand({Bucket: BUCKET_NAME, Key: documentid,  VersionId: latestVersion.VersionId }), 
          { expiresIn: PreSignUrlsExpirationConfigs.DOCUMENT_VIEW_EXPIRATION_DURATION }
       );
       return url ? 
@@ -37,7 +49,8 @@ export const handler = async (event: any): Promise<any> => {
                ...event.body,
                url,
                urlexpiresat: new Date(Date.now() + PreSignUrlsExpirationConfigs.DOCUMENT_VIEW_EXPIRATION_DURATION * 1000).getTime(),
-               actions
+               actions,
+               version: latestVersion.VersionId
             }
          } : {
             statusCode: 404,

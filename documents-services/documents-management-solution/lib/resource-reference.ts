@@ -73,6 +73,7 @@ export const ResourceName = {
         DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentUploadBase64`,
         DOCUMENTS_REQUEST_MODEL_DOCUMENT_UPLOAD: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentUpload`,
         DOCUMENTS_REQUEST_MODEL_DOCUMENT_GET_DETAILS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetDetails`,
+        DOCUMENTS_REQUEST_MODEL_DOCUMENT_GET_URL: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetUrl`,
         DOCUMENTS_REQUEST_MODEL_GET_LIST_STATUS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetListStatus`,
         DOCUMENTS_REQUEST_MODEL_GET_LIST_OWNER: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetListOwner`,
 
@@ -98,6 +99,7 @@ export const ResourceName = {
         WORKFLOW_VERIFY_DOCUMENT: resourceName('workflow-verify-doc-sm-role'),
         WORKFLOW_DOCUMENT_UPLOAD: resourceName('workflow-upload-document-sm-role'),
         WORKFLOW_DOCUMENT_GET_DETAILS: resourceName('workflow-get-document-details-sm-role'),
+        WORKFLOW_DOCUMENT_GET_URL: resourceName('workflow-get-document-url-sm-role'),
         /* API Gateway roles */
         API_GATEWAY_ROLE: resourceName('api-gateway-role'),
     },
@@ -120,6 +122,11 @@ export const ResourceName = {
         WF_GET_DETAILS_TASK_GET_METADATA: resourceName('wf-get-details-task-get-metadata'),
         WF_GET_DETAILS_TASK_GET_URL: resourceName('wf-get-details-task-get-url'),
         WF_GET_DETAILS_TASK_STORE_AUDIT_EVENT: resourceName('wf-get-details-task-record-audit'),
+         /* Get document details */
+         WORKFLOW_DOCUMENT_GET_URL: resourceName('workflow-get-doc-url-sm'),
+         WF_GET_URL_TASK_GENERATE_URL: resourceName('wf-get-doc-url-task-generate-url'),
+         WF_GET_URL_TASK_STORE_AUDIT_EVENT: resourceName('wf-get-doc-url-task-record-audit'),
+
         /* Verify document workflow */
         WORKFLOW_VERIFY_DOCUMENT: resourceName('workflow-verify-doc-sm'),
         WF_VERIFY_TASK_UPDATE_TRAIL: resourceName('wf-verify-doc-task-update-trail'),

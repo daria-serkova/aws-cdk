@@ -75,6 +75,7 @@ export default function configureApiGatewayResources(scope: Construct ) {
     configureGetDocumentsListByStatusEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentsListByOwnerEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentDetailsEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
+    configureGetDocumentUrlEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
 
    
     //
@@ -200,7 +201,33 @@ function configureGetDocumentDetailsEndpoint(apiGateway: RestApi, node: Resource
         requestValidator: requestValidatorInstance,
     })
 }
-
+function configureGetDocumentUrlEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
+    const modelName = ResourceName.apiGateway.DOCUMENTS_REQUEST_MODEL_DOCUMENT_GET_URL;
+    let requestModel = {
+        contentType: "application/json",
+        description: "Request model: Get Document Url API endpoint",
+        modelName: modelName,
+        modelId: modelName,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties: {
+                initiatorsystemcode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
+                requestorid: { type: JsonSchemaType.STRING },
+                requestorip: { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.IP },
+                documenttype: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
+                documentid: { type: JsonSchemaType.STRING },
+            },
+            required: [ 'initiatorsystemcode', 'requestorid', 'documenttype', 'requestorip', 'documentid'],
+        },
+    };
+    apiGateway.addModel(modelName, requestModel);
+    node.addResource("get-url").addMethod('POST',
+        StepFunctionsIntegration.startExecution(workflows.workflowGetDocumentUrl()), {
+        apiKeyRequired: true,
+        requestModels: { "application/json": requestModel },
+        requestValidator: requestValidatorInstance,
+    })
+}
 
 
 

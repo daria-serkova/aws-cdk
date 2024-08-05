@@ -24,7 +24,8 @@ export const addS3ReadPolicy = (role: Role, bucketName: string) => {
     role.addToPolicy(new PolicyStatement({
         actions: [
             's3:GetObject',
-            's3:ListBucket'
+            's3:ListBucket',
+            "s3:ListBucketVersions"
         ],
         resources: [
             `arn:aws:s3:::${bucketName}`, 
