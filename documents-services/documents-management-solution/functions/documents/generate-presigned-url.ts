@@ -7,14 +7,17 @@ const s3Client = new S3Client({ region: process.env.REGION });
 const BUCKET_NAME = process.env.BUCKET_NAME!;
 
 /**
- * Lambda handler function to generate document pre-signed URL from S3.
+ * Lambda handler function to generate document pre-signed URL from S3 for view.
  * 
  * @param {any} event - The event object containing the request body.
- * @returns {Promise<any>} - The response object containing the document's url or an error message.
+ * @returns {Promise<any>} - The response object containing the document's url with all data from previous step or an error message.
  */
 export const handler = async (event: any): Promise<any> => {
-   const { documentId } =  event.body;
-   if (!documentId) {
+   if (event.statusCode && event.statusCode !== 200) return event; // skip step if previos returned non success
+   const { documentid } =  event.body;
+   const actions = event.body.actions || [];
+   actions.push(EventCodes.VIEW_CONTENT);
+   if (!documentid) {
        return {
            statusCode: 400,
            body: {
@@ -24,21 +27,22 @@ export const handler = async (event: any): Promise<any> => {
    }
    try {
       const url = await getSignedUrl(s3Client, 
-         new GetObjectCommand({Bucket: BUCKET_NAME, Key: documentId}), 
-         { expiresIn: PreSignUrlsExpirationConfigs.DOCUMENT_VIEW_EXPIRATION_DURATION });
+         new GetObjectCommand({Bucket: BUCKET_NAME, Key: documentid}), 
+         { expiresIn: PreSignUrlsExpirationConfigs.DOCUMENT_VIEW_EXPIRATION_DURATION }
+      );
       return url ? 
          {
             statusCode: 200,
             body: {
                ...event.body,
                url,
-               urlExpiresAt: new Date(Date.now() + PreSignUrlsExpirationConfigs.DOCUMENT_VIEW_EXPIRATION_DURATION * 1000),
-               action: EventCodes.VIEW
+               urlexpiresat: new Date(Date.now() + PreSignUrlsExpirationConfigs.DOCUMENT_VIEW_EXPIRATION_DURATION * 1000),
+               actions
             }
          } : {
             statusCode: 404,
             body: {
-               error: `Record with documentID ${documentId} is not found`
+               error: `Record with documentID ${documentid} is not found`
             }
          }
    } catch (error) {

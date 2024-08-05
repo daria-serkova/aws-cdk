@@ -1,9 +1,8 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { getAuditEvent, getCurrentTime } from '../helpers/utilities';
+import { getAuditEvent, getCurrentTime, getDocumentTableNamePatternByType } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
-const TABLE_NAME = process.env.TABLE_NAME!;
 
 /**
  * Lambda function handler for storing audit events in DynamoDB.
@@ -13,26 +12,40 @@ const TABLE_NAME = process.env.TABLE_NAME!;
  * @throws - Throws an error if the metadata storage fails.
  */
  export const handler = async (event: any): Promise<any> => {
-  if (event.statusCode && event.statusCode !== 200) return event;
-  //const { action } = event;
-  const { action, documentId, version, documentOwnerId, requestorId, initiatorSystemCode } = event.body;
-  if (!action || !documentId || !version || !documentOwnerId || !requestorId || !initiatorSystemCode) {
+  if (event.statusCode && event.statusCode !== 200) return event; // skip step if previos returned non success
+  const { documentid, version, documentownerid, requestorid, requestorip, initiatorsystemcode, documenttype } = event.body;
+  if (!documentid || !version || !documentownerid || !requestorid || !initiatorsystemcode || !documenttype || !requestorip) {
     return {
       statusCode: 400,
       body: {
         error: `Can't store audit event. Required data is not provided`,
+        ...event.body
       }
     }
   }
-  const auditEvent = getAuditEvent(documentId, version, documentOwnerId, action, 
-      getCurrentTime(), requestorId, initiatorSystemCode, 'ipTBD');
+  const actions = event.body.actions || [];
   try {
-    await dynamoDb.send(new PutItemCommand({TableName: TABLE_NAME, Item: marshall(auditEvent)}));
+    const table = `${getDocumentTableNamePatternByType(documenttype)}`.replace('$', 'audit');
+    const auditEvents = [];
+    for (let index = 0; index < actions.length; index++) {
+      const action = actions[index];
+      const auditEvent = getAuditEvent(documentid, version, documentownerid, action, getCurrentTime(), requestorid, initiatorsystemcode, requestorip);
+      await dynamoDb.send(new PutItemCommand({TableName: table, Item: marshall(auditEvent)}));
+      auditEvents.push({
+        action,
+        auditid: auditEvent.auditid
+      })
+    }
     return {
       statusCode: 200,
       body: {
-        ...event.body,
-        auditEvent: auditEvent.auditId
+        ...(({
+          requestorid,         // Extract `requestorid` to exclude it from response
+          initiatorsystemcode, // Extract `initiatorsystemcode` to exclude it from response
+          actions,              // Extract `actions` to exclude it from response
+          ...rest              // Include rest of the properties to response
+        }) => rest)(event.body),
+        auditEvents
       }
     }
   } catch (error) {

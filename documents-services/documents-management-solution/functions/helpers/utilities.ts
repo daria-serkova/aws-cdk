@@ -205,6 +205,9 @@ export const SupportedRejectFolders = [
 export const SupportedDocumentTypes: string[] = supportedDocumentsTypes().map(f => f.type);
 export const SupportedDocumentS3Directories: string[] = supportedDocumentsCategories().map(f => f.folder);
 export const SupportedDocumentsCategories: string[] = supportedDocumentsCategories().map(f => f.category);
+export const SupportedParamsPatterns = {
+    IP: "^((25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$"
+}
 
 export const getDocumentTableNamePatternByType = (type: string): string | undefined => {
     const entries = supportedDocumentsTypes();
@@ -310,7 +313,8 @@ export const DocumentStatuses = {
 export const SupportedDocumentStatuses = Object.values(DocumentStatuses);
 
 export const EventCodes = {
-    VIEW: "View",                             // When a document is viewed.
+    VIEW_CONTENT: "View Content",            // When a document is viewed.
+    VIEW_METADATA: "View Metadata",            // When a document is viewed.
     UPLOAD: "Upload",                         // When a document is uploaded.
     REVIEW_SUBMIT: "Submitted for Review",    // When a document is submitted for review.
     VERIFY: "Verified",                       // When a document is verified.
@@ -368,7 +372,7 @@ export const EventCodes = {
     return categoryObj && categoryObj.reviewRequired ? DocumentStatuses.PENDING_REVIEW : DocumentStatuses.UPLOADED;
 };
 export const PreSignUrlsExpirationConfigs = {
-    DOCUMENT_VIEW_EXPIRATION_DURATION: 3600,
+    DOCUMENT_VIEW_EXPIRATION_DURATION: 600, // 10 mins
     DOCUMENT_UPLOAD_EXPIRATION_DURATION: 300 // 5 mins
 }
   

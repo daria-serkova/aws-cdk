@@ -1,44 +1,43 @@
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { EventCodes, getDocumentTableNamePatternByType } from "../helpers/utilities";
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
-const TABLE_NAME = process.env.TABLE_NAME!;
 /**
  * Lambda handler function to retrieve document metadata from DynamoDB.
  * 
  * @param {any} event - The event object containing the request body.
- * @returns {Promise<any>} - The response object containing the document metadata or an error message.
+ * @returns {Promise<any>} - The response object containing the document metadata + initial request information or an error message.
  */
  export const handler = async (event: any): Promise<any> => {
-    if (event.statusCode && event.statusCode !== 200) return event;
-    
-    const { documentId } =  event.body;
-    
-    if (!documentId) {
+    if (event.statusCode && event.statusCode !== 200) return event; // skip step if previos returned non success
+    const { documentid, documenttype } =  event.body;
+    const actions = event.body.actions || [];
+    actions.push(EventCodes.VIEW_METADATA);
+    if (!documentid || !documenttype) {
         return {
             statusCode: 400,
             body: {
-                error: `Can't retrieve document's url. Document ID is not provided`
+                error: `Can't retrieve document's url. Document ID or Document Type is not provided`
             }
         }
     }
     try {
-        const { Item } = await dynamoDb.send(new GetItemCommand({
-            TableName: TABLE_NAME,
-            Key: {
-                documentId: { S: documentId },
-            }
-        }));
+        const metadataTable = `${getDocumentTableNamePatternByType(documenttype)}`.replace('$', 'metadata');
+        const { Item } = await dynamoDb.send(
+            new GetItemCommand({ TableName: metadataTable, Key: { documentid: { S: documentid } }})
+        );
         return Item ? {
             statusCode: 200,
             body: {
+                ...unmarshall(Item),
                 ...event.body,
-                ...unmarshall(Item)
+                actions
             }
         } : {
             statusCode: 404,
             body: {
-               error: `Record with documentID ${documentId} is not found`
+               error: `Record with documentID ${documentid} is not found`
             }
         }
     } catch (error) {
@@ -46,7 +45,7 @@ const TABLE_NAME = process.env.TABLE_NAME!;
         return {
             statusCode: 500,
             body: {
-               error: `Request could not be processed. ${error.message}`
+               error: `Request could not be processed. See logs for more details.`
             }
         }
     }

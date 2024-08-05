@@ -18,16 +18,16 @@ export const configureWorkflow = (scope: Construct, apiGatewayRole: Role, logGro
   const generateDocumentPreSignedUrlTask = createLambdaInvokeTask(scope,
       ResourceName.stateMachines.WF_GET_DETAILS_TASK_GET_URL,
       documentGeneratePreSignedLambda);
-  const storeAuditEventTask = createLambdaInvokeTask(scope, 
+  const storeViewAuditEventTask = createLambdaInvokeTask(scope, 
       ResourceName.stateMachines.WF_GET_DETAILS_TASK_STORE_AUDIT_EVENT,
-      auditStoreEventLambda)
+      auditStoreEventLambda);
 
   const stateMachineRole = createStateMachineRole(scope, ResourceName.iam.WORKFLOW_DOCUMENT_GET_DETAILS);
   addCloudWatchPutPolicy(stateMachineRole, ResourceName.cloudWatch.DOCUMENT_WORKFLOW_LOGS_GROUP);
 
   const definition = getDocumentMetadataTask
     .next(generateDocumentPreSignedUrlTask)
-    .next(storeAuditEventTask);
+    .next(storeViewAuditEventTask)
 
   const stateMachine = new StateMachine(scope, ResourceName.stateMachines.WORKFLOW_DOCUMENT_GET_DETAILS, {
     stateMachineName: ResourceName.stateMachines.WORKFLOW_DOCUMENT_GET_DETAILS,

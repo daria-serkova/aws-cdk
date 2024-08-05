@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Resource, RestApi, StepFunctionsIntegration } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
-import { AllowedDocumentSize, SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedDocumentStatuses, SupportedDocumentTypes, SupportedInitiatorSystemCodes } from "../../functions/helpers/utilities";
+import { AllowedDocumentSize, SupportedDocumentsCategories, SupportedDocumentsFormats, SupportedDocumentStatuses, SupportedDocumentTypes, SupportedInitiatorSystemCodes, SupportedParamsPatterns } from "../../functions/helpers/utilities";
 import * as workflows from "./state-machines";
 import { auditGetEventsLambda, documentGeneratePreSignedUploadUrlsLambda, documentGetListByOwnerLambda, documentGetListByStatusLambda } from "./lambdas";
 
@@ -183,12 +183,13 @@ function configureGetDocumentDetailsEndpoint(apiGateway: RestApi, node: Resource
         schema: {
             type: JsonSchemaType.OBJECT,
             properties: {
-                initiatorSystemCode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
-                requestorId: { type: JsonSchemaType.STRING },
-                documentType: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
-                documentId: { type: JsonSchemaType.STRING },
+                initiatorsystemcode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
+                requestorid: { type: JsonSchemaType.STRING },
+                requestorip: { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.IP },
+                documenttype: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
+                documentid: { type: JsonSchemaType.STRING },
             },
-            required: [ "initiatorSystemCode", "requestorId", "documentType", "documentId"],
+            required: [ 'initiatorsystemcode', 'requestorid', 'documenttype', 'requestorip', 'documentid'],
         },
     };
     apiGateway.addModel(modelName, requestModel);
