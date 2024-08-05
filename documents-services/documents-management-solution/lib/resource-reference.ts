@@ -84,7 +84,8 @@ export const ResourceName = {
         // Lambdas roles
         DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS: resourceName('document-generate-upload-urls-lbd-role'),
         DOCUMENT_S3_UPLOAD_LISTENER: resourceName('document-s3-upload-listener-lbd-role'),
-        
+        DOCUMENT_GET_LIST_BY_STATUS: resourceName('document-get-list-status-lbd-role'),
+        DOCUMENT_GET_LIST_BY_OWNER: resourceName('document-get-list-owner-lbd-role'),
         
         
         // CLEANUP
@@ -97,8 +98,7 @@ export const ResourceName = {
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd-role'),
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd-role'),
         DOCUMENT_GET_METADATA: resourceName('document-get-metadata-lbd-role'),
-        DOCUMENT_GET_LIST_BY_STATUS: resourceName('document-get-list-status-lbd-role'),
-        DOCUMENT_GET_LIST_BY_OWNER: resourceName('document-get-list-owner-lbd-role'),
+        
 
         AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd-role'),
         AUDIT_GET_EVENTS: resourceName('get-audit-events-lbd-role'),
@@ -119,26 +119,18 @@ export const ResourceName = {
     lambdas: {
         DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS: resourceName('document-generate-upload-urls-lbd'),
         DOCUMENT_S3_UPLOAD_LISTENER: resourceName('document-s3-upload-listener-lbd'),
+        DOCUMENT_GET_LIST_BY_STATUS: resourceName('document-get-list-status-lbd'),
+        DOCUMENT_GET_LIST_BY_OWNER: resourceName('document-get-list-owner-lbd'),
         //CLEANUP
         
         DOCUMENT_VALIDATE_BASE64_DOCUMENT: resourceName('document-validate-b64-lbd'),
         DOCUMENT_UPLOAD_BASE64: resourceName('document-upload-base64-lbd'),
-        
-
-
-
         DOCUMENT_UPLOAD_METADATA: resourceName('document-upload-metadata-lbd'),
         DOCUMENT_GENERATE_PRESIGNED_URL: resourceName('document-generate-url-lbd'),
         DOCUMENT_GET_METADATA: resourceName('document-get-metadata-lbd'),
-        DOCUMENT_GET_LIST_BY_STATUS: resourceName('document-get-list-status-lbd'),
-        DOCUMENT_GET_LIST_BY_OWNER: resourceName('document-get-list-owner-lbd'),
-
         VERIFY_UPDATE_TRAIL: resourceName('verify-update-trail-lbd'),
-
-        
         NOTIFICATIONS_SEND: resourceName('notifications-send-lbd'),
         ERRORS_HANDLING: resourceName('errors-handling-lbd'),
-
         AUDIT_STORE_EVENT: resourceName('store-audit-event-lbd'),
         AUDIT_GET_EVENTS: resourceName('get-audit-events-lbd'),
     },

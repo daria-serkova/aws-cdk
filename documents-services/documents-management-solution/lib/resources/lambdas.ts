@@ -25,7 +25,8 @@ let documentS3UploadListenerLambdaInstance: NodejsFunction;
 export const documentS3UploadListenerLambda = () => documentS3UploadListenerLambdaInstance;
 let documentGetListByStatusLambdaInstance: NodejsFunction;
 export const documentGetListByStatusLambda = () => documentGetListByStatusLambdaInstance;
-
+let documentGetListByOwnerLambdaInstance: NodejsFunction;
+export const documentGetListByOwnerLambda = () => documentGetListByOwnerLambdaInstance;
 
 
 
@@ -36,7 +37,7 @@ let documentUploadMetadataLambdaInstance: NodejsFunction;
 let documentGeneratePreSignedLambdaInstance: NodejsFunction;
 let documentGetMetadataLambdaInstance: NodejsFunction;
 
-let documentGetListByOwnerLambdaInstance: NodejsFunction;
+
 
 
 
@@ -47,7 +48,7 @@ export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaIn
 export const documentGetMetadataLambda = () => documentGetMetadataLambdaInstance;
 export const documentGeneratePreSignedLambda = () => documentGeneratePreSignedLambdaInstance;
 
-export const documentGetListByOwnerLambda = () => documentGetListByOwnerLambdaInstance;
+
 
 /**
  * Lambdas, related to Communication functionality
@@ -176,6 +177,29 @@ const configureLambdaGetListByStatus = (scope: Construct, logGroup: LogGroup): N
         functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_STATUS,
         description: 'Retrieves list of documents by Status',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-list-by-status.ts`),
+        logGroup: logGroup,
+        role: iamRole,
+        environment: {
+            REGION: process.env.AWS_REGION || '',
+            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
+        },
+        ...defaultLambdaSettings
+    });
+    return lambda;   
+}
+const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_LIST_BY_OWNER);
+    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    const tables = metadataTables();
+    tables.forEach((tableName) => {
+        addDynamoDbIndexReadPolicy(iamRole, tableName,
+            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.OWNER}`);
+    });
+    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER, {
+        functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER,
+        description: 'Retrieves list of documents by Owner ID',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-list-by-owner.ts`),
         logGroup: logGroup,
         role: iamRole,
         environment: {
@@ -468,31 +492,6 @@ const configureLambdaErrorHandling = (scope: Construct, logGroup: LogGroup): Nod
         functionName: ResourceName.lambdas.DOCUMENT_GET_METADATA,
         description: 'Retrieves information about document metadata',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-metadata.ts`),
-        logGroup: logGroup,
-        role: iamRole,
-        environment: {
-            REGION: process.env.AWS_REGION || '',
-            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
-            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
-        },
-        ...defaultLambdaSettings
-    });
-    return lambda;   
-}
-
-const configureLambdaGetListByOwner = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
-    const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_LIST_BY_OWNER);
-    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    const tables = metadataTables();
-    tables.forEach((tableName) => {
-        addDynamoDbIndexReadPolicy(iamRole, 
-            tableName,
-            `${tableName}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.OWNER}`);
-    });
-    const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER, {
-        functionName: ResourceName.lambdas.DOCUMENT_GET_LIST_BY_OWNER,
-        description: 'Retrieves list of documents by Owner ID',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/get-list-by-owner.ts`),
         logGroup: logGroup,
         role: iamRole,
         environment: {

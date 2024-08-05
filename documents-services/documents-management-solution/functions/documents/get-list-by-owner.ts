@@ -1,21 +1,19 @@
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
+import { getDocumentTableNamePatternByType } from '../helpers/utilities';
+import { ResourceName } from '../../lib/resource-reference';
 
 const client = new DynamoDBClient({ region: process.env.REGION });
-const TABLE_NAME = process.env.TABLE_NAME!;
-const INDEX = process.env.INDEX!;
 
 /**
  * Lambda function handler for retrieving list of documents
  *
- * @param event - The input event containing documentId, userId and audit action.
- * @returns - A list of items matching the objectId.
- * @throws - Throws an error if the query operation fails.
+ * @param event
  */
 export const handler = async (event: any): Promise<any> => {
   const body = JSON.parse(event.body!);
-  const { documentOwnerId } = body;
-  if (!documentOwnerId) {
+  const { documentOwnerId, documentType } = body;
+  if (!documentOwnerId || !documentType) {
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -23,14 +21,16 @@ export const handler = async (event: any): Promise<any> => {
       }),
     };
   }
+  const metadataTable = `${getDocumentTableNamePatternByType(documentType)}`.replace('$', 'metadata');
+  const metadataTableIndex = `${getDocumentTableNamePatternByType(documentType)}-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.OWNER}`.replace('$', 'metadata');
   const params = {
-      TableName: TABLE_NAME,
-      IndexName: INDEX,
-      KeyConditionExpression: "documentOwnerId = :documentOwnerId",
+      TableName: metadataTable,
+      IndexName: metadataTableIndex,
+      KeyConditionExpression: "documentownerid = :documentownerid",
       ExpressionAttributeValues: {
-          ":documentOwnerId": { S: documentOwnerId }
+          ":documentownerid": { S: documentOwnerId }
       },
-      ProjectionExpression: "documentId, documentOwnerId, documentCategory, documentStatus"
+      ProjectionExpression: "documentid, documentownerid, documentcategory, documentstatus, expirydate"
   }
   try {
     const data = await client.send(new QueryCommand(params));
