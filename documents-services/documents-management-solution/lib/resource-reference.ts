@@ -74,6 +74,7 @@ export const ResourceName = {
         DOCUMENTS_REQUEST_MODEL_DOCUMENT_UPLOAD: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentUpload`,
         DOCUMENTS_REQUEST_MODEL_DOCUMENT_GET_DETAILS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetDetails`,
         DOCUMENTS_REQUEST_MODEL_DOCUMENT_GET_URL: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetUrl`,
+        DOCUMENTS_REQUEST_MODEL_DOCUMENT_GET_METADATA: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetMetadata`,
         DOCUMENTS_REQUEST_MODEL_GET_LIST_STATUS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetListStatus`,
         DOCUMENTS_REQUEST_MODEL_GET_LIST_OWNER: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetListOwner`,
 
@@ -100,6 +101,7 @@ export const ResourceName = {
         WORKFLOW_DOCUMENT_UPLOAD: resourceName('workflow-upload-document-sm-role'),
         WORKFLOW_DOCUMENT_GET_DETAILS: resourceName('workflow-get-document-details-sm-role'),
         WORKFLOW_DOCUMENT_GET_URL: resourceName('workflow-get-document-url-sm-role'),
+        WORKFLOW_DOCUMENT_GET_METADATA: resourceName('workflow-get-document-metadata-sm-role'),
         /* API Gateway roles */
         API_GATEWAY_ROLE: resourceName('api-gateway-role'),
     },
@@ -122,10 +124,14 @@ export const ResourceName = {
         WF_GET_DETAILS_TASK_GET_METADATA: resourceName('wf-get-details-task-get-metadata'),
         WF_GET_DETAILS_TASK_GET_URL: resourceName('wf-get-details-task-get-url'),
         WF_GET_DETAILS_TASK_STORE_AUDIT_EVENT: resourceName('wf-get-details-task-record-audit'),
-         /* Get document details */
-         WORKFLOW_DOCUMENT_GET_URL: resourceName('workflow-get-doc-url-sm'),
-         WF_GET_URL_TASK_GENERATE_URL: resourceName('wf-get-doc-url-task-generate-url'),
-         WF_GET_URL_TASK_STORE_AUDIT_EVENT: resourceName('wf-get-doc-url-task-record-audit'),
+        /* Get document url */
+        WORKFLOW_DOCUMENT_GET_URL: resourceName('workflow-get-doc-url-sm'),
+        WF_GET_URL_TASK_GENERATE_URL: resourceName('wf-get-doc-url-task-generate-url'),
+        WF_GET_URL_TASK_STORE_AUDIT_EVENT: resourceName('wf-get-doc-url-task-record-audit'),
+        /* Get document metadata */
+        WORKFLOW_DOCUMENT_GET_META: resourceName('workflow-get-doc-meta-sm'),
+        WF_GET_METADATA_TASK_RETRIEVE_META: resourceName('wf-get-doc-meta-task-retrieve-data'),
+        WF_GET_METADATA_TASK_STORE_AUDIT_EVENT: resourceName('wf-get-doc-meta-task-record-audit'),
 
         /* Verify document workflow */
         WORKFLOW_VERIFY_DOCUMENT: resourceName('workflow-verify-doc-sm'),

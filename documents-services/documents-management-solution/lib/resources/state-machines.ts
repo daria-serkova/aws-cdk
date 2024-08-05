@@ -6,11 +6,14 @@ import { LogGroup } from "aws-cdk-lib/aws-logs";
 import * as verifyDocument from './state-machines/verify-document';
 import * as getDocumentDetails from './state-machines/get-document-details';
 import * as getDocumentUrl from './state-machines/get-document-url';
+import * as getDocumentMetadata from './state-machines/get-document-metadata';
 
 let workflowGetDocumentDetailsInstance: StateMachine;
 export const workflowGetDocumentDetails = () => workflowGetDocumentDetailsInstance;
 let workflowGetDocumentUrlInstance: StateMachine;
 export const workflowGetDocumentUrl = () => workflowGetDocumentUrlInstance;
+let workflowGetDocumentMetadataInstance: StateMachine;
+export const workflowGetDocumentMetadata = () => workflowGetDocumentMetadataInstance;
 let workflowVerifyDocumentInstance: StateMachine;
 export const workflowVerifyDocument = () => workflowVerifyDocumentInstance;
 
@@ -22,13 +25,12 @@ export const workflowVerifyDocument = () => workflowVerifyDocumentInstance;
 export default function configureStateMachines(scope: Construct, logGroup: LogGroup) {
     // Create a role for API Gateway
     const apiGatewayRole = createApiGatewayRole(scope, ResourceName.iam.API_GATEWAY_ROLE);
-
     // Configure and initialize the 'Get Document Details' state machine
     workflowGetDocumentDetailsInstance = getDocumentDetails.configureWorkflow(scope, apiGatewayRole, logGroup);
      // Configure and initialize the 'Get Document URL' state machine
     workflowGetDocumentUrlInstance = getDocumentUrl.configureWorkflow(scope, apiGatewayRole, logGroup);
-
+     // Configure and initialize the 'Get Document Metadata' state machine
+     workflowGetDocumentMetadataInstance = getDocumentMetadata.configureWorkflow(scope, apiGatewayRole, logGroup);
     // Configure and initialize the 'Verify Document' state machine
     workflowVerifyDocumentInstance = verifyDocument.configureWorkflow(scope, apiGatewayRole, logGroup);
-
 }
