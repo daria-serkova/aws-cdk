@@ -173,8 +173,7 @@ export const SupportedRejectFolders = [
 ]}
 export const RequestOperations = {
     DOCUMENT: 'DOCUMENT',
-    USER: 'USER',
-    ACTION: 'ACTION'
+    USER: 'USER'
 }
 export const SupportedRequestOperations: string[]  = Object.values(RequestOperations);
 /**

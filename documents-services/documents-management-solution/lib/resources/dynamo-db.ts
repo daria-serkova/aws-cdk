@@ -51,18 +51,11 @@ export default function configureDynamoDbResources(scope: Construct ) {
         name = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_DOC_ID}`);
         table.addGlobalSecondaryIndex({
             indexName: name,
-            partitionKey: { name: 'eventInitiator', type: AttributeType.STRING },
-            sortKey: { name: 'documentId', type: AttributeType.STRING },
-            projectionType: ProjectionType.ALL,
-        });
-        name = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_ACTION}`);
-        table.addGlobalSecondaryIndex({
-            indexName: name,
             partitionKey: { name: 'eventinitiator', type: AttributeType.STRING },
-            sortKey: { name: 'event', type: AttributeType.STRING },
+            sortKey: { name: 'documentid', type: AttributeType.STRING },
             projectionType: ProjectionType.ALL,
         });
-        name = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID}`);
+        name = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID_AND_EVENT_INITIATOR}`);
         table.addGlobalSecondaryIndex({
             indexName: name,
             partitionKey: { name: 'documentid', type: AttributeType.STRING },

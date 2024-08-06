@@ -49,7 +49,8 @@ export const ResourceName = {
         INDEX_NAMES_SUFFIXES: {
             DOCUMENT_ID_AND_STATUS: 'index-doc-id-and-status',
             DOCUMENT_ID: 'index-doc-id',
-            EVENT_INITIATOR_AND_ACTION: 'index-event-initiator-and-action',
+            //Audit indexes
+            DOCUMENT_ID_AND_EVENT_INITIATOR: 'index-doc-id-and-event-initiator',
             EVENT_INITIATOR_AND_DOC_ID: 'index-event-initiator-and-doc-id',
             STATUS_AND_OWNER: 'index-status-and-owner',
             OWNER: 'index-owner',

@@ -18,7 +18,6 @@ export const handler = async (event: any): Promise<any> => {
   const { documenttype, operationtype, documentid, eventinitiator, eventaction} = body;
   if ((operationtype === RequestOperations.USER && (!eventinitiator || eventinitiator === '*')) || 
       (operationtype === RequestOperations.DOCUMENT && (!documentid || documentid === '*')) || 
-      (operationtype === RequestOperations.ACTION && (!eventaction || eventaction === '*')) || 
       !documenttype) {
     return {
       statusCode: 500,
@@ -28,42 +27,32 @@ export const handler = async (event: any): Promise<any> => {
     };
   }
   const table = resolveTableName(documenttype, tableType);
-  const indexDocumentId = resolveTableIndexName(documenttype, tableType, ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID);
-  const indexUserDocumentId = resolveTableIndexName(documenttype, tableType, ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_DOC_ID);
-  const indexUserEvent = resolveTableIndexName(documenttype, tableType, ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID_AND_STATUS);
+  const indexDocumentIdAndInitiator = resolveTableIndexName(documenttype, tableType, ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID_AND_EVENT_INITIATOR);
+  const indexUserAndDocumentId = resolveTableIndexName(documenttype, tableType, ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_DOC_ID);
   let params: QueryCommandInput;
   switch (operationtype) {
     case RequestOperations.DOCUMENT:
       params = {
         TableName: table,
-        IndexName: indexDocumentId,
+        IndexName: indexDocumentIdAndInitiator,
         KeyConditionExpression: "documentid = :documentid" + (eventinitiator !== '*' ? " AND eventinitiator = :eventinitiator" : ""),
         ExpressionAttributeValues: {
             ":documentid": { S: documentid },
             ...(eventinitiator !== '*' ? { ":eventinitiator": { S: eventinitiator } } : {})
-        }
+        },
+        //FilterExpression: eventaction ? "event = :event" : '',
       }
       break;
     case RequestOperations.USER:
       params =  {
         TableName: table,
-        IndexName: indexUserDocumentId,
+        IndexName: indexUserAndDocumentId,
         KeyConditionExpression: "eventinitiator = :eventinitiator" + (documentid !== '*' ? " AND documentid = :documentid" : ""),
         ExpressionAttributeValues: {
             ":eventinitiator": { S: eventinitiator },
             ...(documentid !== '*' ? { ":documentid": { S: documentid } } : {})
-        }
-      }
-      break;
-    case RequestOperations.ACTION:
-      params =  {
-        TableName: table,
-        IndexName: indexUserEvent,
-        KeyConditionExpression: "eventinitiator = :eventinitiator" + (eventaction !== '*' ? " AND event = :event" : ""),
-        ExpressionAttributeValues: {
-            ":eventinitiator": { S: eventinitiator },
-            ...(event !== '*' ? { ":event": { S: eventaction } } : {})
-        }
+        },
+        //FilterExpression: eventaction ? "event = :event" : '',
       }
       break;
     default:

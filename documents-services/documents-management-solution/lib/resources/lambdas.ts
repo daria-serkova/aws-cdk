@@ -301,9 +301,7 @@ const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup:
         addDynamoDbReadPolicy(iamRole, name);
         let indexName = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_DOC_ID}`);
         addDynamoDbIndexReadPolicy(iamRole, name, indexName);
-        indexName = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_ACTION}`);
-        addDynamoDbIndexReadPolicy(iamRole, name, indexName);
-        indexName = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID}`);
+        indexName = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID_AND_EVENT_INITIATOR}`);
         addDynamoDbIndexReadPolicy(iamRole, name, indexName);
     });
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.AUDIT_GET_EVENTS, {

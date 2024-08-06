@@ -17,6 +17,7 @@ export default function configureS3Resources(scope: Construct) {
         encryption: BucketEncryption.S3_MANAGED,
         versioned: true,
         removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
+        autoDeleteObjects: !isProduction,
         blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
     });
     SupportedUploadFolders.forEach(folder => {
