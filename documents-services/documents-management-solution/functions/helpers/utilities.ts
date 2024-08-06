@@ -321,9 +321,9 @@ export const EventCodes = {
     VIEW_CONTENT: "View Content",            // When a document is viewed.
     VIEW_METADATA: "View Metadata",            // When a document is viewed.
     UPLOAD: "Upload",                         // When a document is uploaded.
-    REVIEW_SUBMIT: "Submitted for Review",    // When a document is submitted for review.
-    VERIFY: "Verified",                       // When a document is verified.
-    REJECT: "Rejected",                       // When a document is rejected.
+    STARTED_VERIFICATION: "Started Verification",    // When a document is submitted for review.
+    VERIFIED: "Verified",                       // When a document is verified.
+    REJECTED: "Rejected",                       // When a document is rejected.
     
     /*
 
@@ -401,8 +401,23 @@ export const getAuditEvent = (
         initiatorsystemcode
       }
 }
+export const getAuditEventCode = (documentStatus: string): string | undefined => {
+    switch (documentStatus) {
+        case DocumentStatuses.UPLOADED:
+        case DocumentStatuses.PENDING_REVIEW:
+            return EventCodes.UPLOAD;
+        case DocumentStatuses.UNDER_REVIEW:
+            return EventCodes.STARTED_VERIFICATION;
+        case DocumentStatuses.VERIFIED:
+            return EventCodes.VERIFIED;
+        case DocumentStatuses.REJECTED:
+            return EventCodes.REJECTED;
+        default:
+            return undefined;
+    }
+}
 
-export const getCurrentTime = () => new Date().getTime().toString();
+export const getCurrentTime = (): string => new Date().getTime().toString();
 interface Body {
     [key: string]: any;
 }

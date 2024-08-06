@@ -1,6 +1,13 @@
-
 import { Construct } from "constructs";
-import { Cors, JsonSchemaType, LambdaIntegration, Period, RequestValidator, Resource, RestApi, StepFunctionsIntegration } from "aws-cdk-lib/aws-apigateway";
+import { 
+    Cors, 
+    JsonSchemaType, 
+    LambdaIntegration, 
+    Period, 
+    RequestValidator, 
+    Resource, RestApi, 
+    StepFunctionsIntegration 
+} from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
 import { isProduction } from "../../helpers/utilities";
 import { 
@@ -12,9 +19,15 @@ import {
     SupportedEventCodes, 
     SupportedInitiatorSystemCodes, 
     SupportedRequestOperations,
-     SupportedParamsPatterns } from "../../functions/helpers/utilities";
+     SupportedParamsPatterns, 
+} from "../../functions/helpers/utilities";
 import * as workflows from "./state-machines";
-import { auditGetEventsLambda, documentGeneratePreSignedUploadUrlsLambda, documentGetListByOwnerLambda, documentGetListByStatusLambda } from "./lambdas";
+import { 
+    auditGetEventsLambda, 
+    documentGeneratePreSignedUploadUrlsLambda, 
+    documentGetListByOwnerLambda, 
+    documentGetListByStatusLambda 
+} from "./lambdas";
 
 interface ApiNodes {
     document: Resource;
@@ -89,7 +102,7 @@ export default function configureApiGatewayResources(scope: Construct ) {
     /* Audit endpoints */
     configureAuditGetEventsEndpoint(apiGatewayInstance, apiNodesInstance.audit, requestValidatorInstance);
     /* Verify endpoints */
-    //configureVerifyUpdateTrailEndpoint(apiGatewayInstance, apiNodesInstance.verify, requestValidatorInstance);
+    configureVerifyUpdateTrailEndpoint(apiGatewayInstance, apiNodesInstance.verify, requestValidatorInstance);
 }
 function configureDocumentUploadEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.DOCUMENTS_REQUEST_MODEL_DOCUMENT_UPLOAD;
@@ -260,9 +273,6 @@ function configureGetDocumentMetadataEndpoint(apiGateway: RestApi, node: Resourc
         requestValidator: requestValidatorInstance,
     })
 }
-
-
-
 function configureVerifyUpdateTrailEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
     const modelName = ResourceName.apiGateway.VERIFY_REQUEST_MODEL_UPDATE_TRAIL;
     let requestModel = {
@@ -273,29 +283,14 @@ function configureVerifyUpdateTrailEndpoint(apiGateway: RestApi, node: Resource,
         schema: {
             type: JsonSchemaType.OBJECT,
             properties: {
-                initiatorSystemCode: {
-                    type: JsonSchemaType.STRING,
-                    enum: SupportedInitiatorSystemCodes
-                },
-                requestorId: {
-                    type: JsonSchemaType.STRING
-                },
-                documentId: {
-                    type: JsonSchemaType.STRING
-                },
-                verificationStatus: {
-                    type: JsonSchemaType.STRING
-                },
-                comment: {
-                    type: JsonSchemaType.STRING
-                },
+                initiatorsystemcode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
+                requestorid: { type: JsonSchemaType.STRING },
+                requestorip: { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.IP },
+                documenttype: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
+                documentid: { type: JsonSchemaType.STRING },
+                verificationstatus: { type: JsonSchemaType.STRING, enum: SupportedDocumentStatuses },
             },
-            required: [
-               "initiatorSystemCode",
-               "requestorId",
-               "documentId",
-               "verificationStatus"
-            ],
+            required: [ 'initiatorsystemcode', 'requestorid', 'documenttype', 'requestorip', 'documentid', 'verificationstatus'],
         },
     };
     apiGateway.addModel(modelName, requestModel);

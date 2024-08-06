@@ -127,6 +127,7 @@ export const ResourceName = {
 
         /* Verify document workflow */
         WORKFLOW_VERIFY_DOCUMENT: resourceName('workflow-verify-doc-sm'),
+        WF_VERIFY_TASK_GET_METADATA: resourceName('wf-verify-doc-task-get-metadata'),
         WF_VERIFY_TASK_UPDATE_TRAIL: resourceName('wf-verify-doc-task-update-trail'),
         WF_VERIFY_TASK_UPDATE_METADATA: resourceName('wf-verify-doc-task-update-metadata'),
         WF_VERIFY_TASK_STORE_AUDIT_EVENT: resourceName('wf-verify-doc-task-record-audit'),

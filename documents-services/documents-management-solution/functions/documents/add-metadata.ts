@@ -1,9 +1,9 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { formSuccessBody } from '../helpers/utilities';
+import { resolveTableName } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
-const TABLE_NAME = process.env.TABLE_NAME!;
+const tableType = 'metadata';
 
 /**
  * Lambda function handler for storing document metadata in DynamoDB.
@@ -13,45 +13,33 @@ const TABLE_NAME = process.env.TABLE_NAME!;
  * @throws - Throws an error if the metadata storage fails.
  */
 export const handler = async (event: any): Promise<any> => {
+  // Skip processing if previous step returned a non-success status code
   if (event.statusCode && event.statusCode !== 200) return event;
-
-  const { documentId } = event.body;
-  if (!documentId) {
+  const { documentid, documenttype, ...rest } = event.body;
+  if (!documentid || !documenttype) {
     return {
       statusCode: 400,
       body: {
-        error: `Can't add metadata. Required data elements (documentId) are missing`,
-      }
-    }
+        error: "Can't add metadata. Required data elements (documentId) are missing",
+      },
+    };
   }
-  try { 
-    await dynamoDb.send(new PutItemCommand({ TableName: TABLE_NAME, Item: marshall({
-      ...(({
-        requestorId,         // Extract `requestorId` to exclude it from DynamoDB record
-        initiatorSystemCode, // Extract `initiatorSystemCode` to exclude it from DynamoDB record
-        action,              // Extract `action` to exclude it from DynamoDB record
-        ...rest              // Include rest of the properties to DynamoDB record
-      }) => rest)(event.body)}
-    )}));
-    const resultFields = [
-      'requestorId', 
-      'initiatorSystemCode', 
-      'action', 
-      'documentId', 
-      'version', 
-      'documentOwnerId'
-    ];
+  const table = resolveTableName(documenttype, tableType);
+  try {
+    const { requestorip, requestorid, initiatorsystemcode, actions, ...item } = rest; // exclude from metadata record
+    item.documentid = documentid;
+    await dynamoDb.send(new PutItemCommand({ TableName: table, Item: marshall(item) }));
     return {
       statusCode: 200,
-      body: formSuccessBody(event.body, resultFields)
-    } 
+      body: { ...event.body },
+    };
   } catch (error) {
     console.error('Error adding document metadata to DynamoDB:', error);
     return {
       statusCode: 500,
       body: {
-        error: `Request could not be processed. ${error.message}`
-      }
-    }
+        error: `Request could not be processed. ${error.message}`,
+      },
+    };
   }
 };
