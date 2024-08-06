@@ -26,14 +26,14 @@ export const SupportedUploadFolders = [
     'consent-forms/uploaded/',
     'patients/uploaded/',
 ]
-export const SupportedVerifyFolders = [
+export const SupportedVerifiedFolders = [
     'providers/verified/',
     'insurance/verified/',
     'billing/verified/',
     'consent-forms/verified/',
     'patients/verified/',
 ];
-export const SupportedRejectFolders = [
+export const SupportedRejectedFolders = [
     'providers/rejected/',
     'insurance/rejected/',
     'billing/rejected/',

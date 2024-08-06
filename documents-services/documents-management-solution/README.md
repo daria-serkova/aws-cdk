@@ -19,10 +19,10 @@ This solution is designed to address a variety of real-world business scenarios,
 
 ### 1. Document Storage and Retrieval
 
-- Secure and scalable storage for contracts, invoices, HR files, and project documentation.
+- Secure and scalable storage for any types of documents (contracts, invoices, claims, HR files, etc).
 - Metadata tagging for efficient organization and retrieval.
 
-### 2. Document Sharing and Collaboration
+### 2. TBD: Document Sharing and Collaboration
 
 - Version control and history tracking for collaborative editing.
 - Access controls to manage viewing and editing permissions.
@@ -30,14 +30,14 @@ This solution is designed to address a variety of real-world business scenarios,
 ### 3. Document Approval Workflows
 
 - Automated workflows for approval processes such as expense reports, purchase orders, and legal contracts.
-- Role-based access control and audit trails.
+- Role-based access control audit trails.
 
 ### 4. Document Security and Compliance
 
 - Encryption at rest and in transit to protect sensitive documents.
 - Detailed access logs and compliance with regulations like GDPR and HIPAA.
 
-### 5. Document Generation and Templates
+### 5. TBD: Document Generation and Templates
 
 - Template management and automated document generation for invoices, reports, and letters.
 - Support for various formats (PDF, DOCX, etc.).
