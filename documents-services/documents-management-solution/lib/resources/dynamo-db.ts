@@ -59,6 +59,7 @@ export default function configureDynamoDbResources(scope: Construct ) {
         table.addGlobalSecondaryIndex({
             indexName: name,
             partitionKey: { name: 'documentid', type: AttributeType.STRING },
+            sortKey: { name: 'eventinitiator', type: AttributeType.STRING },
             projectionType: ProjectionType.ALL,
         });
     });
@@ -72,11 +73,12 @@ export default function configureDynamoDbResources(scope: Construct ) {
             ...defaultTablesSettings
         });
         name = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID_AND_STATUS}`);
-        table.addGlobalSecondaryIndex({
-            indexName: name,
-            partitionKey: { name: 'documentid', type: AttributeType.STRING },
-            sortKey: { name: "documentstatus", type: AttributeType.STRING },
-            projectionType: ProjectionType.ALL,
-        });     
+        //TBD
+        // table.addGlobalSecondaryIndex({
+        //     indexName: name,
+        //     partitionKey: { name: 'documentid', type: AttributeType.STRING },
+        //     sortKey: { name: "documentstatus", type: AttributeType.STRING },
+        //     projectionType: ProjectionType.ALL,
+        // });     
     });
 }
