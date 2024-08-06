@@ -1,4 +1,4 @@
-## AWS Serverless Document Management Solution
+# AWS Serverless Document Management Solution
 
 The AWS Serverless Document Management Solution provides a comprehensive, scalable, and secure platform for managing documents in various business scenarios. Leveraging AWS serverless technologies, this solution offers robust features such as document storage, retrieval, collaboration, approval workflows, and compliance management. The architecture is designed to be cost-effective, highly available, and easy to integrate with other business systems.
 
@@ -116,12 +116,8 @@ TBD location with Postman collection and environments
      ```
 
 3. **Usage**
-   - Configure the solution according to your specific project needs.
-   - Use the provided APIs and dashboards to manage emails.
-
-## Contributions
-
-Contributions are welcome! Please submit issues and pull requests for any improvements or bug fixes.
+   - Configure the solution according to your specific project needs (supported types, categories, folders paths, tables names).
+   - Use the provided APIs and dashboards to manage documents.
 
 ## License
 
