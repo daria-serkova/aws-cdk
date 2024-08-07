@@ -1,0 +1,47 @@
+@startuml
+!define RECTANGLE class
+
+RECTANGLE "S3 Bucket" {
+  +Lifecycle Policies
+  +Versioning
+  +Encryption (At Rest)
+}
+
+RECTANGLE "AWS Lambda" {
+  +Automate Backup Tasks
+}
+
+RECTANGLE "AWS Key Management Service (KMS)" {
+  +Encrypt Data (At Rest)
+}
+
+RECTANGLE "SSL/TLS" {
+  +Encrypt Data In Transit
+}
+
+RECTANGLE "IAM Policies" {
+  +Access Controls
+}
+
+RECTANGLE "S3 Bucket Policies" {
+  +Restrict Access
+}
+
+RECTANGLE "CloudTrail" {
+  +Audit Logs
+}
+
+RECTANGLE "CloudWatch Events (EventBridge)" {
+  +Schedule Lambda Functions
+}
+
+"S3 Bucket" --> "AWS Lambda" : Triggers custom backup tasks
+"S3 Bucket" --> "AWS Key Management Service (KMS)" : Uses for encryption
+"S3 Bucket" --> "SSL/TLS" : Data encrypted in transit
+"S3 Bucket" --> "IAM Policies" : Managed access control
+"S3 Bucket" --> "S3 Bucket Policies" : Restricts access based on policies
+"S3 Bucket" --> "CloudTrail" : Logs all access and management events
+
+"CloudWatch Events (EventBridge)" --> "AWS Lambda" : Schedules backup tasks
+
+@enduml
