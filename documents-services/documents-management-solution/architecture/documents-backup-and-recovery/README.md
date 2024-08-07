@@ -61,7 +61,7 @@ Document backup and disaster recovery are critical components of a robust data m
 ## Key Components of Document Backup and Disaster Recovery
 
 1. **Automated Backup Processes:** Regularly scheduled backups that run automatically to ensure data is consistently backed up without manual intervention.
-2. **Cross-Region Replication:** Replicating data across different geographic locations to provide redundancy and protect against regional disasters.
+2. **Cross-Region Replication:** Replicating data across different geographic locations to provide redundancy and protect against regional disasters. ***NOTE***: If you build application for country with data residency or/and cross-border data transfer regulations: CRR will not be applicable at all or should be done within the same country regions.
 3. **Lifecycle Policies:** Automatically transitioning data to cost-effective storage classes based on access patterns and data age.
 4. **Testing and Validation:** Regularly testing backup and recovery procedures to ensure they work as expected and data integrity is maintained.
 5. **Recovery Objectives:** Defining Recovery Time Objectives (RTO) and Recovery Point Objectives (RPO) to set acceptable levels of downtime and data loss.
