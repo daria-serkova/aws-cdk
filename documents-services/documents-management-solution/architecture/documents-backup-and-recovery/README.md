@@ -19,38 +19,43 @@ Document backup and disaster recovery are critical components of a robust data m
 
 ### Business Continuity
 
-- **Scenario:** Natural disasters, power outages, or other catastrophic events can disrupt business operations.
-- **Importance:** Disaster recovery plans ensure that businesses can quickly resume operations, minimizing downtime and financial losses.
+**Scenario:** Natural disasters, power outages, or other catastrophic events can disrupt business operations.
+
+**Importance:** Disaster recovery plans ensure that businesses can quickly resume operations, minimizing downtime and financial losses.
 
 ### Compliance and Regulatory Requirements
 
-- **Scenario:** Many industries have strict regulations regarding data retention and protection, such as healthcare, finance, and legal sectors. Example:
+**Scenario:** Many industries have strict regulations regarding data retention and protection, such as healthcare, finance, and legal sectors. Example:
     
-    - The HIPAA Security Rule requires covered entities to implement policies and procedures for creating, receiving, maintaining, and transmitting ePHI. This includes having a data backup plan (45 CFR 164.308(a)(7)(ii)(A)) and a disaster recovery plan (45 CFR 164.308(a)(7)(ii)(B)).
-    - FedRAMP provides a standardized approach to security assessment, authorization, and continuous monitoring for cloud products and services used by U.S. federal agencies. FedRAMP requires that cloud service providers implement redundancy measures to ensure high availability and durability. This includes geographic redundancy to protect against data loss due to regional outages.
-    - PCI DSS Requirement 3.1 specifies the need to keep cardholder data storage to a minimum by implementing data retention and disposal policies, while Requirement 3.5.3 requires the storage of encryption keys in as few locations as possible and to protect the keys against unauthorized access.
+- The HIPAA Security Rule requires covered entities to implement policies and procedures for creating, receiving, maintaining, and transmitting ePHI. This includes having a data backup plan (45 CFR 164.308(a)(7)(ii)(A)) and a disaster recovery plan (45 CFR 164.308(a)(7)(ii)(B)).
+- FedRAMP provides a standardized approach to security assessment, authorization, and continuous monitoring for cloud products and services used by U.S. federal agencies. FedRAMP requires that cloud service providers implement redundancy measures to ensure high availability and durability. This includes geographic redundancy to protect against data loss due to regional outages.
+- PCI DSS Requirement 3.1 specifies the need to keep cardholder data storage to a minimum by implementing data retention and disposal policies, while Requirement 3.5.3 requires the storage of encryption keys in as few locations as possible and to protect the keys against unauthorized access.
 
-- **Importance:** Backups and disaster recovery plans help organizations comply with legal requirements, avoiding fines and legal consequences.
+**Importance:** Backups and disaster recovery plans help organizations comply with legal requirements, avoiding fines and legal consequences.
 
 ### Mitigation of Cybersecurity Threats
 
-- **Scenario:** Ransomware attacks and other cyber threats can compromise or encrypt data, making it inaccessible.
-- **Importance:** Having secure backups allows organizations to restore data without yielding to ransom demands, ensuring data integrity and availability.
+**Scenario:** Ransomware attacks and other cyber threats can compromise or encrypt data, making it inaccessible.
+
+**Importance:** Having secure backups allows organizations to restore data without yielding to ransom demands, ensuring data integrity and availability.
 
 ### Preservation of Historical Data
 
-- **Scenario:** Businesses may need access to historical data for audits, reporting, or analysis.
-- **Importance:** Backups provide a way to store and retrieve historical versions of documents and data, supporting business intelligence and compliance needs.
+**Scenario:** Businesses may need access to historical data for audits, reporting, or analysis.
+
+**Importance:** Backups provide a way to store and retrieve historical versions of documents and data, supporting business intelligence and compliance needs.
 
 ### Data Integrity and Corruption Prevention
 
-- **Scenario:** Data corruption can occur due to software errors, malware, or hardware malfunctions.
-- **Importance:** Backups ensure that uncorrupted versions of data are available, allowing for quick recovery and continued operations.
+**Scenario:** Data corruption can occur due to software errors, malware, or hardware malfunctions.
+
+**Importance:** Backups ensure that uncorrupted versions of data are available, allowing for quick recovery and continued operations.
 
 ### Operational Resilience
 
-- **Scenario:** Businesses need to maintain resilience against various operational risks.
-- **Importance:** A well-designed disaster recovery plan ensures that businesses can withstand and recover from unexpected events, maintaining trust and reliability.
+**Scenario:** Businesses need to maintain resilience against various operational risks.
+
+**Importance:** A well-designed disaster recovery plan ensures that businesses can withstand and recover from unexpected events, maintaining trust and reliability.
 
 ## Key Components of Document Backup and Disaster Recovery
 
