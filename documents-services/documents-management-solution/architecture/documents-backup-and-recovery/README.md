@@ -14,8 +14,9 @@ Document backup and disaster recovery are critical components of a robust data m
 
 ### Protection Against Data Loss
 
-- **Scenario:** Accidental deletion, hardware failure, software bugs, or cyberattacks can lead to data loss.
-- **Importance:** Regular backups ensure that a recent copy of data is always available for restoration, preventing permanent loss of critical information.
+**Scenario:** Accidental deletion, hardware failure, software bugs, or cyberattacks can lead to data loss.
+
+**Importance:** Regular backups ensure that a recent copy of data is always available for restoration, preventing permanent loss of critical information.
 
 ### Business Continuity
 

@@ -64,6 +64,8 @@ This solution is designed to address a variety of real-world business scenarios,
 - Automated backup processes and disaster recovery plans.
 - Cross-region replication and regular testing of backup procedures.
 
+[Architecture, recommendations and implementation details](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-backup-and-recovery)
+
 ### 10. Document Integration with Other Systems
 
 - APIs for seamless integration with CRM, ERP, HR systems, and more.
