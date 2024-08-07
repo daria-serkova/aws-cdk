@@ -33,9 +33,10 @@ export const ResourceName = {
     s3Buckets: {
         DOCUMENTS_BUCKET: resourceName('documents-bucket').toLowerCase(),
         LIFECYCLE_RULES: {
-            ARCHIVE_AND_REMOVE_UPLOADED_DOCUMENTS: resourceName('$1-upload-archive-remove-lc'),
-            ARCHIVE_AND_REMOVE_VERIFIED_DOCUMENTS: resourceName('$1-verified-archive-remove-lc'),
-            ARCHIVE_AND_REMOVE_REJECTED_DOCUMENTS: resourceName('$1- rejected-archive-remove-lc'),
+            ARCHIVE_AND_REMOVE_UPLOADED_DOCUMENTS: resourceName('upload-archive-remove-lc'),
+            ARCHIVE_AND_REMOVE_VERIFIED_DOCUMENTS: resourceName('verified-archive-remove-lc'),
+            ARCHIVE_AND_REMOVE_REJECTED_DOCUMENTS: resourceName('rejected-archive-remove-lc'),
+            ARCHIVE_AND_REMOVE_EXPIRED_DOCUMENTS: resourceName('expired-archive-remove-lc'),
         }
     },
     dynamoDbTables: {

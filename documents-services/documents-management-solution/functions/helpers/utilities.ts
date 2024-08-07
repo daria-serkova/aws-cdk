@@ -19,6 +19,12 @@ export const verifiedFolder = (documentType: string, uuid: string) => {
 export const rejectedFolder = (documentType: string, uuid: string) => {
     return `${getDocumentS3Folder(documentType)}`.replace('$status', 'rejected').replace('$id', uuid);
 }
+export const DocumentStatusFolderNames = {
+    UPLOADED: 'uploaded',
+    REJECTED: 'rejected',
+    VERIFIED: 'verified',
+    EXPIRED: 'expired',
+}
 export const SupportedUploadFolders = [
     'providers/uploaded/',
     'insurance/uploaded/',
