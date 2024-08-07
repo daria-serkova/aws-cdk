@@ -49,3 +49,31 @@ Document archiving and retention are crucial components of data management that 
 3. **Operational Efficiency:** Automated archiving and retention streamline data management processes, reducing the manual workload and potential for human error. This leads to more efficient operations and better resource utilization.
 4. **Data Integrity and Availability:** Implementing proper archiving and retention ensures that documents are preserved and accessible for future needs, such as audits, compliance checks, or historical analysis. It also helps in managing storage growth and maintaining system performance.
 5. **Data Governance:** Establishing clear policies for data retention and archiving helps in enforcing data governance principles. This includes maintaining data quality, ensuring data security, and managing data lifecycle effectively.
+
+## Best Practices for Configuration
+
+1. **Transition After:** 30 days is a common practice for documents that are no longer actively accessed but still need to be retained. This balances cost with the need to preserve data for potential future access.
+2. **Expiration After:** 365 days is a reasonable timeframe for automatically deleting documents that are no longer needed. However, this can vary based on industry requirements and the nature of the documents. For example:
+    1. **Healthcare Data:** May require longer retention due to regulations (e.g., HIPAA in the US).
+    2. **Financial Records:** Might also need longer retention periods.
+3. **Regulatory Compliance:** Ensure the retention and deletion policies comply with industry-specific regulations and standards. For instance, healthcare and financial data often have specific retention requirements.
+4. **Access Patterns:** Review access patterns to adjust the transition timing. If some documents are accessed more frequently, a shorter period before transitioning to Glacier might be appropriate.
+5. **Legal Holds:** Implement mechanisms to prevent deletion if there are legal holds or compliance requirements. This helps in case documents are subject to litigation or investigation.
+6. **Data Classification:** Consider classifying documents based on their importance and apply different lifecycle rules for different types.
+7. **Cost Optimization:** Regularly review and adjust your lifecycle policies to ensure they are cost-effective and aligned with your data management strategy.
+
+## Rejected Documents Recommendations
+
+For documents rejected by a verification team, the retention and expiration policies in a production environment should balance between compliance, storage costs, and practical business needs. Here's a recommended configuration based on real-world practices:
+
+1. **Immediate Transition to Glacier or Deep Archive Storage:** Rejected documents often don't need to be accessed frequently. Transition them to a lower-cost storage class soon after rejection.
+2. **Expiration and Deletion - Shorter Retention Period:** Since these documents are rejected, they may not need to be retained as long as accepted ones. Common practices include:
+    1. **Retention Period:** 90 to 180 days. This period allows for any necessary review or audits before final deletion. Adjust based on regulatory requirements and business needs.
+    2. **Expiration After:** Automatically delete documents after the retention period. This helps manage storage costs and ensures that outdated or irrelevant data is cleaned up.
+
+## Expired Documents Recommendations
+
+For expired documents, the management strategy should focus on efficient data cleanup, cost control, and compliance with any relevant policies. Here’s a recommended approach based on real-world practices:
+
+1. **Immediate Deletion:** Set up lifecycle rules to automatically delete expired documents. This ensures that outdated or irrelevant data is removed without manual intervention.
+2. **Archiving Before Deletion (Optional):** If documents need to be retained for a certain period before deletion (e.g., for auditing purposes), you can transition them to a low-cost storage class like S3 Glacier before deletion. This approach is less common for expired documents but might be used if there are specific compliance requirements.
