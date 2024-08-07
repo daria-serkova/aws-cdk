@@ -173,3 +173,7 @@ Cost of the solution for the same scenario:
 4. Monthly cost: 750 GB * $0.004/GB = **$3**
 
 Using a custom backup process can significantly reduce costs, especially for data that doesn't require frequent access. However, it requires more setup and maintenance compared to using AWS Backup.
+
+## Backup and Disaster Recovery Architecture
+
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-backup-and-recovery/s3-backups-and-dr-architecture.png)
