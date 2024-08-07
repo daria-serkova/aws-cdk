@@ -22,23 +22,38 @@ export default function configureS3Resources(scope: Construct) {
         transitions: [
             {
                 storageClass: StorageClass.GLACIER,
-                transitionAfter: Duration.days(30), // Transition to Glacier after 30 days
+                /* 
+                 * Transition to Glacier after 60 days assuming this is maximum period for verification process
+                 */
+                transitionAfter: Duration.days(60),
             },
         ],
-        expiration: Duration.days(365), // Delete after 365 days
+        /* 
+         * Removal after 365 days after upload
+         * Assuming document is abandoned for some reason and will not be processed by verification team.
+         */
+        expiration: Duration.days(365), 
         enabled: true,
     })
-    // Verified documents
+    // Verified documents (active)
     lifecycleRules.push({
         id: ResourceName.s3Buckets.LIFECYCLE_RULES.ARCHIVE_AND_REMOVE_VERIFIED_DOCUMENTS,
         prefix: `*/${DocumentStatusFolderNames.VERIFIED}/`,
         transitions: [
             {
                 storageClass: StorageClass.GLACIER,
-                transitionAfter: Duration.days(14610), //40 years
+                 /* 
+                 * Transition to Glacier 40 years after verification
+                 * TBD update with regulation specific number
+                 */
+                transitionAfter: Duration.days(14610),
             },
         ],
-        expiration: Duration.days(18250), // Delete after 50 years
+        /* 
+         * Removal after 50 years after verification completed
+         * TBD update with regulation specific number
+         */
+        expiration: Duration.days(18250),
         enabled: true,
     });
     // Rejected documents
@@ -48,10 +63,18 @@ export default function configureS3Resources(scope: Construct) {
         transitions: [
             {
                 storageClass: StorageClass.GLACIER,
-                transitionAfter: Duration.days(30), // One month (assuming enough time for re-upload or dispute processing)
+                /* 
+                 * Transition to Glacier 7 days after rejection assuming re-upload or disputes 
+                 * are resolved within a week 
+                 */
+                transitionAfter: Duration.days(7),
             },
         ],
-        expiration: Duration.days(60), // 2 months (assuming enough time for re-upload or dispute processing)
+        /* 
+         * Removal after 6 months after rejection 
+         * assuming enough time for re-upload, dispute processing and auditing to be completed 
+         */
+        expiration: Duration.days(180),
         enabled: true,
     });
     // Expired documents
@@ -61,10 +84,17 @@ export default function configureS3Resources(scope: Construct) {
         transitions: [
             {
                 storageClass: StorageClass.GLACIER,
-                transitionAfter: Duration.days(30), // One month (assuming enough time for re-upload or dispute processing)
+                /* 
+                 * Transition to Glacier 30 days after expiration 
+                 * assuming re-newed documents were re-uploaded
+                 */
+                transitionAfter: Duration.days(30),
             },
         ],
-        expiration: Duration.days(60), // 2 months (assuming enough time for re-upload or dispute processing)
+         /* 
+         * Delete after 730 days (2 years) or according to specific regulations
+         */
+        expiration: Duration.days(730),
         enabled: true,
     })
     const bucket = new Bucket(scope, ResourceName.s3Buckets.DOCUMENTS_BUCKET, {
