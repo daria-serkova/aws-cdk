@@ -105,4 +105,6 @@ S3 lifecycle rules can contribute to the cost of using Amazon S3, but they are d
 
 ## Implementation details
 
-See s3 lifecycle configuration setting in [this file](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/lib/resources/s3.ts).
+See S3 lifecycle configuration in [this file](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/lib/resources/s3.ts).
+
+![PlantUML Diagram](s3-lifecycle-configuration.plantuml)
