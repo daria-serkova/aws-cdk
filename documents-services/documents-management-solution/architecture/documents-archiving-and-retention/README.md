@@ -1,4 +1,4 @@
-# Document Archiving and Retention
+# Documents Archiving and Retention
 
 Document archiving and retention are crucial components of data management that ensure documents are stored and managed in accordance with organizational policies, legal requirements, and cost considerations. Configuring automated archiving and retention policies, along with leveraging cost-effective storage options, is essential for managing data efficiently in production environments. These practices help ensure compliance with regulatory requirements, optimize storage costs, and streamline data management processes. Proper implementation of these aspects not only supports organizational goals but also enhances overall data governance and operational efficiency.
 
@@ -107,4 +107,4 @@ S3 lifecycle rules can contribute to the cost of using Amazon S3, but they are d
 
 See S3 lifecycle configuration in [this file](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/lib/resources/s3.ts).
 
-![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/document-archiving-and-retention/s3-lifecycles-configuration.png)
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-archiving-and-retention/s3-lifecycles-configuration.png)
