@@ -59,6 +59,8 @@ This solution is designed to address a variety of real-world business scenarios,
 - Detailed audit logs and reporting tools for compliance and management review.
 - Integration with BI tools for customizable dashboards and alerts.
 
+[Architecture, recommendations and implementation details](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-audit)
+
 ### 9. Document Backup and Disaster Recovery
 
 - Automated backup processes and disaster recovery plans.
