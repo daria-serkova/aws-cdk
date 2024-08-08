@@ -44,8 +44,27 @@ Use architecture with QuickSight, Athena, and Glue (as DynamoDB alone can't effi
 
 ## Implementation Details
 
-### Audit Events Schema
+### API Endpoints
 
+### Get Events
+
+`{{DMS_API_GATEWAY}}/audit/get-events`
+
+Body:
+
+```
+{
+    "initiatorsystemcode": "ABC_SYSTEM",
+    "requestorid": "id1234567890",
+    "requestorip": "192.168.1.1",
+    "documenttype": "insurance",
+    "operationtype": "USER",
+    "eventinitiator": "id0987654321",
+    "documentid": "*"
+}
+```
+
+Response (DynamoDB schema):
 ```
 {
     "auditid": "2e94e36e-491e-43fb-80bd-0b63e099318d",
@@ -57,3 +76,4 @@ Use architecture with QuickSight, Athena, and Glue (as DynamoDB alone can't effi
     "eventinitiatorip": "192.168.1.1",
     "initiatorsystemcode": "ABC_SYSTEM"
 }
+```
