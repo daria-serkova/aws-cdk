@@ -1,0 +1,25 @@
+@startuml Audit As a Service High-Level Architecture
+!define RECTANGLE class
+
+RECTANGLE "API Gateway" as APIGateway
+RECTANGLE "AWS Lambda\n(Ingestion & Processing)" as Lambda
+RECTANGLE "Amazon DynamoDB (Audit Events Table)" as DynamoDB
+RECTANGLE "Amazon S3\n(Audit Logs Bucket)" as S3
+RECTANGLE "Amazon Kinesis Data Firehose" as Kinesis
+RECTANGLE "Amazon CloudWatch" as CloudWatch
+RECTANGLE "AWS Step Functions" as StepFunctions
+RECTANGLE "Amazon EventBridge" as EventBridge
+RECTANGLE "Amazon Athena" as Athena
+RECTANGLE "Amazon SNS" as SNS
+
+APIGateway --> Lambda : Trigger
+Lambda --> DynamoDB : Store Event
+Lambda --> Kinesis : Stream Event
+Kinesis --> S3 : Archive Events
+Lambda --> S3 : Direct Archive
+S3 --> Athena : Query Logs
+S3 --> CloudWatch : Log Monitoring
+CloudWatch --> SNS : Notify
+Lambda --> StepFunctions : Manage Workflows
+EventBridge --> Lambda : Trigger Workflows
+@enduml
