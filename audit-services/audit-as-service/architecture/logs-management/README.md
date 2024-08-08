@@ -12,4 +12,4 @@ Log groups are organized based on:
 4. Specific audit actions (such as Upload, Access, Metadata Access, etc)
 5. Regulations (such as HIPAA, PII, PCI-DSS)
 
-![PlantUML Diagram]()
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/audit-services/audit-as-service/architecture/logs-management/logs-management-organization-structure.png)
