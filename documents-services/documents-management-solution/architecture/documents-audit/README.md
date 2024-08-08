@@ -46,7 +46,7 @@ Use architecture with QuickSight, Athena, and Glue (as DynamoDB alone can't effi
 
 ### API Endpoints
 
-### Get Events
+#### Get Events
 
 `{{DMS_API_GATEWAY}}/audit/get-events`
 
