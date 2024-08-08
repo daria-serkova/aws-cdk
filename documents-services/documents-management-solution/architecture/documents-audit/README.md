@@ -41,3 +41,19 @@ Use architecture with QuickSight, Athena, and Glue (as DynamoDB alone can't effi
 3. **Visualization Needs:** Complex visualization tool for non-technical stakeholders.
 
 ![PlantUml Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-audit/s3-documents-audit-advanced-architecture.png)
+
+## Implementation Details
+
+### Audit Events Schema
+
+```
+{
+    "auditid": "2e94e36e-491e-43fb-80bd-0b63e099318d",
+    "eventtime": "1722981316605",
+    "version": "dd9774hXD441S56X5ybJd4lLnEx6p0w9",
+     "event": "Verified",
+    "documentid": "insurance/verified/id1234567890/claims/CLAIM-0b63e099318d.PDF",
+    "eventinitiator": "id0987654321",
+    "eventinitiatorip": "192.168.1.1",
+    "initiatorsystemcode": "ABC_SYSTEM"
+}
