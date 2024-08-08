@@ -134,7 +134,7 @@ The AWS Serverless Audit Solution provides a scalable, automated, and real-time 
 
 ## Architectural Design (AWS Serverless)
 
-![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/tree/main/audit-services/audit-as-service/architecture/architecture-overview.png)
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/audit-services/audit-as-service/architecture/architecture-overview.png)
 
 Description:
 
