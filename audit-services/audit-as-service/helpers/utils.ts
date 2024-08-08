@@ -39,7 +39,7 @@ export enum SupportedPIIDocumentTypes {
 export enum SupportedPCIDSSDocumentTypes {
     BILLING = 'billing'
 }
-export const SupportedDocumentTypesNames: string[] = Object.values(SupportedDocumentTypes);
-export const SupportedHIPAADocumentTypesNames: string[] = Object.values(SupportedHIPAADocumentTypes);
-export const SupportedPIIDocumentTypesNames: string[] = Object.values(SupportedPIIDocumentTypes);
-export const SupportedPCIDSSDocumentTypesNames: string[] = Object.values(SupportedPCIDSSDocumentTypes);
+export const SupportedDocumentTypesValues: string[] = Object.values(SupportedDocumentTypes);
+export const SupportedHIPAADocumentTypesValues: string[] = Object.values(SupportedHIPAADocumentTypes);
+export const SupportedPIIDocumentTypesValues: string[] = Object.values(SupportedPIIDocumentTypes);
+export const SupportedPCIDSSDocumentTypesValues: string[] = Object.values(SupportedPCIDSSDocumentTypes);

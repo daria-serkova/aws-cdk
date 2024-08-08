@@ -1,5 +1,10 @@
 import { config } from 'dotenv';
-import { SupportedDocumentTypesNames, SupportedHIPAADocumentTypesNames, SupportedPCIDSSDocumentTypesNames, SupportedPIIDocumentTypesNames } from '../helpers/utils';
+import { 
+    SupportedDocumentTypesValues, 
+    SupportedHIPAADocumentTypesValues,
+    SupportedPCIDSSDocumentTypesValues, 
+    SupportedPIIDocumentTypesValues
+} from '../helpers/utils';
 config(); 
 // Pattern for API Gateway Request models.
 const AWS_REQUEST_MODEL_NAMING_CONVENTION : string = `${process.env.TAG_APPLICATION_CODE?.replace(/-/g, "")}$`;
@@ -80,28 +85,28 @@ export const ResourceName: ResourceNameStructure = {
 const documentManagementActions = Object.keys(ResourceName.cloudWatch.DOCUMENTS_MANAGEMENT) as Array<keyof DocumentManagementResources>;
 
 export const getCloudWatchDocumentsManagementLogsGroups = (): string[] => {
-    return SupportedDocumentTypesNames.flatMap(documentType =>
+    return SupportedDocumentTypesValues.flatMap(documentType =>
         documentManagementActions
             .filter(action => ResourceName.cloudWatch.DOCUMENTS_MANAGEMENT[action] !== undefined) // Filter out undefined actions
             .map(action => ResourceName.cloudWatch.DOCUMENTS_MANAGEMENT[action]!.replace('$1', documentType))
     );
 };
 export const getCloudWatchDocumentsManagementHIPAALogsGroups = (): string[] => {
-    return SupportedHIPAADocumentTypesNames.flatMap(documentType =>
+    return SupportedHIPAADocumentTypesValues.flatMap(documentType =>
         documentManagementActions
             .filter(action => ResourceName.cloudWatch.DOCUMENTS_MANAGEMENT_HIPPA[action] !== undefined) // Filter out undefined actions
             .map(action => ResourceName.cloudWatch.DOCUMENTS_MANAGEMENT_HIPPA[action]!.replace('$1', documentType))
     );
 };
 export const getCloudWatchDocumentsManagementPIILogsGroups = (): string[] => {
-    return SupportedPIIDocumentTypesNames.flatMap(documentType =>
+    return SupportedPIIDocumentTypesValues.flatMap(documentType =>
         documentManagementActions
             .filter(action => ResourceName.cloudWatch.DOCUMENTS_MANAGEMENT_PII[action] !== undefined) // Filter out undefined actions
             .map(action => ResourceName.cloudWatch.DOCUMENTS_MANAGEMENT_PII[action]!.replace('$1', documentType))
     );
 };
 export const getCloudWatchDocumentsManagementPCIDSSLogsGroups = (): string[] => {
-    return SupportedPCIDSSDocumentTypesNames.flatMap(documentType =>
+    return SupportedPCIDSSDocumentTypesValues.flatMap(documentType =>
         documentManagementActions
             .filter(action => ResourceName.cloudWatch.DOCUMENTS_MANAGEMENT_PCI_DSS[action] !== undefined) // Filter out undefined actions
             .map(action => ResourceName.cloudWatch.DOCUMENTS_MANAGEMENT_PCI_DSS[action]!.replace('$1', documentType))
