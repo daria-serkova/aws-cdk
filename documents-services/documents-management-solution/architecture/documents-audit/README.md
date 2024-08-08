@@ -28,7 +28,7 @@ Here are some real-world scenarios where the Documents auditing is required:
 
 If project’s primary goal is to build a dashboard that shows audit logs based on specific documentID (track all activities done for specified document) or userId (track all activities done by specified user), simplified architecture (API Gateway, Lambdas / Step Functions, DynamoDB combination) is recommended:
 
-![PlantUml Diagram]()
+![PlantUml Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-audit/s3-documents-audit-simplified-architecture.png)
 
 **NOTE:** This service implements simplified architecture.
 
@@ -40,4 +40,4 @@ Use architecture with QuickSight, Athena, and Glue (as DynamoDB alone can't effi
 2. **Cross-Data Source Analysis:** Audit data needs to be combined with data from other sources (e.g., RDS, S3)
 3. **Visualization Needs:** Complex visualization tool for non-technical stakeholders.
 
-![PlantUml Diagram]()
+![PlantUml Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-audit/s3-documents-audit-advanced-architecture.png)
