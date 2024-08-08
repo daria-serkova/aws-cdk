@@ -77,3 +77,5 @@ Response (DynamoDB schema):
     "initiatorsystemcode": "ABC_SYSTEM"
 }
 ```
+
+[Postman collections](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/postman-collection)
