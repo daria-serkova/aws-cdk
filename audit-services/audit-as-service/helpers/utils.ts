@@ -27,8 +27,7 @@ export const SupportedInitiatorSystemCodesValues: string[] = Object.values(Suppo
 export enum SupportedEventTypes {
     // OTP Related Activities
     OTP_GENERATED = 'OTP_GENERATED', // Indicates that an OTP code was generated for a user action (e.g., registration, login, password change).
-    OTP_SENT_EMAIL = 'OTP_SENT_EMAIL', // Indicates that the generated OTP code was sent to the user's email.
-    OTP_SENT_PHONE = 'OTP_SENT_PHONE', // Indicates that the generated OTP code was sent to the user's phone.
+    OTP_SENT = 'OTP_SENT', // Indicates that the generated OTP code was sent to the user's phone.
     OTP_VALIDATION_SUCCESS = 'OTP_VALIDATION_SUCCESS', // Indicates that the OTP code was successfully validated by the user.
     OTP_VALIDATION_FAILED = 'OTP_VALIDATION_FAILED',   // Indicates that the OTP code validation failed (e.g., incorrect OTP entered).
     // Login Attempts
@@ -73,8 +72,7 @@ const databaseDetails: Record<DatabaseCategory, DatabaseDetails> = {
 // Map event types to their categories
 const eventCategoryMappings: Record<string, DatabaseCategory> = {
     [SupportedEventTypes.OTP_GENERATED]: 'userAccess',
-    [SupportedEventTypes.OTP_SENT_EMAIL]: 'userAccess',
-    [SupportedEventTypes.OTP_SENT_PHONE]: 'userAccess',
+    [SupportedEventTypes.OTP_SENT]: 'userAccess',
     [SupportedEventTypes.OTP_VALIDATION_SUCCESS]: 'userAccess',
     [SupportedEventTypes.OTP_VALIDATION_FAILED]: 'userAccess',
     [SupportedEventTypes.LOGIN_SUCCESSFUL]: 'userAccess',
@@ -99,10 +97,11 @@ export const getDatabaseDetails = (eventType: string): DatabaseDetails | null =>
     const category = eventCategoryMappings[eventType];
     return category ? databaseDetails[category] : null;
 };
+// Real time auditing is set for 30 days only. All records will be moved to S3 for long-term storage after that.
 export const getTtlValue = (eventTimestamp: string) : string => {
-    const timestamp = parseInt(eventTimestamp, 10);
+    const timestamp = parseInt(eventTimestamp);
     const date = new Date(timestamp);
-    date.setDate(date.getDate() + 90);
+    date.setDate(date.getDate() + 30);
     return date.getTime().toString();
 }
 
@@ -116,8 +115,34 @@ export const SupportedEventTypesValues: string[] = Object.values(SupportedEventT
  *   - Example of a valid IP address: `192.168.1.1`.
  */
 export const SupportedParamsPatterns = {
-    IP: "^((25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$"
+    IP: '^((25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$',
+    TIMESTAMP: '^[0-9]+$'
 }
+export const formatAuditEvent = (data: Record<string, any>): { deviceDetails: Record<string, any>, otherDetails: Record<string, any> } => {
+    const deviceDetails: Record<string, any> = {};
+    const otherDetails: Record<string, any> = {};
+
+    Object.keys(data).forEach(key => {
+        if (key.startsWith('device')) {
+            deviceDetails[key] = data[key];
+        } else {
+            otherDetails[key] = data[key];
+        }
+    });
+
+    return { deviceDetails, otherDetails };
+};
+export enum SupportedOtpPurposes {
+    LOGIN = 'LOGIN',
+    REGISTRATION = 'REGISTRATION',
+    PASSWORD_CHANGE = 'PASSWORD_CHANGE'
+}
+export const SupportedOtpPurposesValues: string[] = Object.values(SupportedOtpPurposes);
+export enum SupportedOtpMediums {
+    EMAIL = 'EMAIL',
+    PHONE = 'PHONE'
+}
+export const SupportedOtpMediumsValues: string[] = Object.values(SupportedOtpMediums);
 
 
 

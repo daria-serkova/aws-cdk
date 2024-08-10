@@ -9,7 +9,7 @@ import {
     RestApi, 
 } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
-import { isProduction, SupportedEventTypesValues, SupportedInitiatorSystemCodesValues, SupportedParamsPatterns } from "../../helpers/utils";
+import { isProduction, SupportedEventTypesValues, SupportedInitiatorSystemCodesValues, SupportedOtpMediumsValues, SupportedOtpPurposesValues, SupportedParamsPatterns } from "../../helpers/utils";
 import { auditStoreEventLambda } from "./lambdas";
 
 interface ApiNodes {
@@ -88,9 +88,23 @@ const auditStoreEventsEndpoint = (apiGateway: RestApi, node: Resource, requestVa
                 requestorid: { type: JsonSchemaType.STRING },
                 requestorip: { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.IP },
                 eventtype: { type: JsonSchemaType.STRING, enum: SupportedEventTypesValues },
-                timestamp: { type: JsonSchemaType.STRING },
+                timestamp: { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
+                
+                devicetype: { type: JsonSchemaType.STRING },
+                devicemodel: { type: JsonSchemaType.STRING },
+                devicebrowsername: { type: JsonSchemaType.STRING },
+                deviceosname: { type: JsonSchemaType.STRING },
+                deviceosversion: { type: JsonSchemaType.STRING },
+
+                otppurpose: { type: JsonSchemaType.STRING, enum: SupportedOtpPurposesValues },
+                otpmedium: { type: JsonSchemaType.STRING, enum: SupportedOtpMediumsValues },
+                otpexpirationtime: { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
+                otprecipient: { type: JsonSchemaType.STRING },
+                otpvalidationfailuremessage: { type: JsonSchemaType.STRING },
+                relatedeventid: { type: JsonSchemaType.STRING }, // Audit event ID linking this event to the corresponding OTP_GENERATED event.
             },
             required: ["initiatorsystemcode", "requestorid", "requestorip", "eventtype", "timestamp"],
+            additionalProperties: false, // Restricts any other fields
         },
     };
     apiGateway.addModel(modelName, requestModel);

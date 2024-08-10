@@ -1,6 +1,6 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { generateUUID, getDatabaseDetails, getTtlValue } from '../helpers/utils';
+import { formatAuditEvent, generateUUID, getDatabaseDetails, getTtlValue } from '../helpers/utils';
 import { ResourceName } from '../lib/resource-reference';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
@@ -26,6 +26,7 @@ const tableType = 'audit';
           };
     }
     const eventid = generateUUID();
+    const eventMetadata = formatAuditEvent(rest);
     const auditRecord = {
         eventid: eventid,
         timestamp,
@@ -33,6 +34,8 @@ const tableType = 'audit';
         requestorid,
         requestorip,
         initiatorsystemcode,
+        requestordevice: eventMetadata.deviceDetails,
+        requestdetails: eventMetadata.otherDetails,
         ttl: getTtlValue(timestamp)
     }
     try {
