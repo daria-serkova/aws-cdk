@@ -36,6 +36,7 @@ export enum SupportedEventTypes {
     MULTIPLE_LOGIN_FAILED = 'MULTIPLE_LOGIN_FAILED',   // Indicates multiple consecutive failed login attempts.
     ACCOUNT_LOCKOUT = 'ACCOUNT_LOCKOUT',               // Indicates multiple consecutive failed login attempts.
     // Logout and Session Management
+    LOGOUT_SUCCESSFUL = 'LOGOUT_SUCCESSFUL',           // Indicates that a user successfully logged out of the system.
     SESSION_REFRESH = 'SESSION_REFRESH',               // Indicates that the session has been successfully refreshed due to user activity.
     SESSION_EXPIRED = 'SESSION_EXPIRED',               // Indicates that a session has expired due to inactivity and the user has been automatically logged out.
     // User Account Management
@@ -79,6 +80,7 @@ const eventCategoryMappings: Record<string, DatabaseCategory> = {
     [SupportedEventTypes.LOGIN_FAILED]: 'userAccess',
     [SupportedEventTypes.MULTIPLE_LOGIN_FAILED]: 'userAccess',
     [SupportedEventTypes.ACCOUNT_LOCKOUT]: 'userAccess',
+    [SupportedEventTypes.LOGOUT_SUCCESSFUL]: 'userAccess',
     [SupportedEventTypes.SESSION_REFRESH]: 'userAccess',
     [SupportedEventTypes.SESSION_EXPIRED]: 'userAccess',
     [SupportedEventTypes.USER_ACCOUNT_CREATED]: 'userAccess',
