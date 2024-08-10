@@ -100,7 +100,8 @@ export const getDatabaseDetails = (eventType: string): DatabaseDetails | null =>
     return category ? databaseDetails[category] : null;
 };
 export const getTtlValue = (eventTimestamp: string) : string => {
-    const date = new Date(eventTimestamp);
+    const timestamp = parseInt(eventTimestamp, 10);
+    const date = new Date(timestamp);
     date.setDate(date.getDate() + 90);
     return date.getTime().toString();
 }
