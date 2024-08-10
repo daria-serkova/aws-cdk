@@ -111,6 +111,7 @@ const auditStoreEventsEndpoint = (apiGateway: RestApi, node: Resource, requestVa
                 sessionexpirationtime:  { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
             
                 accountlockstatus: { type: JsonSchemaType.STRING, enum: SupportedAccountLockStatusesValues },
+                accountlockduration: { type: JsonSchemaType.NUMBER }
                 
             },
             required: ["initiatorsystemcode", "requestorid", "requestorip", "eventtype", "timestamp"],
