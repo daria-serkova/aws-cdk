@@ -4,7 +4,7 @@ import { Duration } from 'aws-cdk-lib';
 import { resolve, dirname } from 'path';
 
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
-import { addCloudWatchGeneralPutPolicy, createLambdaRole } from './iam';
+import { addCloudWatchGeneralPutPolicy, addDynamoDbWritePolicy, createLambdaRole } from './iam';
 import { ResourceName } from '../resource-reference';
 
 const lambdaFilesLocation = '../../functions';
@@ -42,6 +42,7 @@ export default function configureLambdaResources(scope: Construct) {
  const configureAuditStoreEventLambda = (scope: Construct): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.AUDIT_STORE_LAMBDA);
     addCloudWatchGeneralPutPolicy(iamRole);
+    addDynamoDbWritePolicy(iamRole, ResourceName.dynamodb.AUDIT_EVENTS_USER_ACCESS);
     const lambda = new NodejsFunction(scope, ResourceName.lambda.AUDIT_STORE_LAMBDA, {
         functionName: ResourceName.lambda.AUDIT_STORE_LAMBDA,
         description: 'Stores audit events in the DynamoDB',

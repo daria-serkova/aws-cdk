@@ -84,7 +84,7 @@ const auditStoreEventsEndpoint = (apiGateway: RestApi, node: Resource, requestVa
         schema: {
             type: JsonSchemaType.OBJECT,
             properties: {
-                initiatorsystemcode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodesValues},
+                initiatorsystemcode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodesValues },
                 requestorid: { type: JsonSchemaType.STRING },
                 requestorip: { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.IP },
                 eventtype: { type: JsonSchemaType.STRING, enum: SupportedEventTypesValues },

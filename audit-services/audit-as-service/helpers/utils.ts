@@ -40,7 +40,7 @@ export enum SupportedEventTypes {
     SESSION_EXPIRED = 'SESSION_EXPIRED',               // Indicates that a session has expired due to inactivity and the user has been automatically logged out.
     // User Account Management
     USER_ACCOUNT_CREATED = 'USER_ACCOUNT_CREATED',     // Indicates the creation of a new user account.
-    USER_ACCOUNT_MODIFIED = 'USER_ACCOUNT_CREATED',    // Indicates modifications to an existing user account, such as changes to privileges.
+    USER_ACCOUNT_MODIFIED = 'USER_ACCOUNT_MODIFIED',    // Indicates modifications to an existing user account, such as changes to privileges.
     USER_ACCOUNT_DELETED = 'USER_ACCOUNT_DELETED',     // Indicates the deletion or deactivation of a user account.
     ROLE_ASSIGNED = 'ROLE_ASSIGNED',                   // Indicates the assignment of a role or privilege to a user.
     ROLE_REVOKED = 'ROLE_REVOKED',                     // Indicates the revocation of a role or privilege from a user.
@@ -48,7 +48,6 @@ export enum SupportedEventTypes {
     PASSWORD_CHANGED = 'PASSWORD_CHANGED',             // Indicates a successful change of a user password.
     PASSWORD_CHANGE_FAILED = 'PASSWORD_CHANGE_FAILED', // Indicates a failed attempt to change a user password.
     PASSWORD_RESET_REQUESTED = 'PASSWORD_RESET_REQUESTED' // Indicates a password reset request.
-
 }
 export const SupportedEventTypesValues: string[] = Object.values(SupportedEventTypes);
 /**

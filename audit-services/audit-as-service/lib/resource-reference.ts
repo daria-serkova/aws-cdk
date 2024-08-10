@@ -35,11 +35,17 @@ interface IamResources {
 interface LambdaResources {
     AUDIT_STORE_LAMBDA: string;
 }
+interface DynamoDbResources {
+    AUDIT_EVENTS_USER_ACCESS: string;
+    AUDIT_EVENTS_USER_ACCESS_INDEX_BY_USER_ID: string;
+    AUDIT_EVENTS_USER_ACCESS_INDEX_BY_IP: string;
+}
 interface ResourceNameStructure {
     cloudWatch: CloudWatchResources;
     apiGateway: ApiGatewayResources;
     iam: IamResources;
     lambda: LambdaResources;
+    dynamodb: DynamoDbResources;
 }
 // Pattern for API Gateway Request models.
 const AWS_REQUEST_MODEL_NAMING_CONVENTION : string = `${process.env.TAG_APPLICATION_CODE?.replace(/-/g, "")}$`;
@@ -109,6 +115,11 @@ export const ResourceName: ResourceNameStructure = {
     },
     lambda: {
         AUDIT_STORE_LAMBDA: resourceName('audit-store-lbd'),
+    },
+    dynamodb: {
+        AUDIT_EVENTS_USER_ACCESS: resourceName('audit-events-user-access'),
+        AUDIT_EVENTS_USER_ACCESS_INDEX_BY_USER_ID: resourceName('audit-events-user-access-by-user-id'),
+        AUDIT_EVENTS_USER_ACCESS_INDEX_BY_IP: resourceName('audit-events-user-access-by-ip')
     }
     
 };
