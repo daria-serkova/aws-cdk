@@ -1,6 +1,6 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { generateUUID, getDatabaseDetails } from '../helpers/utils';
+import { generateUUID, getDatabaseDetails, getTtlValue } from '../helpers/utils';
 import { ResourceName } from '../lib/resource-reference';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
@@ -25,21 +25,22 @@ const tableType = 'audit';
             }),
           };
     }
-    const auditId = generateUUID();
+    const eventid = generateUUID();
     const auditRecord = {
-        auditid: auditId,
+        eventid: eventid,
         timestamp,
         eventtype,
         requestorid,
         requestorip,
         initiatorsystemcode,
+        ttl: getTtlValue(timestamp)
     }
     try {
         await dynamoDb.send(new PutItemCommand({TableName: tableName, Item: marshall(auditRecord)}));
         return {
             statusCode: 200,
             body: JSON.stringify({
-                auditId
+                eventid
             }),
         };
     } catch (error) {

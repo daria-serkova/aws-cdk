@@ -99,7 +99,11 @@ export const getDatabaseDetails = (eventType: string): DatabaseDetails | null =>
     const category = eventCategoryMappings[eventType];
     return category ? databaseDetails[category] : null;
 };
-
+export const getTtlValue = (eventTimestamp: string) : string => {
+    const date = new Date(eventTimestamp);
+    date.setDate(date.getDate() + 90);
+    return date.getTime().toString();
+}
 
 
 export const SupportedEventTypesValues: string[] = Object.values(SupportedEventTypes);
