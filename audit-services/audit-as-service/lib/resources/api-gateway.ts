@@ -9,7 +9,7 @@ import {
     RestApi, 
 } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
-import { isProduction, SupportedEventTypesValues, SupportedInitiatorSystemCodesValues, SupportedLoginMethodsValues, SupportedOtpMediumsValues, SupportedOtpPurposesValues, SupportedOtpValidationFailureCodesValues, SupportedParamsPatterns } from "../../helpers/utils";
+import { isProduction, SupportedAccountLockStatusesValues, SupportedEventTypesValues, SupportedInitiatorSystemCodesValues, SupportedLoginFailuresCodesValues, SupportedLoginMethodsValues, SupportedOtpMediumsValues, SupportedOtpPurposesValues, SupportedOtpValidationFailureCodesValues, SupportedParamsPatterns } from "../../helpers/utils";
 import { auditStoreEventLambda } from "./lambdas";
 
 interface ApiNodes {
@@ -102,10 +102,16 @@ const auditStoreEventsEndpoint = (apiGateway: RestApi, node: Resource, requestVa
                 otprecipient: { type: JsonSchemaType.STRING },
                 otpvalidationfailurecode: { type: JsonSchemaType.STRING, enum: SupportedOtpValidationFailureCodesValues },
                 relatedeventid: { type: JsonSchemaType.STRING }, // Audit event ID linking this event to the corresponding OTP_GENERATED event.
-            
+                
                 loginmethod: { type: JsonSchemaType.STRING, enum: SupportedLoginMethodsValues },
+                loginfailurecode: { type: JsonSchemaType.STRING, enum: SupportedLoginFailuresCodesValues },
+                loginpreviousfailedattempts:  { type: JsonSchemaType.NUMBER },
+
                 sessionid: { type: JsonSchemaType.STRING },
                 sessionexpirationtime:  { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
+            
+                accountlockstatus: { type: JsonSchemaType.STRING, enum: SupportedAccountLockStatusesValues },
+                
             },
             required: ["initiatorsystemcode", "requestorid", "requestorip", "eventtype", "timestamp"],
             additionalProperties: false, // Restricts any other fields

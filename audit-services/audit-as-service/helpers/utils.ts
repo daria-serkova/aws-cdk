@@ -159,8 +159,87 @@ export enum SupportedLoginMethods {
 }
 export const SupportedLoginMethodsValues: string[] = Object.values(SupportedLoginMethods);
 
+/**
+ * List of possible SupportedLoginFailuresCodes that could be used 
+ * in applications for tracking different reasons why a login might fail:
+ */
+export enum SupportedLoginFailuresCodes {
+    // The username provided is incorrect.
+    USERNAME_NOT_FOUND = 'USERNAME_NOT_FOUND',
+    // The password provided is incorrect.
+    INCORRECT_PASSWORD = 'INCORRECT_PASSWORD',
+    // The account has been locked due to too many failed login attempts or administrative action.
+    ACCOUNT_LOCKED = 'ACCOUNT_LOCKED',
+    // The account has been disabled and cannot be used for login.
+    ACCOUNT_DISABLED = 'ACCOUNT_DISABLED',
+    // The account has expired and requires renewal or reactivation.
+    ACCOUNT_EXPIRED = 'ACCOUNT_EXPIRED',
+    // The provided multi-factor authentication code is incorrect or expired.
+    MFA_FAILED = 'MFA_FAILED',
+    // Multi-factor authentication is required but was not provided.
+    MFA_REQUIRED = 'MFA_REQUIRED',
+    // The password has expired and must be reset before login is allowed.
+    PASSWORD_EXPIRED = 'PASSWORD_EXPIRED',
+    // The login attempt was made from an unauthorized IP address or range.
+    UNAUTHORIZED_IP = 'UNAUTHORIZED_IP',
+    // The login attempt was made from an unauthorized device.
+    UNAUTHORIZED_DEVICE = 'UNAUTHORIZED_DEVICE',
+    // The login attempt was made from an unauthorized geographical location.
+    UNAUTHORIZED_LOCATION = 'UNAUTHORIZED_LOCATION',
+    // The session has expired and the user needs to log in again.
+    SESSION_EXPIRED = 'SESSION_EXPIRED',
+    // The login failed due to too many failed attempts in a short period.
+    TOO_MANY_ATTEMPTS = 'TOO_MANY_ATTEMPTS',
+    // A CAPTCHA challenge was required but not completed.
+    CAPTCHA_REQUIRED = 'CAPTCHA_REQUIRED',
+    // The CAPTCHA challenge was completed incorrectly.
+    CAPTCHA_FAILED = 'CAPTCHA_FAILED',
+    // The session is invalid, possibly due to tampering or expiration.
+    INVALID_SESSION = 'INVALID_SESSION',
+    // The password being used has been reused from a previous password and is not allowed.
+    PASSWORD_REUSE_DETECTED = 'PASSWORD_REUSE_DETECTED',
+    // The password does not meet complexity requirements.
+    PASSWORD_COMPLEXITY_FAILED = 'PASSWORD_COMPLEXITY_FAILED',
+    // The login attempt via a social authentication provider (e.g., Google, Facebook) failed.
+    SOCIAL_AUTH_FAILED = 'SOCIAL_AUTH_FAILED',                 
+    // The login attempt via Single Sign-On (SSO) failed.
+    SSO_AUTH_FAILED = 'SSO_AUTH_FAILED',
 
+}
+// Arary of possible SupportedLoginFailuresCodes for Request Model checks
+export const SupportedLoginFailuresCodesValues: string[] = Object.values(SupportedLoginFailuresCodes);
 
+/**
+ * Various states related to the locking and unlocking of user accounts.
+ */
+ export enum SupportedAccountLockStatuses {
+    // The account is not locked and is accessible by the user.
+    UNLOCKED = 'UNLOCKED', 
+    // The account is locked, typically due to multiple failed login attempts or a security policy.
+    LOCKED = 'LOCKED', 
+    // The account is temporarily locked for a specific duration, often due to multiple failed login attempts.
+    TEMPORARILY_LOCKED = 'TEMPORARILY_LOCKED',
+    // The account is permanently locked, usually requiring administrative intervention to unlock.
+    PERMANENTLY_LOCKED = 'PERMANENTLY_LOCKED',
+    // The account is locked by an administrator, possibly for security reasons or policy enforcement.
+    LOCKED_DUE_TO_ADMIN = 'LOCKED_DUE_TO_ADMIN',
+    // The account is locked due to detection of suspicious activity, such as unusual login patterns or failed attempts.
+    LOCKED_DUE_TO_SUSPICIOUS_ACTIVITY = 'LOCKED_DUE_TO_SUSPICIOUS_ACTIVITY',
+    // The account is locked to comply with regulatory or organizational policies.
+    LOCKED_DUE_TO_COMPLIANCE = 'LOCKED_DUE_TO_COMPLIANCE', 
+    // The account is locked because the user’s password has expired and needs to be updated.
+    LOCKED_DUE_TO_PASSWORD_EXPIRY = 'LOCKED_DUE_TO_PASSWORD_EXPIRY',
+    // The account is locked due to prolonged inactivity, requiring reactivation.
+    LOCKED_DUE_TO_INACTIVE_STATUS = 'LOCKED_DUE_TO_INACTIVE_STATUS', 
+    // The account is locked due to failure in Multi-Factor Authentication (MFA) processes.
+    LOCKED_DUE_TO_MFA_FAILURE = 'LOCKED_DUE_TO_MFA_FAILURE',
+    // The account is locked pending some form of verification, such as email confirmation or identity verification.
+    LOCKED_PENDING_VERIFICATION = 'LOCKED_PENDING_VERIFICATION',
+    // The account is locked due to detection of fraudulent activity.
+    LOCKED_DUE_TO_FRAUD_DETECTION = 'LOCKED_DUE_TO_FRAUD_DETECTION' 
+ }
+ // Arary of possible SupportedAccountLockStatuses for Request Model checks
+export const SupportedAccountLockStatusesValues: string[] = Object.values(SupportedAccountLockStatuses);
 
 
 
