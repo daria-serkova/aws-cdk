@@ -25,30 +25,53 @@ export enum SupportedInitiatorSystemCodes {
 export const SupportedInitiatorSystemCodesValues: string[] = Object.values(SupportedInitiatorSystemCodes);
 
 export enum SupportedEventTypes {
-    // OTP Related Activities
-    OTP_GENERATED = 'OTP_GENERATED', // Indicates that an OTP code was generated for a user action (e.g., registration, login, password change).
-    OTP_SENT = 'OTP_SENT', // Indicates that the generated OTP code was sent to the user's phone.
-    OTP_VALIDATION_SUCCESS = 'OTP_VALIDATION_SUCCESS', // Indicates that the OTP code was successfully validated by the user.
-    OTP_VALIDATION_FAILED = 'OTP_VALIDATION_FAILED',   // Indicates that the OTP code validation failed (e.g., incorrect OTP entered).
-    // Login Attempts
-    LOGIN_SUCCESSFUL = 'LOGIN_SUCCESSFUL',             // Indicates a successful login to system.
-    LOGIN_FAILED = 'LOGIN_FAILED',                     // Indicates a failed login attempt.
-    MULTIPLE_LOGIN_FAILED = 'MULTIPLE_LOGIN_FAILED',   // Indicates multiple consecutive failed login attempts.
-    ACCOUNT_LOCKOUT = 'ACCOUNT_LOCKOUT',               // Indicates multiple consecutive failed login attempts.
-    // Logout and Session Management
-    LOGOUT_SUCCESSFUL = 'LOGOUT_SUCCESSFUL',           // Indicates that a user successfully logged out of the system.
-    SESSION_REFRESH = 'SESSION_REFRESH',               // Indicates that the session has been successfully refreshed due to user activity.
-    SESSION_EXPIRED = 'SESSION_EXPIRED',               // Indicates that a session has expired due to inactivity and the user has been automatically logged out.
-    // User Account Management
-    USER_ACCOUNT_CREATED = 'USER_ACCOUNT_CREATED',     // Indicates the creation of a new user account.
-    USER_ACCOUNT_MODIFIED = 'USER_ACCOUNT_MODIFIED',    // Indicates modifications to an existing user account, such as changes to privileges.
-    USER_ACCOUNT_DELETED = 'USER_ACCOUNT_DELETED',     // Indicates the deletion or deactivation of a user account.
-    ROLE_ASSIGNED = 'ROLE_ASSIGNED',                   // Indicates the assignment of a role or privilege to a user.
-    ROLE_REVOKED = 'ROLE_REVOKED',                     // Indicates the revocation of a role or privilege from a user.
-    // Password Management
-    PASSWORD_CHANGED = 'PASSWORD_CHANGED',             // Indicates a successful change of a user password.
-    PASSWORD_CHANGE_FAILED = 'PASSWORD_CHANGE_FAILED', // Indicates a failed attempt to change a user password.
-    PASSWORD_RESET_REQUESTED = 'PASSWORD_RESET_REQUESTED' // Indicates a password reset request.
+    /* === OTP Related Activities === */
+    // Indicates that an OTP code was generated for a user action (e.g., registration, login, password change).
+    OTP_GENERATED = 'OTP_GENERATED',
+    // Indicates that the OTP code was successfully validated by the user.
+    OTP_VALIDATION_SUCCESS = 'OTP_VALIDATION_SUCCESS',
+    // Indicates that the generated OTP code was sent to the user's phone or email
+    OTP_SENT = 'OTP_SENT',
+    // Indicates that the OTP code validation failed (e.g., incorrect OTP entered).
+    OTP_VALIDATION_FAILED = 'OTP_VALIDATION_FAILED',
+    
+    /* === Login Attempts === */
+    // Indicates a successful login to system.
+    LOGIN_SUCCESSFUL = 'LOGIN_SUCCESSFUL',
+    // Indicates a failed login attempt.
+    LOGIN_FAILED = 'LOGIN_FAILED',
+    // Indicates multiple consecutive failed login attempts.
+    MULTIPLE_LOGIN_FAILED = 'MULTIPLE_LOGIN_FAILED',
+    // Indicates multiple consecutive failed login attempts.
+    ACCOUNT_LOCKOUT = 'ACCOUNT_LOCKOUT',
+    
+    /* === Logout and Session Management === */
+    // Indicates that a user successfully logged out of the system.
+    LOGOUT_SUCCESSFUL = 'LOGOUT_SUCCESSFUL',
+    // Indicates that the session has been successfully refreshed due to user activity.
+    SESSION_REFRESH = 'SESSION_REFRESH',
+    // Indicates that a session has expired due to inactivity and the user has been automatically logged out.               
+    SESSION_EXPIRED = 'SESSION_EXPIRED',
+    
+    /* === User Account Management === */
+    // Indicates the creation of a new user account.
+    USER_ACCOUNT_CREATED = 'USER_ACCOUNT_CREATED',
+    // Indicates modifications to an existing user account, such as changes to privileges.
+    USER_ACCOUNT_MODIFIED = 'USER_ACCOUNT_MODIFIED',
+    // Indicates the deletion or deactivation of a user account.
+    USER_ACCOUNT_DELETED = 'USER_ACCOUNT_DELETED',
+    // Indicates the assignment of a role or privilege to a user.
+    ROLE_ASSIGNED = 'ROLE_ASSIGNED',
+    // Indicates the revocation of a role or privilege from a user.
+    ROLE_REVOKED = 'ROLE_REVOKED',
+    
+    /* === Password Management === */
+    // Indicates a successful change of a user password.
+    PASSWORD_CHANGED = 'PASSWORD_CHANGED',
+    // Indicates a failed attempt to change a user password.
+    PASSWORD_CHANGE_FAILED = 'PASSWORD_CHANGE_FAILED',
+    // Indicates a password reset request.
+    PASSWORD_RESET_REQUESTED = 'PASSWORD_RESET_REQUESTED',
 }
 // Define the interface for database details
 interface DatabaseDetails {
