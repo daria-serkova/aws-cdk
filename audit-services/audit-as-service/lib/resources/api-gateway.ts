@@ -9,7 +9,7 @@ import {
     RestApi, 
 } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
-import { isProduction, SupportedAccountLockStatusesValues, SupportedEventTypesValues, SupportedInitiatorSystemCodesValues, SupportedLoginFailuresCodesValues, SupportedLoginMethodsValues, SupportedOtpMediumsValues, SupportedOtpPurposesValues, SupportedOtpValidationFailureCodesValues, SupportedParamsPatterns } from "../../helpers/utils";
+import { isProduction, SupportedAccountLockReasonsValues, SupportedAccountLockStatusesValues, SupportedEventTypesValues, SupportedInitiatorSystemCodesValues, SupportedLoginFailuresCodesValues, SupportedLoginMethodsValues, SupportedOtpMediumsValues, SupportedOtpPurposesValues, SupportedOtpValidationFailureCodesValues, SupportedParamsPatterns } from "../../helpers/utils";
 import { auditStoreEventLambda } from "./lambdas";
 
 interface ApiNodes {
@@ -111,7 +111,8 @@ const auditStoreEventsEndpoint = (apiGateway: RestApi, node: Resource, requestVa
                 sessionexpirationtime:  { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
             
                 accountlockstatus: { type: JsonSchemaType.STRING, enum: SupportedAccountLockStatusesValues },
-                accountlockduration: { type: JsonSchemaType.NUMBER }
+                accountlockduration: { type: JsonSchemaType.NUMBER },
+                accountlockreason: { type: JsonSchemaType.STRING, enum: SupportedAccountLockReasonsValues }, 
                 
             },
             required: ["initiatorsystemcode", "requestorid", "requestorip", "eventtype", "timestamp"],

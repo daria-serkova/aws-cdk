@@ -239,9 +239,36 @@ export const SupportedLoginFailuresCodesValues: string[] = Object.values(Support
     // The account is locked due to detection of fraudulent activity.
     LOCKED_DUE_TO_FRAUD_DETECTION = 'LOCKED_DUE_TO_FRAUD_DETECTION' 
  }
- // Arary of possible SupportedAccountLockStatuses for Request Model checks
+// Array of possible SupportedAccountLockStatuses for Request Model checks
 export const SupportedAccountLockStatusesValues: string[] = Object.values(SupportedAccountLockStatuses);
 
+/**
+ * Various reasons related to the locking of user accounts.
+ */
+export enum SupportedAccountLockReasons {
+    // The account was locked due to multiple failed login attempts within a specified period.
+    TOO_MANY_FAILED_LOGINS = 'TOO_MANY_FAILED_LOGINS',
+    // The account was locked due to detected suspicious or unusual activity, such as login attempts from different geographical locations or devices.
+    SUSPICIOUS_ACTIVITY = 'SUSPICIOUS_ACTIVITY',
+    // The account was locked by an administrator or system operator, possibly for security or policy reasons.
+    ADMINISTRATIVE_ACTION = 'ADMINISTRATIVE_ACTION',
+    // The account was locked to prevent potential fraud or unauthorized access.
+    FRAUD_PREVENTION = 'FRAUD_PREVENTION',
+    // The account was temporarily locked as part of an account recovery or password reset process.
+    ACCOUNT_RECOVERY_PROCESS = 'ACCOUNT_RECOVERY_PROCESS',
+    // The account was locked due to the detection of a brute-force attack.
+    BRUTE_FORCE_ATTACK_DETECTED = 'BRUTE_FORCE_ATTACK_DETECTED',
+    // The account was locked due to a violation of security policies, such as attempting to access restricted areas of the system.
+    SECURITY_POLICY_VIOLATION = 'SECURITY_POLICY_VIOLATION',
+    // The account was locked because the user's password expired and needs to be reset.
+    PASSWORD_EXPIRATION = 'PASSWORD_EXPIRATION',
+    // The account was locked because the device used to access it was suspected of being compromised or infected with malware.
+    DEVICE_COMPROMISE = 'DEVICE_COMPROMISE',
+    // The account was suspended, leading to a lockout, often due to terms of service violations or legal issues.
+    ACCOUNT_SUSPENSION = 'ACCOUNT_SUSPENSION', 
+}
+// Array of possible SupportedAccountLockReasons for Request Model checks
+ export const SupportedAccountLockReasonsValues: string[] = Object.values(SupportedAccountLockReasons);
 
 
 
