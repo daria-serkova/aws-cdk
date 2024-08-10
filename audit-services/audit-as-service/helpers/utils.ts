@@ -152,6 +152,12 @@ export enum SupportedOtpValidationFailureCodes {
 }
 export const SupportedOtpValidationFailureCodesValues: string[] = Object.values(SupportedOtpValidationFailureCodes);
 
+export enum SupportedLoginMethods {
+    PASSWORD = 'PASSWORD',
+    SSO = 'SSO',
+    MFA = 'MFA'
+}
+export const SupportedLoginMethodsValues: string[] = Object.values(SupportedLoginMethods);
 
 
 
