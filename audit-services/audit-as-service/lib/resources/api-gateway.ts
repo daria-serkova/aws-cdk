@@ -108,10 +108,13 @@ const auditStoreEventsEndpoint = (apiGateway: RestApi, node: Resource, requestVa
                 loginpreviousfailedattempts:  { type: JsonSchemaType.NUMBER },
 
                 sessionid: { type: JsonSchemaType.STRING },
+                sessionstarttime:  { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
                 sessionexpirationtime:  { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
                 sessionidold: { type: JsonSchemaType.STRING },
+                sessionstarttimeold:  { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
                 sessionexpirationtimeold:  { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
                 sessionidnew: { type: JsonSchemaType.STRING },
+                sessionstarttimenew:  { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
                 sessionexpirationtimenew:  { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
             
                 accountlockstatus: { type: JsonSchemaType.STRING, enum: SupportedAccountLockStatusesValues },
