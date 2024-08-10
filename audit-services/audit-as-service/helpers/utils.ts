@@ -97,11 +97,12 @@ export const getDatabaseDetails = (eventType: string): DatabaseDetails | null =>
     const category = eventCategoryMappings[eventType];
     return category ? databaseDetails[category] : null;
 };
+const ttlDays : number = isProduction ? 30 : 1;
 // Real time auditing is set for 30 days only. All records will be moved to S3 for long-term storage after that.
 export const getTtlValue = (eventTimestamp: string) : string => {
     const timestamp = parseInt(eventTimestamp);
     const date = new Date(timestamp);
-    date.setDate(date.getDate() + 30);
+    date.setDate(date.getDate() + ttlDays);
     return date.getTime().toString();
 }
 
