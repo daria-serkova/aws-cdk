@@ -6,13 +6,6 @@ import {
     SupportedPIIDocumentTypesValues
 } from '../helpers/utils';
 config(); 
-// Pattern for API Gateway Request models.
-const AWS_REQUEST_MODEL_NAMING_CONVENTION : string = `${process.env.TAG_APPLICATION_CODE?.replace(/-/g, "")}$`;
-
-// Pattern for resources names to keep consistency across all application resources.
-const AWS_RESOURCES_NAMING_CONVENTION : string = `${process.env.AWS_RESOURCES_NAME_PREFIX}-${process.env.TAG_ENVIRONMENT}-$`;
-// Pattern for resources names to keep consistency across all application resources.
-const AWS_LOGS_GROUPS_NAMING_CONVENTION : string = `${process.env.AWS_RESOURCES_NAME_PREFIX}/${process.env.TAG_ENVIRONMENT}/$`;
 
 interface DocumentManagementResources {
     UPLOAD: string;
@@ -29,28 +22,52 @@ interface CloudWatchResources {
     DOCUMENTS_MANAGEMENT_PII: DocumentManagementResources;
     DOCUMENTS_MANAGEMENT_PCI_DSS: DocumentManagementResources;
 }
+interface ApiGatewayResources {
+    GATEWAY: string;
+    USAGE_PLAN: string;
+    API_KEY: string;
+    REQUEST_VALIDATOR: string;
+    REQUEST_MODEL_AUDIT_STORE: string;
+}
+interface IamResources {
+    AUDIT_STORE_LAMBDA: string;
+}
+interface LambdaResources {
+    AUDIT_STORE_LAMBDA: string;
+}
 interface ResourceNameStructure {
     cloudWatch: CloudWatchResources;
+    apiGateway: ApiGatewayResources;
+    iam: IamResources;
+    lambda: LambdaResources;
 }
-
-/**
- * Creates name for AWS resource, that match organization's naming convention.
- * @param name - unique AWS resource name
- * @returns string with organization's prefix and unique resource name
- */
-const resourceName = (name: string) : string => AWS_RESOURCES_NAMING_CONVENTION.replace('$', name);
-/**
- * Creates name for AWS CloudWatch Group, that match organization's naming convention.
- * @param name - unique AWS resource name
- * @returns string with organization's prefix and unique resource name
- */
- const logGroupName = (name: string)  : string => AWS_LOGS_GROUPS_NAMING_CONVENTION.replace('$', name);
+// Pattern for API Gateway Request models.
+const AWS_REQUEST_MODEL_NAMING_CONVENTION : string = `${process.env.TAG_APPLICATION_CODE?.replace(/-/g, "")}$`;
 /**
  * Creates name for AWS API Gateway Request Model resource, that match organization's naming convention.
  * @param name - unique AWS resource name
  * @returns string with organization's prefix and unique resource name
  */
 const requestModelName = (name: string)  : string => AWS_REQUEST_MODEL_NAMING_CONVENTION.replace('$', name);
+
+// Pattern for resources names to keep consistency across all application resources.
+const AWS_RESOURCES_NAMING_CONVENTION : string = `${process.env.AWS_RESOURCES_NAME_PREFIX}-${process.env.TAG_ENVIRONMENT}-$`;
+/**
+ * Creates name for AWS resource, that match organization's naming convention.
+ * @param name - unique AWS resource name
+ * @returns string with organization's prefix and unique resource name
+ */
+ const resourceName = (name: string) : string => AWS_RESOURCES_NAMING_CONVENTION.replace('$', name);
+
+ // Pattern for resources names to keep consistency across all application resources.
+const AWS_LOGS_GROUPS_NAMING_CONVENTION : string = `${process.env.AWS_RESOURCES_NAME_PREFIX}/${process.env.TAG_ENVIRONMENT}/$`;
+/**
+ * Creates name for AWS CloudWatch Group, that match organization's naming convention.
+ * @param name - unique AWS resource name
+ * @returns string with organization's prefix and unique resource name
+ */
+ const logGroupName = (name: string)  : string => AWS_LOGS_GROUPS_NAMING_CONVENTION.replace('$', name);
+
 
 // Define the ResourceName object
 export const ResourceName: ResourceNameStructure = {
@@ -80,6 +97,20 @@ export const ResourceName: ResourceNameStructure = {
             METADATA_VIEW: logGroupName('$1/Documents/Metadata/Access/PCI_DSS'),
         }
     },
+    apiGateway: {
+        GATEWAY: resourceName('audit-api'),
+        USAGE_PLAN: resourceName('audit-api-usage-plan'),
+        API_KEY: resourceName('audit-api-key'),
+        REQUEST_VALIDATOR: resourceName('audit-api-request-validator'),
+        REQUEST_MODEL_AUDIT_STORE: requestModelName('AuditStore'),
+    },
+    iam: {
+        AUDIT_STORE_LAMBDA: resourceName('audit-store-lbd-role'),
+    },
+    lambda: {
+        AUDIT_STORE_LAMBDA: resourceName('audit-store-lbd'),
+    }
+    
 };
 // Derive the action keys from ResourceName
 const documentManagementActions = Object.keys(ResourceName.cloudWatch.DOCUMENTS_MANAGEMENT) as Array<keyof DocumentManagementResources>;
