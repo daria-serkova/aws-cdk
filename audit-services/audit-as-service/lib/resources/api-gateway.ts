@@ -9,7 +9,7 @@ import {
     RestApi, 
 } from "aws-cdk-lib/aws-apigateway";
 import { ResourceName } from "../resource-reference";
-import { isProduction, SupportedEventTypesValues, SupportedInitiatorSystemCodesValues, SupportedOtpMediumsValues, SupportedOtpPurposesValues, SupportedParamsPatterns } from "../../helpers/utils";
+import { isProduction, SupportedEventTypesValues, SupportedInitiatorSystemCodesValues, SupportedOtpMediumsValues, SupportedOtpPurposesValues, SupportedOtpValidationFailureCodesValues, SupportedParamsPatterns } from "../../helpers/utils";
 import { auditStoreEventLambda } from "./lambdas";
 
 interface ApiNodes {
@@ -100,7 +100,7 @@ const auditStoreEventsEndpoint = (apiGateway: RestApi, node: Resource, requestVa
                 otpmedium: { type: JsonSchemaType.STRING, enum: SupportedOtpMediumsValues },
                 otpexpirationtime: { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.TIMESTAMP },
                 otprecipient: { type: JsonSchemaType.STRING },
-                otpvalidationfailuremessage: { type: JsonSchemaType.STRING },
+                otpvalidationfailurecode: { type: JsonSchemaType.STRING, enum: SupportedOtpValidationFailureCodesValues },
                 relatedeventid: { type: JsonSchemaType.STRING }, // Audit event ID linking this event to the corresponding OTP_GENERATED event.
             },
             required: ["initiatorsystemcode", "requestorid", "requestorip", "eventtype", "timestamp"],

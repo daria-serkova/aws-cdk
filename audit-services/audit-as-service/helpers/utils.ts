@@ -138,11 +138,19 @@ export enum SupportedOtpPurposes {
     PASSWORD_CHANGE = 'PASSWORD_CHANGE'
 }
 export const SupportedOtpPurposesValues: string[] = Object.values(SupportedOtpPurposes);
+
 export enum SupportedOtpMediums {
     EMAIL = 'EMAIL',
     PHONE = 'PHONE'
 }
 export const SupportedOtpMediumsValues: string[] = Object.values(SupportedOtpMediums);
+
+export enum SupportedOtpValidationFailureCodes {
+    INVALID_OTP = 'INVALID_OTP',
+    EXPIRED_OTP = 'EXPIRED_OTP',
+    OTP_NOT_FOUND = 'OTP_NOT_FOUND'
+}
+export const SupportedOtpValidationFailureCodesValues: string[] = Object.values(SupportedOtpValidationFailureCodes);
 
 
 
