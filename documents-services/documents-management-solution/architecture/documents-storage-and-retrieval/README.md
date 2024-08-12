@@ -97,11 +97,14 @@ Sample of the response from AWS service with S3 pre-signed urls per each documen
         },
         {
             "documentCategory": "PRE-AUTH-REQUEST",
-            "uploadUrl": "https://TBD.s3.us-east-1.amazonaws.com/insurance/uploaded/DOC_OWNER_ID_1/pre-auth-requests/PRE-AUTH-REQUEST.PDF?{{generateddata}}"
+            "uploadUrl": "https://TBD.s3.us-east-1.amazonaws.com/insurance/uploaded/DOC_OWNER_ID_1/pre-auth-requests/PRE-AUTH-REQUEST.PDF?{{generateddata}}",
+            "documentId": "insurance/uploaded/DOC_OWNER_ID_1/pre-auth-requests/PRE-AUTH-REQUEST.PDF"
         }
     ]
 }
 ```
+
+UI application will need to iterate through list of generated URLs to upload binary files to AWS service.
 
 ### 2. Get Document Details Workflow
 
@@ -134,8 +137,8 @@ This request is subject to auditing due to the potential exposure of sensitive i
         "version": "dd9774hXD441S56X5ybJd4lLnEx6p0w9",
         "documentstatus": "Verified",
         "expirydate": "7596421138000",
-        "documentid": "insurance/verified/PROVIDER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF",
-        "documentownerid": "PROVIDER_COGNITO_ID_1",
+        "documentid": "insurance/verified/USER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF",
+        "documentownerid": "USER_COGNITO_ID_1",
         "documentformat": "PDF",
         "issuedate": "1596421138000",
         "uploadedby": "REQUESTOR_COGNITO_ID_1",
@@ -152,7 +155,7 @@ This request is subject to auditing due to the potential exposure of sensitive i
             "View Metadata",
             "View Content"
         ],
-        "url": "https://TBD.s3.us-east-1.amazonaws.com/insurance/verified/PROVIDER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF?{{generateddata}}",
+        "url": "https://TBD.s3.us-east-1.amazonaws.com/insurance/verified/USER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF?{{generateddata}}",
         "urlexpiresat": 1723477931026
     }
 }
@@ -165,6 +168,40 @@ API and corresponding workflow is used on screens where users want to view the c
 This request is audited due to the potential exposure of sensitive information contained within the document (View Content event).
 
 ![PlantUML Diagram](#)
+
+#### API Request Format
+
+```
+{
+    "initiatorsystemcode": "ABC_WEB_APP",
+    "requestorid": "REQUESTOR_COGNITO_ID",
+    "requestorip": "192.168.1.1",
+    "documenttype": "insurance",
+    "documentid": "insurance/uploaded/USER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF"
+}
+```
+
+#### API Response Format
+
+```
+{
+    "statusCode": 200,
+    "body": {
+        "initiatorsystemcode": "ABC_WEB_APP",
+        "requestorid": "REQUESTOR_COGNITO_ID",
+        "requestorip": "192.168.1.1",
+        "documenttype": "insurance",
+        "documentid": "insurance/uploaded/USER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF",
+        "url": "https://TBD.s3.us-east-1.amazonaws.com/insurance/uploaded/USER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF?{{generateddata}}",
+        "urlexpiresat": 1723490514509,
+        "actions": [
+            "View Content"
+        ],
+        "version": "dd9774hXD441S56X5ybJd4lLnEx6p0w9"
+    }
+}
+
+```
 
 ### 4. Get Document Metadata Workflow
 
