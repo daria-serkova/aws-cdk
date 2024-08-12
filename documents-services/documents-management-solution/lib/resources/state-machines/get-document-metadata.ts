@@ -3,7 +3,7 @@ import { LogGroup } from "aws-cdk-lib/aws-logs";
 import { LogLevel, StateMachine, StateMachineType } from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
 import { ResourceName } from "../../resource-reference";
-import { auditStoreEventLambda, documentGeneratePreSignedLambda, documentGetMetadataLambda } from "../lambdas";
+import { documentGetMetadataLambda } from "../lambdas";
 import { addCloudWatchPutPolicy, addStateMachineExecutionPolicy, createStateMachineRole } from "../iam";
 import { createLambdaInvokeTask } from "../../../helpers/utilities";
 
@@ -15,15 +15,11 @@ export const configureWorkflow = (scope: Construct, apiGatewayRole: Role, logGro
   const getDocumentMetadataTask = createLambdaInvokeTask(scope,
       ResourceName.stateMachines.WF_GET_METADATA_TASK_RETRIEVE_META,
       documentGetMetadataLambda);
-  const storeViewAuditEventTask = createLambdaInvokeTask(scope, 
-      ResourceName.stateMachines.WF_GET_METADATA_TASK_STORE_AUDIT_EVENT,
-      auditStoreEventLambda);
 
   const stateMachineRole = createStateMachineRole(scope, ResourceName.iam.WORKFLOW_DOCUMENT_GET_METADATA);
   addCloudWatchPutPolicy(stateMachineRole, ResourceName.cloudWatch.DOCUMENT_WORKFLOW_LOGS_GROUP);
 
-  const definition = getDocumentMetadataTask
-    .next(storeViewAuditEventTask)
+  const definition = getDocumentMetadataTask;
 
   const stateMachine = new StateMachine(scope, ResourceName.stateMachines.WORKFLOW_DOCUMENT_GET_META, {
     stateMachineName: ResourceName.stateMachines.WORKFLOW_DOCUMENT_GET_META,

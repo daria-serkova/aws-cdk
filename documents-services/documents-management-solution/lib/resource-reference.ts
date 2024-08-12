@@ -76,9 +76,7 @@ export const ResourceName = {
         DOCUMENTS_REQUEST_MODEL_GET_LIST_STATUS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetListStatus`,
         DOCUMENTS_REQUEST_MODEL_GET_LIST_OWNER: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetListOwner`,
 
-        VERIFY_REQUEST_MODEL_UPDATE_TRAIL: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}VerifyUpdateTrail`,
-
-        AUDIT_REQUEST_MODEL_GET_EVENTS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}AuditGetEvents`,
+        VERIFY_REQUEST_MODEL_UPDATE_TRAIL: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}VerifyUpdateTrail`
     },
     iam: {
         /* Lambdas roles */
@@ -143,10 +141,6 @@ export const ResourceName = {
 export const metadataTables = (): string[] => {
     return Object.values(ResourceName.dynamoDbTables.DOCUMENT_TYPES_TABLES).map(name => name.replace('$1', 'metadata'));
 };
-
-export const auditTables = (): string[] => {
-    return Object.values(ResourceName.dynamoDbTables.DOCUMENT_TYPES_TABLES).map(name => name.replace('$1', 'audit'));
-}
 export const verificationTables = (): string[] => {
     return Object.values(ResourceName.dynamoDbTables.DOCUMENT_TYPES_TABLES).map(name => name.replace('$1', 'verification'));
 }

@@ -11,7 +11,7 @@ import {
     addS3ReadPolicy,
     addDynamoDbIndexReadPolicy
 } from './iam';
-import { auditTables, metadataTables, ResourceName, verificationTables } from '../resource-reference';
+import { metadataTables, ResourceName, verificationTables } from '../resource-reference';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 
 const lambdaFilesLocation = '../../functions';
@@ -33,14 +33,6 @@ let documentUploadMetadataLambdaInstance: NodejsFunction;
 export const documentUploadMetadataLambda = () => documentUploadMetadataLambdaInstance;
 let documentGetMetadataLambdaInstance: NodejsFunction;
 export const documentGetMetadataLambda = () => documentGetMetadataLambdaInstance;
-
-/**
- * Lambdas, related to Audit functionality
- */
-let auditStoreEventLambdaInstance: NodejsFunction;
-export const auditStoreEventLambda = () => auditStoreEventLambdaInstance;
-let auditGetEventsLambdaInstance: NodejsFunction;
-export const auditGetEventsLambda = () => auditGetEventsLambdaInstance;
 
 /**
  * Lambdas, related to Verification handling
@@ -70,9 +62,6 @@ export default function configureLambdaResources(
     documentGeneratePreSignedLambdaInstance = configureLambdaDocumentGeneratePreSignedUrl(scope, logGroups.documentOperations);
     documentUploadMetadataLambdaInstance = configureLambdaUploadDocumentMetadata(scope, logGroups.documentOperations);
     documentGetMetadataLambdaInstance = configureLambdaGetDocumentMetadata(scope, logGroups.documentOperations);
-    
-    auditStoreEventLambdaInstance = configureLambdaStoreAuditEvent(scope, logGroups.documentAudit);
-    auditGetEventsLambdaInstance = configureLambdaGetAuditEvents(scope, logGroups.documentAudit);
 
     verifyUpdateTrailLambdaInstance = configureLambdaVerifyUpdateTrail(scope, logGroups.documentOperations);
 }
@@ -102,11 +91,6 @@ const configureLambdaS3UploadListener = (scope: Construct, logGroup: LogGroup): 
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     addS3ReadPolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
     let tables = metadataTables();
-    tables.forEach((tableName) => {
-        let name = tableName.replace('$2', '');
-        addDynamoDbWritePolicy(iamRole, name);
-    });
-    tables = auditTables();
     tables.forEach((tableName) => {
         let name = tableName.replace('$2', '');
         addDynamoDbWritePolicy(iamRole, name);
@@ -246,80 +230,6 @@ const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup:
     return lambda;   
 }
 
-/**
- * Configures an AWS Lambda function to upload audit events about changes, related to documents to a DynamoDB table.
- * This function creates an IAM role for the Lambda function, adds policies to allow
- * writing to CloudWatch logs and DynamoDB, and sets up the Lambda function with necessary configurations.
- *
- * @param {Construct} scope - The scope in which this resource is defined.
- * @param {LogGroup} logGroup - The CloudWatch log group for logging Lambda function activity.
- * 
- * @returns {NodejsFunction} - The configured NodejsFunction instance.
- *
- */
- const configureLambdaStoreAuditEvent = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
-    const iamRole = createLambdaRole(scope, ResourceName.iam.AUDIT_STORE_EVENT);
-    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    const tables = auditTables();
-    tables.forEach((tableName) => {
-        let name = tableName.replace('$2', '');
-        addDynamoDbWritePolicy(iamRole, name); 
-    });
-    const lambda = new NodejsFunction(scope, ResourceName.lambdas.AUDIT_STORE_EVENT, {
-        functionName: ResourceName.lambdas.AUDIT_STORE_EVENT,
-        description: 'Stores audit events in the DynamoDB',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/audit/audit-store-event.ts`),
-        logGroup: logGroup,
-        role: iamRole,
-        environment: {
-            REGION: process.env.AWS_REGION || '',
-            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
-            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
-        },
-        ...defaultLambdaSettings
-    });
-    return lambda;   
-}
-
-/**
- * Configures an AWS Lambda function to get list of audit events.
- * This function creates an IAM role for the Lambda function, adds policies to allow
- * writing to CloudWatch logs and read from Audit DynamoDB, and sets up the Lambda function with necessary configurations.
- *
- * @param {Construct} scope - The scope in which this resource is defined.
- * @param {LogGroup} logGroup - The CloudWatch log group for logging Lambda function activity.
- * 
- * @returns {NodejsFunction} - The configured NodejsFunction instance.
- *
- */
- const configureLambdaGetAuditEvents = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
-    const iamRole = createLambdaRole(scope, ResourceName.iam.AUDIT_GET_EVENTS);
-    addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    const tables = auditTables();
-    tables.forEach((tableName) => {
-        let name = tableName.replace('$2', '');
-        addDynamoDbReadPolicy(iamRole, name);
-        let indexName = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.EVENT_INITIATOR_AND_DOC_ID}`);
-        addDynamoDbIndexReadPolicy(iamRole, name, indexName);
-        indexName = tableName.replace('$2', `-${ResourceName.dynamoDbTables.INDEX_NAMES_SUFFIXES.DOCUMENT_ID_AND_EVENT_INITIATOR}`);
-        addDynamoDbIndexReadPolicy(iamRole, name, indexName);
-    });
-    const lambda = new NodejsFunction(scope, ResourceName.lambdas.AUDIT_GET_EVENTS, {
-        functionName: ResourceName.lambdas.AUDIT_GET_EVENTS,
-        description: 'Get list of audit events',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/audit/audit-get-events.ts`),
-        logGroup: logGroup,
-        role: iamRole,
-        environment: {
-            REGION: process.env.AWS_REGION || '',
-            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
-            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
-        },
-        ...defaultLambdaSettings
-    });
-    return lambda;   
-}
-
  const configureLambdaGetDocumentMetadata = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_GET_METADATA);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
@@ -372,6 +282,3 @@ const configureLambdaVerifyUpdateTrail = (scope: Construct, logGroup: LogGroup):
     });
     return lambda;   
 }
-
-
-

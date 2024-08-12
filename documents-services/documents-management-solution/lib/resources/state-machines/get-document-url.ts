@@ -3,7 +3,7 @@ import { LogGroup } from "aws-cdk-lib/aws-logs";
 import { LogLevel, StateMachine, StateMachineType } from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
 import { ResourceName } from "../../resource-reference";
-import { auditStoreEventLambda, documentGeneratePreSignedLambda } from "../lambdas";
+import { documentGeneratePreSignedLambda } from "../lambdas";
 import { addCloudWatchPutPolicy, addStateMachineExecutionPolicy, createStateMachineRole } from "../iam";
 import { createLambdaInvokeTask } from "../../../helpers/utilities";
 
@@ -15,15 +15,11 @@ export const configureWorkflow = (scope: Construct, apiGatewayRole: Role, logGro
   const generateDocumentPreSignedUrlTask = createLambdaInvokeTask(scope,
       ResourceName.stateMachines.WF_GET_URL_TASK_GENERATE_URL,
       documentGeneratePreSignedLambda);
-  const storeViewAuditEventTask = createLambdaInvokeTask(scope, 
-      ResourceName.stateMachines.WF_GET_URL_TASK_STORE_AUDIT_EVENT,
-      auditStoreEventLambda);
 
   const stateMachineRole = createStateMachineRole(scope, ResourceName.iam.WORKFLOW_DOCUMENT_GET_URL);
   addCloudWatchPutPolicy(stateMachineRole, ResourceName.cloudWatch.DOCUMENT_WORKFLOW_LOGS_GROUP);
 
-  const definition = generateDocumentPreSignedUrlTask
-    .next(storeViewAuditEventTask)
+  const definition = generateDocumentPreSignedUrlTask;
 
   const stateMachine = new StateMachine(scope, ResourceName.stateMachines.WORKFLOW_DOCUMENT_GET_URL, {
     stateMachineName: ResourceName.stateMachines.WORKFLOW_DOCUMENT_GET_URL,

@@ -3,13 +3,13 @@
 AWS_REGION=us-east-1
 
 # Account where AWS resources deployment should be done.
-AWS_ACCOUNT=782183945597
+AWS_ACCOUNT=12345678990
 
 # Client business name.
-TAG_CLIENT_NAME=DVS Corp
+TAG_CLIENT_NAME=ABC Company
 
 # Client business code.
-TAG_CLIENT_CODE=DVS
+TAG_CLIENT_CODE=ABC
 
 # Country where deployment is done. Possible values: 
 # * USA
@@ -21,38 +21,36 @@ APP_COUNTRY_VERSION=USA
 TAG_INDUSTRY=Healthcare
 
 # Solution name
-TAG_SOLUTION=Doclantic Documents Management Solution
+TAG_SOLUTION=Healthcare Platfotm Documents Management Solution
 
 # Solution code
-TAG_SOLUTION_CODE=DVS-DMS
+TAG_SOLUTION_CODE=ABC-DMS
 
 # Module name within solution
-TAG_APPLICATION=Doclantic Documents Management Solution
+TAG_APPLICATION=ealthcare Platfotm Documents Management Solution
 
 # Module code within solution.
-TAG_APPLICATION_CODE=DVS-DMS
+TAG_APPLICATION_CODE=ABC-DMS
 
-# Prefix, that will be added to names of all AWS Resources, created for this application. S
-AWS_RESOURCES_NAME_PREFIX=DVS-DMS-B
+# Prefix, that will be added to names of all AWS Resources, created for this application.
+AWS_RESOURCES_NAME_PREFIX=ABC-DMS
 
 # Environment. Possible values: 
 # * development
 # * testing
 # * performance
 # * production
-TAG_ENVIRONMENT=dev-dasha
+TAG_ENVIRONMENT=development
 
 # Required Compliance rules. Possible values: 
 # * HIPPA - for healthcare data 
 # * PII - for applications with Personally Identifiable Information
 # * PCI-DSS - for applications with credit cards processing
 # * NONE - if no regulations are applicable
-TAG_COMPLIANCE=PII # Documents and metadata can contain PII data 
+TAG_COMPLIANCE=HIPPA # Documents and metadata can contain PHI data 
 TAG_SECURITY_LEVEL=Confidential
 TAG_LIFECYCLE=Active
-TAG_BACKUP_POLICY=No Backup
-TAG_BACKUP_RETENTION_POLICY=0 Days
+TAG_BACKUP_POLICY=Daily
+TAG_BACKUP_RETENTION_POLICY=30 Days
 
-EMS_SERVICE_URL=https://TBD.execute-api.us-east-1.amazonaws.com/dev/v1
-EMS_SERVICE_TOKEN=TBD
 UPLOAD_NOTIFICATION_RECIPIENT=documents.verification@company.com

@@ -3,7 +3,7 @@ import { LogGroup } from "aws-cdk-lib/aws-logs";
 import { LogLevel, StateMachine, StateMachineType } from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
 import { ResourceName } from "../../resource-reference";
-import { verifyUpdateTrailLambda, auditStoreEventLambda, documentUploadMetadataLambda, documentGetMetadataLambda } from "../lambdas";
+import { verifyUpdateTrailLambda, documentUploadMetadataLambda, documentGetMetadataLambda } from "../lambdas";
 import { addCloudWatchPutPolicy, addStateMachineExecutionPolicy, createStateMachineRole } from "../iam";
 import { createLambdaInvokeTask } from "../../../helpers/utilities";
 
@@ -24,14 +24,10 @@ export const configureWorkflow = (scope: Construct, apiGatewayRole: Role, logGro
   const updateDocumentMetadataTask = createLambdaInvokeTask(scope, 
     ResourceName.stateMachines.WF_VERIFY_TASK_UPDATE_METADATA, 
     documentUploadMetadataLambda);
-  const storeViewAuditEventTask = createLambdaInvokeTask(scope, 
-    ResourceName.stateMachines.WF_VERIFY_TASK_STORE_AUDIT_EVENT,
-    auditStoreEventLambda);
 
   const definition = getDocumentMetadataTask
     .next(storeVerificationTrailTask)
     .next(updateDocumentMetadataTask)
-    .next(storeViewAuditEventTask);
 
   const stateMachine = new StateMachine(scope, ResourceName.stateMachines.WORKFLOW_VERIFY_DOCUMENT, {
     stateMachineName: ResourceName.stateMachines.WORKFLOW_VERIFY_DOCUMENT,

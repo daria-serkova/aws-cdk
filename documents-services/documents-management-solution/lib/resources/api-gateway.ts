@@ -15,15 +15,12 @@ import {
     SupportedDocumentsCategories, 
     SupportedDocumentsFormats, 
     SupportedDocumentStatuses, 
-    SupportedDocumentTypes, 
-    SupportedEventCodes, 
-    SupportedInitiatorSystemCodes, 
-    SupportedRequestOperations,
-     SupportedParamsPatterns, 
+    SupportedDocumentTypes,
+    SupportedInitiatorSystemCodes,
+    SupportedParamsPatterns, 
 } from "../../functions/helpers/utilities";
 import * as workflows from "./state-machines";
 import { 
-    auditGetEventsLambda, 
     documentGeneratePreSignedUploadUrlsLambda, 
     documentGetListByOwnerLambda, 
     documentGetListByStatusLambda 
@@ -31,7 +28,6 @@ import {
 
 interface ApiNodes {
     document: Resource;
-    audit: Resource;
     verify: Resource;
 }
 let apiNodesInstance: ApiNodes;
@@ -89,7 +85,6 @@ export default function configureApiGatewayResources(scope: Construct ) {
     const version = apiGatewayInstance.root.addResource('v1');
     apiNodesInstance = {
         document: version.addResource('document'),
-        audit: version.addResource('audit'),
         verify: version.addResource('verify'),
     }
     /* Documents endpoints */
@@ -99,8 +94,6 @@ export default function configureApiGatewayResources(scope: Construct ) {
     configureGetDocumentDetailsEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentUrlEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
     configureGetDocumentMetadataEndpoint(apiGatewayInstance, apiNodesInstance.document, requestValidatorInstance);
-    /* Audit endpoints */
-    configureAuditGetEventsEndpoint(apiGatewayInstance, apiNodesInstance.audit, requestValidatorInstance);
     /* Verify endpoints */
     configureVerifyUpdateTrailEndpoint(apiGatewayInstance, apiNodesInstance.verify, requestValidatorInstance);
 }
@@ -301,35 +294,3 @@ function configureVerifyUpdateTrailEndpoint(apiGateway: RestApi, node: Resource,
         requestValidator: requestValidatorInstance,
     })
 }
-
-function configureAuditGetEventsEndpoint(apiGateway: RestApi, node: Resource, requestValidatorInstance: RequestValidator) {
-    const modelName = ResourceName.apiGateway.AUDIT_REQUEST_MODEL_GET_EVENTS;
-    let requestModel = {
-        contentType: "application/json",
-        description: "Audit: Get List of events",
-        modelName: modelName,
-        modelId: modelName,
-        schema: {
-            type: JsonSchemaType.OBJECT,
-            properties: {
-                initiatorsystemcode: { type: JsonSchemaType.STRING, enum: SupportedInitiatorSystemCodes },
-                requestorid: { type: JsonSchemaType.STRING },
-                requestorip: { type: JsonSchemaType.STRING, pattern: SupportedParamsPatterns.IP },
-                documenttype: { type: JsonSchemaType.STRING, enum: SupportedDocumentTypes  },
-                operationtype: { type: JsonSchemaType.STRING, enum: SupportedRequestOperations },
-                documentid: { type: JsonSchemaType.STRING },
-                eventinitiator: { type: JsonSchemaType.STRING },
-                eventaction: { type: JsonSchemaType.STRING,  enum: SupportedEventCodes || ['*']},
-            },
-            required: ["initiatorsystemcode", "requestorid", "requestorip", "documenttype", "operationtype"],
-        },
-    };
-    apiGateway.addModel(modelName, requestModel);
-    node.addResource('get-events').addMethod("POST", new LambdaIntegration(auditGetEventsLambda()), {
-        apiKeyRequired: true,
-        requestModels: { "application/json": requestModel },
-        requestValidator: requestValidatorInstance,
-    });
-}
-
-
