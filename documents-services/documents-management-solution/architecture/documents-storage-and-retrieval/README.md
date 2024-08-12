@@ -5,13 +5,21 @@ In any document management system, ensuring secure and scalable storage is criti
 
 ## Secure and Scalable Storage
 
-**Security**: Documents often contain sensitive or confidential information that must be protected from unauthorized access. This requires implementing robust security measures, such as encryption both at rest and in transit, access control mechanisms, and regular security audits. Access to documents can be controlled through role-based permissions, ensuring that only authorized users can view or modify specific files.
+### Security
+
+Documents often contain sensitive or confidential information that must be protected from unauthorized access. This requires implementing robust security measures, such as encryption both at rest and in transit, access control mechanisms, and regular security audits. Access to documents can be controlled through role-based permissions, ensuring that only authorized users can view or modify specific files.
 
 ![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/security-view/security-elements.png)
 
 
+### Scalability
 
-**Scalability**: As organizations grow, so does the volume of documents they need to store. A scalable storage solution ensures that the system can handle increasing data without compromising performance. Cloud-based storage solutions, such as Amazon S3 or Azure Blob Storage, provide virtually unlimited storage capacity, automatically scaling with the needs of the organization. Additionally, these platforms offer features like automatic replication and data redundancy to ensure high availability and durability.
+As organizations grow, so does the volume of documents they need to store. A scalable storage solution ensures that the system can handle increasing data without compromising performance. Cloud-based storage solutions, such as Amazon S3 or Azure Blob Storage, provide virtually unlimited storage capacity, automatically scaling with the needs of the organization. Additionally, these platforms offer features like automatic replication and data redundancy to ensure high availability and durability.
+
+### S3 Structure
+
+Following S3 structure will be created by service's upload workflow:
+
 
 ## Metadata Tagging for Efficient Organization and Retrieval
 
