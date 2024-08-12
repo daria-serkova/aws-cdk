@@ -212,7 +212,7 @@ API and corresponding workflow is used on screens where users need to view detai
 
 This request is audited due to the potential exposure of sensitive information contained in the metadata (View Metadata event).
 
-![PlantUML Diagram](#)
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/workflows/get-document-metadata.png)
 
 ### 5. Get Documents List (By Status)
 
