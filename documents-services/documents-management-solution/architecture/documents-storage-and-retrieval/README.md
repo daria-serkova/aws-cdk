@@ -214,6 +214,48 @@ This request is audited due to the potential exposure of sensitive information c
 
 ![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/workflows/get-document-metadata.png)
 
+#### API Request Format
+
+```
+{
+    "initiatorsystemcode": "ABC_WEB_APP",
+    "requestorid": "REQUESTOR_COGNITO_ID",
+    "requestorip": "192.168.1.1",
+    "documenttype": "insurance",
+    "documentid": "insurance/verified/USER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF"
+}
+```
+#### API Response Format
+
+```
+{
+    "statusCode": 200,
+    "body": {
+        "version": "dd9774hXD441S56X5ybJd4lLnEx6p0w9",
+        "documentstatus": "Verified",
+        "expirydate": "7596421138000",
+        "documentid": "insurance/verified/USER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF",
+        "documentownerid": "USER_COGNITO_ID_1",
+        "documentformat": "PDF",
+        "issuedto": "Joe Field",
+        "issuedate": "1596421138000",
+        "uploadedby": "REQUESTOR_COGNITO_ID_1",
+        "documentname": "CLAIM_2024_12_31_12345667788",
+        "documentcategory": "INSURANCE_CLAIM",
+        "uploadedat": "1722981251767",
+        "documentsize": 334454,
+        "documentnumber": "123456789012",
+        "initiatorsystemcode": "ABC_WEB_APP",
+        "requestorid": "REQUESTOR_COGNITO_ID",
+        "requestorip": "192.168.1.1",
+        "documenttype": "insurance",
+        "actions": [
+            "View Metadata"
+        ]
+    }
+}
+```
+
 ### 5. Get Documents List (By Status)
 
 API and corresponding workflow is used on screens where end-users need to view a list of documents filtered by a specified status. For example, it is particularly useful on the Verification Team's screens to:
@@ -224,7 +266,11 @@ API and corresponding workflow is used on screens where end-users need to view a
 ![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/workflows/get-documents-list-by-status.png)
 
 
-**NOTE:** API endpoint retrieves only non-sensitive information. For example it will not return IssueTo field or any other PII, PHI, PCI information, that was provided in metadata, during upload process. This is done because returned list can be large and auditing of View List api call can affect application performance (since audit event will have to be created for each document from the list). Recommended to go in the document details page to see it’s PII, PHI, PCI metadata information and view link (Get Document Details is audited action). If displaying sensitive information in the list is needed, this should be implemented separately with all performance considerations in place.
+**NOTE:** API endpoint retrieves only non-sensitive information. For example it will not return IssueTo field or any other PII, PHI, PCI information, that was provided in metadata, during upload process. This is done because returned list can be large and auditing of View List api call can affect application performance (since audit event will have to be created for each document from the list). Recommended to go in the document details page to see it’s PII, PHI, PCI metadata information and view link (Get Document Details is audited action). If displaying sensitive information in the list is needed, this should be implemented separately with all performance considerations in place. This service does not have code for such scenarios.
+
+#### API Request Format
+
+#### API Response Format
 
 ### 6. Get Documents List (By Owner)
 
@@ -235,4 +281,8 @@ API and corresponding workflow is used on screens where end-users need to view a
 
 ![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/workflows/get-documents-list-by-owner.png)
 
-**NOTE:** API endpoint retrieves only non-sensitive information. For example it will not return IssueTo field or any other PII, PHI, PCI information, that was provided in metadata, during upload process. This is done because returned list can be large and auditing of View List api call can affect application performance (since audit event will have to be created for each document from the list). Recommended to go in the document details page to see it’s PII, PHI, PCI metadata information and view link (Get Document Details is audited action). If displaying sensitive information in the list is needed, this should be implemented separately with all performance considerations in place.
+**NOTE:** API endpoint retrieves only non-sensitive information. For example it will not return IssueTo field or any other PII, PHI, PCI information, that was provided in metadata, during upload process. This is done because returned list can be large and auditing of View List api call can affect application performance (since audit event will have to be created for each document from the list). Recommended to go in the document details page to see it’s PII, PHI, PCI metadata information and view link (Get Document Details is audited action). If displaying sensitive information in the list is needed, this should be implemented separately with all performance considerations in place. This service does not have code for such scenarios.
+
+#### API Request Format
+
+#### API Response Format
