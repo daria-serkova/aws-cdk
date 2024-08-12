@@ -14,6 +14,7 @@ The Document Storage and Retrieval processes in the system leverage following te
 6. **S3:** Provides scalable and durable storage for documents, enabling secure upload, retrieval, and management of document files.
 7. **DynamoDB:** Serves as the primary database for storing and querying document metadata, supporting fast and reliable access to document information based on various criteria.
 8. **CloudWatch:** Monitors and logs the entire document storage and retrieval process, offering real-time insights, alerts, and detailed errors trails for troubleshooting and performance optimization.
+9. **KMS (Key Management Service):** Provides encryption at rest and in transit, ensuring that sensitive documents and metadata are securely encrypted using managed keys. This enhances the security and compliance of document storage and retrieval processes.
 
 ## Secure Storage
 
