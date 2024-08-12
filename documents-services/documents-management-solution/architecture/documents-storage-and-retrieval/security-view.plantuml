@@ -1,18 +1,19 @@
 @startuml
 actor User
-rectangle "AWS Cognito" as Cognito
+actor "AWS Cognito" as Cognito
 
 rectangle "Document Management Solution" {
     User -> Cognito : "Login"
     Cognito -> User : "JWT Token"
 
-    User -> [Documents API Layer] : "Upload Document"
-    [Documents API Layer] -> Cognito : "Validate Token"
+    User -> [Upload Document] : "Upload Document"
+    [Upload Document] -> Cognito : "Validate Token"
 
-    [Documents API Layer] -> [S3] : "Store Document"
-    [Documents API Layer] -> [DynamoDB] : "Store Metadata"
+    [Upload Document] -> [S3] : "Store Document"
+    [Upload Document] -> [DynamoDB] : "Store Metadata"
+    [Upload Document] -> [Audit Log] : "Record Upload Event"
 
-    Cognito -> [Documents API Layer] : "Token Validated"
+    Cognito -> [Upload Document] : "Token Validated"
 }
 
 note bottom of Cognito
@@ -26,6 +27,10 @@ end note
 
 note bottom of [DynamoDB]
   - Encrypted at Rest
+end note
+
+note bottom of [Audit Log]
+  - Records Events
 end note
 
 @enduml
