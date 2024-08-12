@@ -50,7 +50,7 @@ Sample of the metadata record:
 
 ### 1. Document Upload Workflow
 
-![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/upload-workflow.png)
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/workflows/upload-workflow.png)
 
 #### API Request Format
 Sample of the request to AWS service to generate S3 pre-signed urls per each document:
@@ -112,7 +112,7 @@ API and corresponding flow is utilized on screens where users need to view detai
 
 This request is subject to auditing due to the potential exposure of sensitive information from both the document and its metadata (View Metadata and View Content events).
 
-![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/workflows/get-document-details.png)
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/workflows/get-document-details.png)
 
 **NOTES:** 
 
@@ -164,13 +164,13 @@ This request is subject to auditing due to the potential exposure of sensitive i
 }
 ```
 
-### 3. Get Document Content Workflow
+### 3. Get Document URL (Content) Workflow
 
 API and corresponding workflow is used on screens where users want to view the content of a document. For example, it is useful on the List of Documents screen, where the 'View Document' button allows the document to be opened in a separate tab.
 
 This request is audited due to the potential exposure of sensitive information contained within the document (View Content event).
 
-![PlantUML Diagram](#)
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/workflows/get-document-url.png)
 
 #### API Request Format
 
