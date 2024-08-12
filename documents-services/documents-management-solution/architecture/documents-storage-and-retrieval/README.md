@@ -16,24 +16,51 @@ The Document Storage and Retrieval processes in the system leverage following te
 8. **CloudWatch:** Monitors and logs the entire document storage and retrieval process, offering real-time insights, alerts, and detailed errors trails for troubleshooting and performance optimization.
 9. **KMS (Key Management Service):** Provides encryption at rest and in transit, ensuring that sensitive documents and metadata are securely encrypted using managed keys. This enhances the security and compliance of document storage and retrieval processes.
 
-## Secure Storage
+## Storage Considerations
+
+### Security
 
 Documents often contain sensitive or confidential information that must be protected from unauthorized access. This requires implementing robust security measures, such as encryption both at rest and in transit, access control mechanisms, and regular security audits. Access to documents can be controlled through role-based permissions, ensuring that only authorized users can view or modify specific files. Following security aspects are implemented in the Documents Management Service:
 
 ![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/security-view/security-elements.png)
 
+### Scalability
 
-## Scalable Storage
+As organizations grow, so does the volume of documents they need to store and manage. A scalable storage solution ensures that the system can handle increasing data without compromising performance. Cloud-based storage solutions, such as Amazon S3, provide virtually unlimited storage capacity, automatically scaling with the needs of the organization. Additionally, S3 offers features like automatic replication and data redundancy to ensure high availability and durability. Key aspects include:
 
-As organizations grow, so does the volume of documents they need to store. A scalable storage solution ensures that the system can handle increasing data without compromising performance. Cloud-based storage solutions, such as Amazon S3, provide virtually unlimited storage capacity, automatically scaling with the needs of the organization. Additionally, S3 offers features like automatic replication and data redundancy to ensure high availability and durability.
+1. **Elastic Storage:** Amazon S3 scales automatically to accommodate growing data volumes.
+2. **High Availability:** S3 provides a Service Level Agreement (SLA) of 99.99% availability.
+3. **Durability:** S3 guarantees 99.999999999% (11 nines) durability, ensuring that documents are reliably stored and protected.
 
-## Storage Structure
+Following additional scalability aspects are implemented in the Documents Management Service:
+
+**TBD**
+
+
+### Cost 
+
+Managing costs is essential in any storage solution. Cloud storage solutions like Amazon S3 offer various pricing tiers and options to help manage expenses effectively:
+
+1. **Cost-Effective Storage:** Use of different storage classes (e.g., S3 Standard, S3 Intelligent-Tiering, S3 Glacier) based on access patterns to optimize costs.
+2. **Lifecycle Policies:** Automated archiving and deletion policies to manage long-term storage costs.
+3. **Monitoring and Alerts:** Implementation of CloudWatch to monitor usage and costs, with alerts set up to inform about potential overspending.
+
+Following cost managment configuration is done in the Documents Management Service and needs to be tuned for each project separately:
+
+**TBD**
+
+## Storage Architecture
+
+### S3 Bucket Structure
 
 Following S3 storage structure will be created by service's upload workflow, based on the type and category of uploaded document:
 
 ![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/organization-view/s3-structure.png)
 
-## Documents Metadata
+### S3 Bucket Object Metadata
+
+**TBD**
+### DynamoDB Metadata Tables Structure
 
 Metadata is data about data, which provides information about the document's contents, context, and attributes. By tagging documents with relevant metadata (e.g., document type, date created, author, status, expiration date etc.), organizations can create a structured and easily searchable document repository. Metadata tagging facilitates quick access to documents by enabling users to search and filter documents based on specific criteria. Metadata is stored inside DynamoDB table for fast and effective retrieval.
 
