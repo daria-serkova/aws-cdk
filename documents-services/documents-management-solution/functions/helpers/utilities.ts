@@ -294,8 +294,8 @@ export const SupportedDocumentsFormats: string[] = supportedDocumentsFormatsCone
 };
 export const AllowedDocumentSize: number = 5 * 1024 * 1024; // 5 MB
 export const SupportedInitiatorSystemCodes: string[] = [
-    "DHS_PP_WEB_APP",
-    "DHS_PP_MBL_APP",
+    "ABC_WEB_APP",
+    "ABC_MBL_APP",
 ]
 export const DocumentStatuses = {
     UPLOADED: "Uploaded",                       // The document has been successfully uploaded to the system but has not yet been processed.
