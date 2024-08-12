@@ -2,6 +2,19 @@
 
 In any document management system, ensuring secure and scalable storage is critical for handling a wide variety of documents such as contracts, invoices, claims, HR files, and more. This aspect encompasses not only the physical storage of files but also the efficient organization and retrieval of those documents to support business operations.
 
+## Technology Stack
+
+The Document Storage and Retrieval processes in the system leverage following technology stack to ensure security, scalability, and efficiency:
+
+1. **IAM (Identity and Access Management):** Manages secure access to the system's resources, ensuring that only authorized users can interact with document storage and retrieval processes.
+2. **AWS Cognito:** Manages user authentication and authorization, providing secure access to the system by ensuring that only verified users can interact with document storage and retrieval processes.
+3. **API Gateway:** Serves as the front door for all API requests, routing them to the appropriate backend services while providing features like request validation, rate limiting, and authorization.
+4. **Step Functions:** Orchestrates complex, multi-step workflows, including document upload, retrieval, audit logging, and notification steps. This ensures that each step in the process is executed in sequence and according to predefined logic.
+5. **Lambdas:** Handles simple, stateless flows within the document management process, such as generating pre-signed URLs or processing document metadata, ensuring rapid and efficient execution of specific tasks.
+6. **S3:** Provides scalable and durable storage for documents, enabling secure upload, retrieval, and management of document files.
+7. **DynamoDB:** Serves as the primary database for storing and querying document metadata, supporting fast and reliable access to document information based on various criteria.
+8. **CloudWatch:** Monitors and logs the entire document storage and retrieval process, offering real-time insights, alerts, and detailed errors trails for troubleshooting and performance optimization.
+
 ## Secure Storage
 
 Documents often contain sensitive or confidential information that must be protected from unauthorized access. This requires implementing robust security measures, such as encryption both at rest and in transit, access control mechanisms, and regular security audits. Access to documents can be controlled through role-based permissions, ensuring that only authorized users can view or modify specific files. Following security aspects are implemented in the Documents Management Service:
