@@ -53,7 +53,7 @@ Following cost managment configuration is done in the Documents Management Servi
 
 ### Supported Documents
 
-Documents Managment Solutions contains configuration, that allows to restrict list of supported documents' types, categories, formats and maximum size of the documents, that can be uploaded to the system through its API Layer. Configuration is done via aws-cdk/documents-services/documents-management-solution/functions/helpers/utilities.ts file and can be tuned for specific project's use cases with minimum effort. API Layer will validate each request for match with these values before route it for processing. 
+Documents Managment Solution contains configuration, that allows to restrict list of supported documents' types, categories, formats and maximum size of the documents, that can be uploaded to the system through its API Layer. Configuration is done via aws-cdk/documents-services/documents-management-solution/functions/helpers/utilities.ts file and can be tuned for specific project's use cases with minimum effort. API Layer will validate each request for match with these values before route it for processing. 
 
 Sample of supported files configuration (based on Healthcare Platform use case):
 
