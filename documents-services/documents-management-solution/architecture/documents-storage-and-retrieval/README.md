@@ -221,7 +221,10 @@ API and corresponding workflow is used on screens where end-users need to view a
 1. Display all users' documents with a Pending Review status.
 2. Display all insurance documents with a Rejected status for a specified user ID (document Owner ID).
 
-![PlantUML Diagram](#)
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/workflows/get-documents-list-by-status.png)
+
+
+**NOTE:** API endpoint retrieves only non-sensitive information. For example it will not return IssueTo field or any other PII, PHI, PCI information, that was provided in metadata, during upload process. This is done because returned list can be large and auditing of View List api call can affect application performance (since audit event will have to be created for each document from the list). Recommended to go in the document details page to see it’s PII, PHI, PCI metadata information and view link (Get Document Details is audited action). If displaying sensitive information in the list is needed, this should be implemented separately with all performance considerations in place.
 
 ### 6. Get Documents List (By Owner)
 
@@ -230,4 +233,6 @@ API and corresponding workflow is used on screens where end-users need to view a
 1. Users to see all submitted documents and their current status on their profile screen.
 2. The billing team to view a list of payment statements associated with a specific user ID
 
-![PlantUML Diagram](#)
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/workflows/get-documents-list-by-owner.png)
+
+**NOTE:** API endpoint retrieves only non-sensitive information. For example it will not return IssueTo field or any other PII, PHI, PCI information, that was provided in metadata, during upload process. This is done because returned list can be large and auditing of View List api call can affect application performance (since audit event will have to be created for each document from the list). Recommended to go in the document details page to see it’s PII, PHI, PCI metadata information and view link (Get Document Details is audited action). If displaying sensitive information in the list is needed, this should be implemented separately with all performance considerations in place.

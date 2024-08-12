@@ -1,0 +1,18 @@
+@startuml Get Documents List by Owner Flow
+actor User
+participant "UI" as UI
+participant "API Gateway" as APIGW
+participant "Lambda Function" as Lambda
+participant "DynamoDB" as DynamoDB
+
+User -> UI : Opens dashboard to view his own documents
+UI -> APIGW : Sends request with specified documentOwnerId
+APIGW -> Lambda : Trigger Lambda function
+
+Lambda -> DynamoDB : Retrieve list of documents for specified Owner ID
+DynamoDB -> Lambda : Return list of documents
+
+Lambda -> UI : Return data to UI
+UI -> User : Display documents
+
+@enduml

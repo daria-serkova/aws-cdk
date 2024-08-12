@@ -1,0 +1,19 @@
+@startuml Get Documents List by Status Flow
+actor User
+participant "UI" as UI
+participant "API Gateway" as APIGW
+participant "Lambda Function" as Lambda
+participant "DynamoDB" as DynamoDB
+
+User -> UI : Opens dashboard to view all documents
+User -> UI : Filters documents by Status
+UI -> APIGW : Sends request with specified status
+APIGW -> Lambda : Trigger Lambda function
+
+Lambda -> DynamoDB : Retrieve list of documents with specified status
+DynamoDB -> Lambda : Return list of documents
+
+Lambda -> UI : Return data to UI
+UI -> User : Display filtered documents
+
+@enduml
