@@ -18,7 +18,9 @@ As organizations grow, so does the volume of documents they need to store. A sca
 
 ### S3 Structure
 
-Following S3 structure will be created by service's upload workflow:
+Following S3 storage structure will be created by service's upload workflow, based on the type and category of uploaded document:
+
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/organization-view/s3-structure.png)
 
 
 ## Metadata Tagging for Efficient Organization and Retrieval
