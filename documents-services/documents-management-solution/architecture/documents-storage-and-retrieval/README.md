@@ -270,7 +270,42 @@ API and corresponding workflow is used on screens where end-users need to view a
 
 #### API Request Format
 
+Across all document owners:
+```
+{
+    "initiatorsystemcode": "ABC_WEB_APP",
+    "requestorid": "REQUESTOR_COGNITO_ID",
+    "documenttype": "insurance",
+    "documentstatus": "Verified",
+    "documentownerid": "*"
+}
+```
+
+For specified document owner:
+
+```
+{
+    "initiatorsystemcode": "ABC_WEB_APP",
+    "requestorid": "REQUESTOR_COGNITO_ID",
+    "documenttype": "insurance",
+    "documentstatus": "Verified",
+    "documentownerid": "USER_COGNITO_ID"
+}
+```
+
 #### API Response Format
+
+```
+[
+    {
+        "documentcategory": "INSURANCE_CLAIM",
+        "documentownerid": "PROVIDER_COGNITO_ID_1",
+        "documentstatus": "Verified",
+        "documentid": "insurance/verified/USER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF",
+        "expirydate": "7596421138000"
+    }
+]
+```
 
 ### 6. Get Documents List (By Owner)
 
