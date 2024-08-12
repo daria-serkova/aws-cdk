@@ -22,7 +22,9 @@ This solution is designed to address a variety of real-world business scenarios,
 - Secure and scalable storage for any types of documents (contracts, invoices, claims, HR files, etc).
 - Metadata tagging for efficient organization and retrieval.
 
-### 2. TBD: Document Sharing and Collaboration
+[Architecture, recommendations and implementation details](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval)
+
+### 2. Document Sharing and Collaboration
 
 - Version control and history tracking for collaborative editing.
 - Access controls to manage viewing and editing permissions.
@@ -37,7 +39,7 @@ This solution is designed to address a variety of real-world business scenarios,
 - Encryption at rest and in transit to protect sensitive documents.
 - Detailed access logs and compliance with regulations like GDPR and HIPAA.
 
-### 5. TBD: Document Generation and Templates
+### 5. Document Generation and Templates
 
 - Template management and automated document generation for invoices, reports, and letters.
 - Support for various formats (PDF, DOCX, etc.).
@@ -85,18 +87,11 @@ The following technologies are used in this solution:
 - **Amazon DynamoDB**: For storing metadata, document indices, and workflow states.
 - **Amazon API Gateway**: To expose APIs for document operations like upload, download, and search.
 - **AWS Step Functions**: To orchestrate complex workflows and approval processes.
-- **??? Amazon Elasticsearch Service (Amazon OpenSearch Service)**: For implementing search functionality.
+- **TBD: Amazon Elasticsearch Service (Amazon OpenSearch Service)**: For implementing search functionality.
 - **AWS Identity and Access Management (IAM)**: To manage access controls and permissions.
 - **AWS CloudTrail and CloudWatch**: For logging, monitoring, and auditing activities.
 - **AWS Simple Notification Service (SNS) and Simple Queue Service (SQS)**: For notifications and asynchronous processing.
 - **AWS Key Management Service (KMS)**: For managing encryption keys.
-
-
-## Workflows
-TBD location with diagrams and documentation
-
-## API
-TBD location with Postman collection and environments
 
 ## Getting Started
 
