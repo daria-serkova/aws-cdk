@@ -114,7 +114,10 @@ This request is subject to auditing due to the potential exposure of sensitive i
 
 ![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/workflows/get-document-details.png)
 
-**NOTE:** Generated Pre-Signed URL will expire after 5 mins. For immediate access scenarios (e.g., viewing a document right after it's requested), an expiration time of 5 to 15 minutes is usually recommended. This helps minimize the risk of the URL being misused if intercepted.
+**NOTES:** 
+
+1. Generated Pre-Signed URL will expire after 5 mins. For immediate access scenarios (e.g., viewing a document right after it's requested), an expiration time of 5 to 15 minutes is usually recommended. This helps minimize the risk of the URL being misused if intercepted.
+2. API endpoint should be used for immediate access only (for example display document content side by side with metadata). This API endpoint is not intended to be used for buttons on the page which opens files upon click, since if user clicked on the button after expiration time, error will be displayed. /get-url endpoint should be used instead for scenarios, where user view document after clicking the button.
 
 #### API Request Format
 
