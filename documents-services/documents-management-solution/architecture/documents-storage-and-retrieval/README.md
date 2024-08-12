@@ -342,7 +342,7 @@ API and corresponding workflow is used on screens where end-users need to view a
 [
     {
         "documentcategory": "INSURANCE_CLAIM",
-        "documentownerid": "PROVIDER_COGNITO_ID_1",
+        "documentownerid": "USER_COGNITO_ID_1",
         "documentstatus": "Verified",
         "documentid": "insurance/verified/USER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF",
         "expirydate": "7596421138000"
