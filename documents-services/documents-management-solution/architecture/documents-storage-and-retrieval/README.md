@@ -52,7 +52,7 @@ Sample of the metadata record:
 
 ![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/upload-workflow.png)
 
-### API Request Format
+#### API Request Format
 Sample of the request to AWS service to generate S3 pre-signed urls per each document:
 
 ```
@@ -84,7 +84,7 @@ POST: {{API_GATEWAY_URL}}/document/upload
 }
 
 ```
-### API Response Format
+#### API Response Format
 Sample of the response from AWS service with S3 pre-signed urls per each document:
 ```
 {
@@ -102,3 +102,13 @@ Sample of the response from AWS service with S3 pre-signed urls per each documen
     ]
 }
 ```
+
+### 2. Get Document Details Workflow
+
+### 3. Get Document Content Workflow
+
+### 4. Get Document Metadata Workflow
+
+### 5. Get Documents List (By Status)
+
+### 6. Get Documents List (By Owner)
