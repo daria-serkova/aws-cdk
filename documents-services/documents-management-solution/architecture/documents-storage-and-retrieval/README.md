@@ -46,7 +46,13 @@ Sample of the metadata record:
 ```
 
 
-## Workflows
+## API Layer
+
+Service contains an API layer that provides essential functionalities for managing documents. This API layer allows users to:
+
+1. **Upload Documents:** Users can securely upload documents to the system, ensuring that they are properly stored and accessible for future use. 
+2. **Retrieve Document Information:** Users can access detailed information about specific documents, including content, metadata, status, and other relevant details.
+3. **Retrieve a List of Documents based on certain criteria:** The API enables users to filter and retrieve lists of documents based on various criteria, such as document status, user ID, or other attributes, facilitating efficient document management and access.
 
 ### 1. Document Upload Workflow
 
@@ -320,4 +326,25 @@ API and corresponding workflow is used on screens where end-users need to view a
 
 #### API Request Format
 
+```
+{
+    "initiatorsystemcode": "ABC_WEB_APP",
+    "requestorid": "REQUESTOR_COGNITO_ID",
+    "documenttype": "insurance",
+    "documentownerid": "USER_COGNITO_ID_1"
+}
+
+```
+
 #### API Response Format
+
+```
+[
+    {
+        "documentcategory": "INSURANCE_CLAIM",
+        "documentownerid": "PROVIDER_COGNITO_ID_1",
+        "documentstatus": "Verified",
+        "documentid": "insurance/verified/USER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF",
+        "expirydate": "7596421138000"
+    }
+]
