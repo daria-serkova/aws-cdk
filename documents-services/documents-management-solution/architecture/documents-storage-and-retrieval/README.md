@@ -152,7 +152,7 @@ This request is subject to auditing due to the potential exposure of sensitive i
             "View Metadata",
             "View Content"
         ],
-        "url": "https://TBD.s3.us-east-1.amazonaws.com/providers/uploaded/PROVIDER_COGNITO_ID_1/personal/AADHAAR_CARD.PDF?{{generateddata}}",
+        "url": "https://TBD.s3.us-east-1.amazonaws.com/insurance/verified/PROVIDER_COGNITO_ID_1/claims/CLAIM_2024_12_31_12345667788.PDF?{{generateddata}}",
         "urlexpiresat": 1723477931026
     }
 }
@@ -160,8 +160,34 @@ This request is subject to auditing due to the potential exposure of sensitive i
 
 ### 3. Get Document Content Workflow
 
+API and corresponding workflow is used on screens where users want to view the content of a document. For example, it is useful on the List of Documents screen, where the 'View Document' button allows the document to be opened in a separate tab.
+
+This request is audited due to the potential exposure of sensitive information contained within the document (View Content event).
+
+![PlantUML Diagram](#)
+
 ### 4. Get Document Metadata Workflow
+
+API and corresponding workflow is used on screens where users need to view detailed information about a document, excluding its content.
+
+This request is audited due to the potential exposure of sensitive information contained in the metadata (View Metadata event).
+
+![PlantUML Diagram](#)
 
 ### 5. Get Documents List (By Status)
 
+API and corresponding workflow is used on screens where end-users need to view a list of documents filtered by a specified status. For example, it is particularly useful on the Verification Team's screens to:
+
+1. Display all users' documents with a Pending Review status.
+2. Display all insurance documents with a Rejected status for a specified user ID (document Owner ID).
+
+![PlantUML Diagram](#)
+
 ### 6. Get Documents List (By Owner)
+
+API and corresponding workflow is used on screens where end-users need to view a list of documents based on the user ID to whom the documents belong. For example, it is useful for:
+
+1. Users to see all submitted documents and their current status on their profile screen.
+2. The billing team to view a list of payment statements associated with a specific user ID
+
+![PlantUML Diagram](#)
