@@ -1,6 +1,6 @@
 # Architecture Overview
 
-This folder contains all necessary information about the architecture and implementation and recommended practices of various business processes related to document management. Below are the key areas covered:
+This folder contains all necessary information about the architecture, implementation, recommended practices and Postman collections for various business processes related to document management. Below are the key areas covered:
 
 1. [Document Storage and Retrieval](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval)
 2. Document Sharing and Collaboration
@@ -13,5 +13,7 @@ This folder contains all necessary information about the architecture and implem
 9. [Document Auditing and Reporting](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-audit)
 10. [Document Backup and Disaster Recovery](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-backup-and-recovery)
 11. Document Integration with Other Systems
+
+[Postman collection location](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/postman-collection)
     
 Please refer to the respective documents and diagrams within this folder for details.
