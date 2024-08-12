@@ -47,7 +47,7 @@ This solution is designed to address a variety of real-world business scenarios,
 - Automated archiving and retention policies for long-term storage.
 - Cost-effective storage options like S3 Glacier.
 
-[Architecture, recommendations and implementation details](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/document-archiving-and-retention)
+[Architecture, recommendations and implementation details](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-archiving-and-retention)
 
 ### 7. Document Indexing and Search
 
