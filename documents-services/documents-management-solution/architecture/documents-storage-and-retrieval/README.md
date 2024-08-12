@@ -51,6 +51,14 @@ Following cost managment configuration is done in the Documents Management Servi
 
 ## Storage Architecture
 
+### Supported Documents
+
+Documents Managment Solutions contains configuration, that allows to restrict list of supported documents' types, categories, formats and maximum size of the documents, that can be uploaded to the system through its API Layer. Configuration is done via aws-cdk/documents-services/documents-management-solution/functions/helpers/utilities.ts file and can be tuned for specific project's use cases with minimum effort. API Layer will validate each request for match with these values before route it for processing. 
+
+Sample of supported files configuration (based on Healthcare Platform use case):
+
+![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/organization-view/supported-documents.png)
+
 ### S3 Bucket Structure
 
 Following S3 storage structure will be created by service's upload workflow, based on the type and category of uploaded document:

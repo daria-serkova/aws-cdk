@@ -263,7 +263,7 @@ export const supportedDocumentsFormatsConentTypeMapping = (): Array<{ format: st
     { format: 'JPG', contentType: 'image/jpeg' },
     { format: 'JPEG', contentType: 'image/jpeg' },
     { format: 'PNG', contentType: 'image/png' },
-    /*
+    /* Uncomment lines below if application should support other formats
     { format: 'DOC', contentType: 'application/msword' },
     { format: 'DOCX', contentType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' },
     { format: 'XLS', contentType: 'application/vnd.ms-excel' },
