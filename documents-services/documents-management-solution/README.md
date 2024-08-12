@@ -17,12 +17,10 @@ The AWS Serverless Document Management Solution provides a comprehensive, scalab
 
 This solution is designed to address a variety of real-world business scenarios, including:
 
-### 1. Document Storage and Retrieval
+### [1. Document Storage and Retrieval](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval)
 
 - Secure and scalable storage for any types of documents (contracts, invoices, claims, HR files, etc).
 - Metadata tagging for efficient organization and retrieval.
-
-[Architecture, recommendations and implementation details](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval)
 
 ### 2. Document Sharing and Collaboration
 
@@ -44,33 +42,33 @@ This solution is designed to address a variety of real-world business scenarios,
 - Template management and automated document generation for invoices, reports, and letters.
 - Support for various formats (PDF, DOCX, etc.).
 
-### 6. Document Archiving and Retention
+### [6. Document Archiving and Retention](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-archiving-and-retention)
 
 - Automated archiving and retention policies for long-term storage.
 - Cost-effective storage options like S3 Glacier.
-
-[Architecture, recommendations and implementation details](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-archiving-and-retention)
 
 ### 7. Document Indexing and Search
 
 - Full-text search capabilities and metadata indexing for efficient document retrieval.
 - OCR for scanning and indexing physical documents.
 
-### 8. Document Auditing and Reporting
+### 8. Documents Scanning and Text Extraction
+
+- **Optical Character Recognition (OCR) Integration:** Utilize OCR technology to scan documents and extract text content, enabling searchable and editable text from scanned images or PDFs.
+- **Text Extraction from Structured Forms:** Implement tools to extract structured data from forms and tables within scanned documents, facilitating automated data entry and processing.
+
+### [9. Document Auditing and Reporting](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-audit)
 
 - Detailed audit logs and reporting tools for compliance and management review.
 - Integration with BI tools for customizable dashboards and alerts.
 
-[Architecture, recommendations and implementation details](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-audit)
 
-### 9. Document Backup and Disaster Recovery
+### [10. Document Backup and Disaster Recovery](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-backup-and-recovery)
 
 - Automated backup processes and disaster recovery plans.
 - Cross-region replication and regular testing of backup procedures.
 
-[Architecture, recommendations and implementation details](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-backup-and-recovery)
-
-### 10. Document Integration with Other Systems
+### 11. Document Integration with Other Systems
 
 - APIs for seamless integration with CRM, ERP, HR systems, and more.
 - Event-driven architecture for real-time updates and data synchronization.

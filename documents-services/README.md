@@ -165,11 +165,6 @@ By leveraging AWS services, this solution ensures that document management tasks
    - Configure the solution according to your specific document management needs.
    - Use the provided APIs and dashboards to manage, retrieve, and process documents.
    - Set up notifications and alerts as needed for document events and processing.
-
-## Contributions
-
-Contributions are welcome! Please submit issues and pull requests for any improvements or bug fixes.
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
