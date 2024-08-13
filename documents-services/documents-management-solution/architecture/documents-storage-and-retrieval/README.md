@@ -7,6 +7,7 @@ In any document management system, ensuring secure and scalable storage is criti
 ![Supported Processes Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/supported-processes.svg)
 
 1. [Upload Documents Process](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/process-upload-document)
+2. [Retrieve Full Document](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/process-retrieve-full-document)
 
 ## Storage Considerations
 

@@ -16,7 +16,7 @@ This request is subject to auditing due to the potential exposure of sensitive i
 
 ## API Details
 
-- **API endpoint:** {{API_GATEWAY_URL}}/v1/document/upload
+- **API endpoint:** {{API_GATEWAY_URL}}/document/get-document
 - **API supported methods:** POST
 - **API authorization:** Security header X-API-Key (generated API Gateway key) is required.
 
