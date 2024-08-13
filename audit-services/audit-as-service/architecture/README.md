@@ -1,7 +1,7 @@
 # Audit As a Service Solution
 The Audit As a Service Solution (AAAS)i s a robust and scalable system designed to manage, store, and analyze audit events within an organization. 
 
-This solution provides comprehensive audit logging, tracking, and reporting capabilities, ensuring that all actions and transactions within the system are recorded in a secure and tamper-proof manner. It is built to meet industry standards and regulatory requirements, providing insights into system activity and aiding in compliance efforts.
+This solution provides comprehensive audit logging, tracking, and reporting capabilities, ensuring that all actions and transactions, required by industry regulations are recorded in a secure and tamper-proof manner. It is built to meet industry standards and regulatory requirements, providing insights into system activity and aiding in compliance efforts.
 
 This folder contains all the necessary information about the architecture, implementation, recommended practices, and Postman collections for various business processes related to audit management.
 
