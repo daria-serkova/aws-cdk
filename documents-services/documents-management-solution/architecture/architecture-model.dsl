@@ -16,6 +16,35 @@ workspace {
             apiGateway = container "API Gateway" {
                 description "Handles incoming API requests and routes them to the appropriate services."
                 technology "AWS API Gateway"
+                
+                documentUploadAPI = component "Document Upload API" {
+                    description "API for generating S3 Pre-Sign URLs."
+                    technology "REST"
+                }
+                documentGetFullDetailsAPI = component "Get Document Details API" {
+                    description "API for retrieving document's URL and metadata"
+                    technology "REST"
+                }
+                documentGetUrlAPI = component "Get Document Url API" {
+                    description "API for retrieving document's URL"
+                    technology "REST"
+                }
+                documentGetMetadataAPI = component "Get Document Metadata API" {
+                    description "API for retrieving document's metadata"
+                    technology "REST"
+                }
+                documentsGetListByStatusAPI = component "Get Documents List by Status API" {
+                    description "API for retrieving list of documents with specified status."
+                    technology "REST"
+                }
+                documentsGetListByOwnerAPI = component "Get Documents List by Owner API" {
+                    description "API for retrieving list of documents for specified owner."
+                    technology "REST"
+                }
+                documentVerifyAPI = component "Verification API" {
+                    description "API for document verification."
+                    technology "REST"
+                }
             }
             
             documentStorage = container "Document Storage" {
@@ -118,6 +147,17 @@ workspace {
             include cloudWatch
             include kms
             autolayout lr
+        }
+        
+        component apiGateway {
+            include documentUploadAPI
+            include documentGetFullDetailsAPI
+            include documentGetUrlAPI
+            include documentGetMetadataAPI
+            include documentsGetListByStatusAPI
+            include documentsGetListByOwnerAPI
+            include documentVerifyAPI
+            autolayout tb
         }
 
         theme default
