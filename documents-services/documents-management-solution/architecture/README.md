@@ -10,8 +10,9 @@ The following System Context Diagram provides a high-level overview of how the D
 ![System Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/system-context-diagram.svg)
 
 **NOTES:**
-1. [3rd-Party Audit Service (Audit as a Service Solution)](https://github.com/daria-serkova/aws-cdk/tree/main/audit-services/audit-as-service)
-2. [3rd-Party Email Service](https://github.com/daria-serkova/aws-cdk/tree/main/communication-services/emails-management-solution)
+1. [3rd-Party Auth Service](https://github.com/daria-serkova/aws-cdk/tree/main/authorization-and-authentication-services)
+2. [3rd-Party Audit Service (Audit as a Service Solution)](https://github.com/daria-serkova/aws-cdk/tree/main/audit-services/audit-as-service)
+3. [3rd-Party Email Service](https://github.com/daria-serkova/aws-cdk/tree/main/communication-services/emails-management-solution)
 
 ## Container Diagram
 
