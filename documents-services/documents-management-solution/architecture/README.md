@@ -9,9 +9,24 @@ The following System Context Diagram provides a high-level overview of how the D
 
 ![System Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/system-context-diagram.png)
 
+## Container Diagram
 
-# Details
-Below are the key areas covered:
+Detailed view of the Document Management Solution's architecture at the container level. It illustrates how various components within the system interact with each other and the roles they play in managing document workflows.
+
+![Container Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/container-diagram.svg)
+
+### Architecture Highlights:
+
+- **API Gateway:** Serves as the entry point for all API requests, directing them to the appropriate backend services. It handles request routing, validation, and authorization.
+- **Document Storage:** Utilizes AWS S3 for secure and scalable storage of document files. This component ensures that documents are stored reliably and can be accessed efficiently.
+- **Metadata Database:** Employs AWS DynamoDB to manage and query metadata associated with documents. This allows for quick retrieval and management of document information based on various criteria.
+- **Step Functions:** Orchestrates complex workflows involved in document processing. It coordinates multiple steps such as retrieval, processing, and notifications, ensuring each step is executed according to the defined sequence.
+- **Lambda Functions:** Handles specific, stateless tasks such as generating pre-signed URLs, processing document metadata, and performing other operational tasks.
+- **CloudWatch:** Provides monitoring and logging capabilities, allowing for real-time insights into system performance and detailed audit trails of system events.
+- **KMS (Key Management Service):** Manages encryption keys to secure document data both at rest and in transit, ensuring compliance with security and privacy regulations.
+- **Cognito:** Manages user authentication and access control, ensuring that only authorized users can interact with the system's resources.
+
+# Processes Documentation
 
 1. [Document Storage and Retrieval](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval)
 2. Document Sharing and Collaboration
