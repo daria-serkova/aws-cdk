@@ -29,7 +29,6 @@ Detailed view of the Document Management Solution's architecture at the containe
 - **Lambda Functions:** Handles specific, stateless tasks such as generating pre-signed URLs, processing document metadata, and performing other operational tasks.
 - **CloudWatch:** Provides monitoring and logging capabilities, allowing for real-time insights into system performance and detailed audit trails of system events.
 - **KMS (Key Management Service):** Manages encryption keys to secure document data both at rest and in transit, ensuring compliance with security and privacy regulations.
-- **Cognito:** Manages user authentication and access control, ensuring that only authorized users can interact with the system's resources.
 
 ## Processes Documentation
 
