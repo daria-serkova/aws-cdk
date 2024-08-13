@@ -1,28 +1,25 @@
 workspace {
     model { 
-        documentManagementSystem = softwareSystem "Document Management System" {
-            description "Manages the storage, retrieval, and processing of documents."
+        documentManagementSystem = softwareSystem "Document Management System - Storage and Retrieval" {
+            description "Manages the storage and retrieval of documents."
             
             uploadDocumentWorkflow = container "Process: Upload Document" {
-                description "Handles incoming API requests and routes them to the appropriate services."
+                description "Handles document upload process including audit"
             }
             getFullDocumentDetailsWorkflow = container "Process: Get Full Document Details" {
-                description "Handles incoming API requests and routes them to the appropriate services."
+                description "Handles document retrieval process including audit"
             }
             getDocumentUrlWorkflow = container "Process: Get Document URL" {
-                description "Handles incoming API requests and routes them to the appropriate services."
+                description "Handles document retrieval process including audit"
             }
             getDocumentMetadataWorkflow = container "Process: Get Document Metadata" {
-                description "Handles incoming API requests and routes them to the appropriate services."
+                description "Handles document retrieval process including audit"
             }
             getDocumentsListByStatusWorkflow = container "Process: Get Documents List By Status" {
-                description "Handles incoming API requests and routes them to the appropriate services."
+               description "Handles document list retrieval process"
             }
             getDocumentsListByOwnerWorkflow = container "Process: Get Documents List By Owner" {
-                description "Handles incoming API requests and routes them to the appropriate services."
-            }
-            verifyDocumentWorkflow = container "Process: Verify Document" {
-                description "Handles incoming API requests and routes them to the appropriate services."
+                description "Handles document list retrieval process"
             }
         }
     }
