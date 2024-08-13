@@ -13,7 +13,7 @@ The following System Context Diagram provides a high-level overview of how the D
 
 Detailed view of the Document Management Solution's architecture at the container level. It illustrates how various components within the system interact with each other and the roles they play in managing document workflows.
 
-![Container Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/container-diagram.svg)
+![Container Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/container-diagram .svg)
 
 ### Architecture Highlights:
 
@@ -39,7 +39,6 @@ Detailed view of the Document Management Solution's architecture at the containe
 9. [Document Auditing and Reporting](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-audit)
 10. [Document Backup and Disaster Recovery](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-backup-and-recovery)
 11. Document Integration with Other Systems
-
-[Postman collection location](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/postman-collection)
+12. [Postman collection location](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/postman-collection)
     
 Please refer to the respective documents and diagrams within this folder for details.
