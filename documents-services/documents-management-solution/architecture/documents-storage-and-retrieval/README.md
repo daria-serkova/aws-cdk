@@ -2,19 +2,9 @@
 
 In any document management system, ensuring secure and scalable storage is critical for handling a wide variety of documents such as contracts, invoices, claims, HR files, and more. This aspect encompasses not only the physical storage of files but also the efficient organization and retrieval of those documents to support business operations.
 
-## Technology Stack
+## Supported Processes
 
-The Document Storage and Retrieval processes in the system leverage following technology stack to ensure security, scalability, and efficiency:
-
-1. **IAM (Identity and Access Management):** Manages secure access to the system's resources, ensuring that only authorized users can interact with document storage and retrieval processes.
-2. **AWS Cognito:** Manages user authentication and authorization, providing secure access to the system by ensuring that only verified users can interact with document storage and retrieval processes.
-3. **API Gateway:** Serves as the front door for all API requests, routing them to the appropriate backend services while providing features like request validation, rate limiting, and authorization.
-4. **Step Functions:** Orchestrates complex, multi-step workflows, including document upload, retrieval, audit logging, and notification steps. This ensures that each step in the process is executed in sequence and according to predefined logic.
-5. **Lambdas:** Handles simple, stateless flows within the document management process, such as generating pre-signed URLs or processing document metadata, ensuring rapid and efficient execution of specific tasks.
-6. **S3:** Provides scalable and durable storage for documents, enabling secure upload, retrieval, and management of document files.
-7. **DynamoDB:** Serves as the primary database for storing and querying document metadata, supporting fast and reliable access to document information based on various criteria.
-8. **CloudWatch:** Monitors and logs the entire document storage and retrieval process, offering real-time insights, alerts, and detailed errors trails for troubleshooting and performance optimization.
-9. **KMS (Key Management Service):** Provides encryption at rest and in transit, ensuring that sensitive documents and metadata are securely encrypted using managed keys. This enhances the security and compliance of document storage and retrieval processes.
+![Supported Processes Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/supported-processes.svg)
 
 ## Storage Considerations
 
