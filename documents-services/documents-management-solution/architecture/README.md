@@ -9,6 +9,10 @@ The following System Context Diagram provides a high-level overview of how the D
 
 ![System Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/system-context-diagram.svg)
 
+**NOTES:**
+1. [3rd-Party Audit Service (Audit as a Service Solution)](https://github.com/daria-serkova/aws-cdk/tree/main/audit-services/audit-as-service)
+2. [3rd-Party Email Service](https://github.com/daria-serkova/aws-cdk/tree/main/communication-services/emails-management-solution)
+
 ## Container Diagram
 
 Detailed view of the Document Management Solution's architecture at the container level. It illustrates how various components within the system interact with each other and the roles they play in managing document workflows.
