@@ -1,6 +1,17 @@
 # Architecture Overview
 
-This folder contains all necessary information about the architecture, implementation, recommended practices and Postman collections for various business processes related to document management. Below are the key areas covered:
+The Document Management Solution is a comprehensive system designed to manage the entire lifecycle of documents within an organization. It provides secure storage, retrieval, sharing, and processing of various types of documents such as contracts, invoices, claims, and HR files. The solution is built to be scalable, secure, and compliant with industry regulations.
+
+This folder contains all necessary information about the architecture, implementation, recommended practices and Postman collections for various business processes related to document management.
+## System Context Diagram
+
+The following System Context Diagram provides a high-level overview of how the Document Management Solution interacts with external entities, including users, third-party services, and other systems within the organization.
+
+![System Context Diagram](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/system-context.png)
+
+
+# Details
+Below are the key areas covered:
 
 1. [Document Storage and Retrieval](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval)
 2. Document Sharing and Collaboration
