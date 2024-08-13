@@ -13,7 +13,7 @@ The following System Context Diagram provides a high-level overview of how the D
 
 Detailed view of the Document Management Solution's architecture at the container level. It illustrates how various components within the system interact with each other and the roles they play in managing document workflows.
 
-![Container Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/container-diagram .svg)
+![Container Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/container-diagram.svg)
 
 ### Architecture Highlights:
 
