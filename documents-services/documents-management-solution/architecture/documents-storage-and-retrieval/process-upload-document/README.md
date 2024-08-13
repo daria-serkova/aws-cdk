@@ -7,6 +7,27 @@ The Upload Document process is a critical component of Document Management Solut
 ![Components View](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/process-upload-document/process-diagram.svg)
 
 ## API Details
+
+This endpoint should be used when a user needs to upload a single document or multiple documents into the system. This method will generate list of S3 pre-signed URLs, where UI application can upload documents via direct PUT API request to S3.
+
+- **API endpoint:** {{API_GATEWAY_URL}}/v1/document/upload
+- **API supported methods:** POST
+- **API authorization:** Security header X-API-Key (generated API Gateway key) is required.
+
+### API Request Model Validation
+
+API endpoint conducts following validation checks on the request's body before routing it for processing.
+
+![Validation Rules](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval/process-upload-document/api-validation-rules.svg)
+
+If at least one validation rule failed, API will return `400 (Bad Request)` status code:
+
+```
+{
+    "message": "Invalid request body"
+}
+```
+
 ### API Request Format
 Sample of the request to AWS service to generate S3 pre-signed urls per each document:
 
