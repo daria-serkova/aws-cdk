@@ -47,11 +47,6 @@ workspace {
                 description "Handles encryption keys for securing document data."
                 technology "AWS KMS"
             }
-            
-            cognito = container "Cognito" {
-                description "Manages user authentication and access control."
-                technology "AWS Cognito"
-            }
         }
         
         // External systems
@@ -71,6 +66,10 @@ workspace {
             description "External service for sending notifications and emails related to document processes."
         }
         
+        thirdPartyAuthenticationAndAutherizationService = softwareSystem "Third-Party Auth Service" {
+            description "Manages user authentication and authorization for access control across various systems."
+        }
+        
         // Define relationships between the containers
         apiGateway -> stepFunctions "Routes requests to"
         stepFunctions -> lambdaFunctions "Invokes for processing"
@@ -81,11 +80,17 @@ workspace {
         lambdaFunctions -> thirdPartyEmailService "Sends email notifications via"
         documentStorage -> kms "Encrypts/Decrypts Documents"
         metadataDatabase -> kms "Encrypts/Decrypts Tables"
-        cognito -> apiGateway "Authenticates API Requests"
         
         // Define relationships between the external systems and the Document Management System
         userDashboard -> apiGateway "Sends document requests via"
         verificationUI -> apiGateway "Sends review requests via"
+        
+        // Define relationships between external systems and Auth service
+        thirdPartyAuthenticationAndAutherizationService -> apiGateway "Provides authentication and authorization"
+        
+        // Define relationships between UI apps and Auth Service
+        userDashboard -> thirdPartyAuthenticationAndAutherizationService "Authenticates users via"
+        verificationUI -> thirdPartyAuthenticationAndAutherizationService "Authenticates users via"
         
         // Define relationships between the external actors and external systems
         user -> userDashboard "Accesses"
@@ -100,6 +105,7 @@ workspace {
             include verificationUI
             include thirdPartyAuditService
             include thirdPartyEmailService
+            include thirdPartyAuthenticationAndAutherizationService
             autolayout lr
         }
 
@@ -111,7 +117,6 @@ workspace {
             include lambdaFunctions
             include cloudWatch
             include kms
-            include cognito
             autolayout lr
         }
 
