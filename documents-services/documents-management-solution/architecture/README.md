@@ -7,7 +7,7 @@ This folder contains all necessary information about the architecture, implement
 
 The following System Context Diagram provides a high-level overview of how the Document Management Solution interacts with external entities, including users, third-party services, and other systems within the organization.
 
-![System Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/system-context-diagram.png)
+![System Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/documents-services/documents-management-solution/architecture/system-context-diagram.svg)
 
 ## Container Diagram
 
