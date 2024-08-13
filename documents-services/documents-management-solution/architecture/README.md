@@ -26,7 +26,7 @@ Detailed view of the Document Management Solution's architecture at the containe
 - **KMS (Key Management Service):** Manages encryption keys to secure document data both at rest and in transit, ensuring compliance with security and privacy regulations.
 - **Cognito:** Manages user authentication and access control, ensuring that only authorized users can interact with the system's resources.
 
-# Processes Documentation
+## Processes Documentation
 
 1. [Document Storage and Retrieval](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval)
 2. Document Sharing and Collaboration
