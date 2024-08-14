@@ -31,7 +31,7 @@ The Container Diagram provides a detailed view of the Audit As a Service Solutio
 6. **KMS (Key Management Service):** Secures audit data by managing encryption keys, ensuring that sensitive information is protected both in transit and at rest.
 
 ## Processes Documentation
-1. [Audit Event Ingestion and Processing](#)
+1. [Audit Event Ingestion](#)
 2. [Audit Data Storage and Retrieval](#)
 3. [Audit Reporting and Analysis](#)
 4. [Audit Data Security and Compliance](#)

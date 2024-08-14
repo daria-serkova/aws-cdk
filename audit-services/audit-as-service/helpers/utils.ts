@@ -14,13 +14,12 @@ export const generateUUID = () : string => uuidv4();
 /**
  * Enumeration representing the supported system codes for systems, that can generate audit events, managed by Audit Service.
  * Each entry maps a specific application, module within it and application type to its corresponding code string.
- *
- * - `ABC_DE_WEB_APPLICATION`: Represents the code for the ABC_DE web application system.
- * - `ABC_DE_MBL_APPLICATION`: Represents the code for the ABC_DE mobile application system.
  */
 export enum SupportedInitiatorSystemCodes {
-    ABC_DE_WEB_APPLICATION = 'ABC_DE_WEB',
-    ABC_DE_MBL_APPLICATION = 'ABC_DE_MBL',
+    // Represents the code for the CRM web application system
+    CRM_WEB_APPLICATION = 'CRM_WEB',
+    // Represents the code for the CRM mobile application system.
+    CRM_MBL_APPLICATION = 'CRM_MBL',
 }
 export const SupportedInitiatorSystemCodesValues: string[] = Object.values(SupportedInitiatorSystemCodes);
 
