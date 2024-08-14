@@ -20,7 +20,7 @@ The following System Context Diagram provides a high-level overview of how the A
 ## Container Diagram
 The Container Diagram provides a detailed view of the Audit As a Service Solution's architecture at the container level. It illustrates how various components within the system interact with each other to capture, store, and analyze audit events.
 
-[TBD]
+![Containers Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/audit-services/audit-as-service/architecture/containers-view.svg)
 
 ## Architecture Highlights:
 1. **API Gateway:** Acts as the front door for all audit-related API requests, handling request validation, authorization, and routing to the appropriate backend services.
