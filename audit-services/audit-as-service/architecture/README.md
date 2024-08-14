@@ -8,7 +8,7 @@ This folder contains all the necessary information about the architecture, imple
 ## System Context Diagram
 The following System Context Diagram provides a high-level overview of how the Audit As a Service Solution interacts with external entities, including users, third-party services, and other systems within the organization.
 
-![System Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/audit-services/audit-as-service/architecture/system-context-diagram.svg)
+![System Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/audit-services/audit-as-service/architecture/system-context-diagram.png)
 
 
 **NOTES:**
