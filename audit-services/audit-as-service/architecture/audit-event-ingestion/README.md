@@ -35,6 +35,19 @@ Allowed attributes for different type of audit events also configured on the API
 
 All additional events need to be added by project team before starting to send ingestion requests to Audit Service.
 
-## Event Collection Mechanisms
+## Centralized Event Ingestion Layer
 
-## Event Transformation & Normalization
+The ingestion layer is the entry point for all audit events into the Audit as a Service solution. This layer is designed to handle large volumes of incoming data from distributed agents and other sources. Key components include:
+
+1. **API Gateways:** Secure APIs through which logging agents and other sources send their audit events. These APIs are designed to be scalable and resilient, often backed by load balancers and autoscaling groups.
+2. **Message Queues:** Events are typically placed in message queues (e.g., AWS SQS, Apache Kafka) to decouple the ingestion process from downstream processing. This helps in managing spikes in event traffic and provides fault tolerance.
+3. **Rate Limiting and Throttling:** To protect the service from being overwhelmed, rate limiting mechanisms are applied to ensure that the system remains responsive even under high loads.
+
+## Event Processing Pipeline
+
+Once events are ingested, they pass through a processing pipeline where they are enriched, validated, and categorized. This pipeline includes:
+
+1. **Validation and Filtering:** Events are validated against predefined schemas to ensure they contain the required fields and meet the format standards. Invalid or incomplete events may be discarded or flagged for further inspection.
+2. **Enrichment:** Additional contextual information, such as user metadata, geolocation data, or organizational hierarchy, is added to events to provide richer context during analysis.
+3. **Transformation:** Events may be transformed into a more suitable format for storage and analysis. For instance, JSON logs might be transformed into a columnar format for efficient querying in a data warehouse.
+4. **Routing:** Based on event type, severity, or source, events are routed to different destinations, such as databases, alerting systems, or long-term storage.
