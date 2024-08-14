@@ -58,7 +58,3 @@ In a large-scale production environment, especially one dealing with sensitive d
 2. **Compliance:** Events such as DOCUMENT_RETENTION_POLICY_APPLIED, DOCUMENT_LEGAL_HOLD_APPLIED, and DOCUMENT_AUDIT_LOG_CREATED are critical for meeting regulatory requirements and maintaining audit trails.
 Transparency: Tracking events like DOCUMENT_VIEWED, DOCUMENT_DOWNLOADED, and DOCUMENT_MODIFIED ensures that all actions on sensitive documents are visible and traceable.
 3. **Collaboration:** Events like DOCUMENT_CHECKED_OUT, DOCUMENT_WORKFLOW_STARTED, and DOCUMENT_COMMENT_ADDED support collaborative work environments by tracking document interactions.
-
-List is configured inside file `aws-cdk/audit-services/audit-as-service/helpers/utils.ts` (SupportedEventTypes)
-
-Allowed attributes for different type of audit events also configured on the API Request Model side: `aws-cdk/audit-services/audit-as-service/lib/resources/api-gateway.ts` (auditStoreEventsEndpoin -> requestModel)

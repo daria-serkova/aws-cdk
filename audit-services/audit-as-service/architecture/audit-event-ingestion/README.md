@@ -23,11 +23,15 @@ Project team will need to add their source application to the supported list bef
 
 ## Events Types
 
-This audit service supports following types of audit events out of the box. 
+This audit service supports following types of audit events out-of-the-box:
 
-1. [Use Access]()
-2. [User Account Managment]()
-3. [Documents Management]()
+1. [Use Access](https://github.com/daria-serkova/aws-cdk/tree/main/audit-services/audit-as-service/architecture/audit-event-ingestion/user-access)
+2. [User Account Managment](https://github.com/daria-serkova/aws-cdk/tree/main/audit-services/audit-as-service/architecture/audit-event-ingestion/user-account-management)
+3. [Documents Management](https://github.com/daria-serkova/aws-cdk/tree/main/audit-services/audit-as-service/architecture/audit-event-ingestion/documents-management)
+
+List is configured inside file `aws-cdk/audit-services/audit-as-service/helpers/utils.ts` (SupportedEventTypes)
+
+Allowed attributes for different type of audit events also configured on the API Request Model side: `aws-cdk/audit-services/audit-as-service/lib/resources/api-gateway.ts` (auditStoreEventsEndpoin -> requestModel)
 
 All additional events need to be added by project team before starting to send ingestion requests to Audit Service.
 
