@@ -2,7 +2,25 @@ import { Firehose } from 'aws-sdk';
 import { ResourceName } from '../lib/resource-reference';
 const firehose = new Firehose({ region: process.env.REGION });
 
-export const sendEvent = async () => {
+interface AuditEventData {
+    initiatorsystemcode: string;
+    eventtype: string;
+    requestorid: string;
+    requestorip: string;
+    timestamp: string;
+    devicetype: string;
+    devicemodel: string;
+    devicebrowsername: string;
+    deviceosname: string;
+    deviceosversion: string;
+    
+    [key: string]: any;  // To allow additional custom fields if needed
+}
+export const sendUploadEvent = async (event) => {
+
+}
+
+export const sendEvent = async (event) => {
     const record = {
         Data: JSON.stringify({
             initiatorsystemcode: "ABC_DE_WEB",
@@ -28,8 +46,8 @@ export const sendEvent = async () => {
 
     try {
         const result = await firehose.putRecord(params).promise();
-        console.log('Record added to Firehose:', result);
     } catch (err) {
         console.error('Error adding record to Firehose:', err);
     }
 }
+
