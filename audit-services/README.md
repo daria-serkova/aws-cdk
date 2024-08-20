@@ -171,9 +171,16 @@ Enhances visibility into cloud resource usage and access patterns.
 **Scenario**: E-commerce and customer-focused businesses need to audit customer data management practices to ensure data security.
 
 **Benefits**:
-- Tracks customer data access and processing.
-- Alerts for potential data breaches.
-- Detailed audit trails for customer assurance.
+1. Monitors and tracks customer data access and processing to ensure proper management and security.
+2. Provides real-time alerts for potential data breaches or unauthorized access to safeguard customer information.
+3. Generates detailed audit trails to demonstrate data security practices and enhance customer assurance.
+4. Enhances visibility into data handling practices to ensure compliance with security policies and regulations.
+5. Facilitates prompt detection and response to potential data security issues.
+6. Automates auditing processes to reduce manual oversight and increase efficiency.
+7. Supports compliance with data protection regulations and industry standards.
+8. Integrates with existing data management systems for a unified approach to customer data security.
+9. Scales with business growth to maintain consistent oversight as customer data volumes increase.
+10. Improves overall data security posture by identifying and addressing vulnerabilities.
 
 ### #12: Data Backup and Recovery Auditing
 **Scenario**: Organizations need to audit data backup and recovery processes to ensure data integrity and availability.
@@ -186,49 +193,3 @@ Enhances visibility into cloud resource usage and access patterns.
 ## Technology Stack
 
 The AWS Serverless Audit Solution is built using a variety of AWS services and serverless technologies to provide a comprehensive and efficient auditing framework:
-
-- **AWS Lambda**: Executes code in response to events, enabling real-time processing of audit data.
-- **Amazon S3**: Stores audit logs, reports, and other data securely and durably.
-- **Amazon DynamoDB**: Manages audit metadata and provides fast and scalable access to audit information.
-- **Amazon API Gateway**: Provides a RESTful API for interacting with the audit solution.
-- **AWS Step Functions**: Orchestrates complex workflows and processes for audit data.
-- **Amazon SNS**: Sends notifications and alerts based on audit events.
-- **Amazon CloudWatch**: Monitors and logs AWS resources, and triggers alarms for audit-related activities.
-- **AWS Kinesis**: Processes streaming data and logs in real-time.
-- **AWS CloudFormation & AWS CDK**: Automates deployment and management of the audit solution infrastructure.
-
-## Getting Started
-
-1. **Prerequisites**
-   - AWS Account
-   - AWS CLI configured
-   - Node.js installed
-   - AWS CDK installed
-
-2. **Deployment**
-   - Clone the repository:
-     ```sh
-     git clone https://github.com/daria-serkova/aws-cdk.git
-     cd audit-services/<business-scenario>
-     ```
-   - Install dependencies:
-     ```sh
-     npm install
-     ```
-   - Deploy the stack using CDK:
-     ```sh
-     cdk deploy
-     ```
-
-3. **Usage**
-   - Configure the solution to integrate with your systems and services.
-   - Use the APIs and dashboards to monitor and manage audit data.
-   - Set up alerts and notifications according to your needs.
-
-## Contributions
-
-Contributions are welcome! Please submit issues and pull requests for any improvements or bug fixes.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
