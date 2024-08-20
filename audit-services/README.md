@@ -25,7 +25,7 @@ The AWS Serverless Audit Solutions provide a scalable, automated, and real-time 
 ### #2: Healthcare Data Access Auditing
 **Scenario**: Healthcare providers need to audit access to electronic health records (EHRs) to comply with HIPAA (Health Insurance Portability and Accountability Act).
 
-![Scenario #2 Context Diagram](https://github.com/daria-serkova/aws-cdk/tree/main/audit-services/diagrams/scenario-2-healthcare-data-access-auditing.svg)
+![Scenario #2 Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/audit-services/diagrams/scenario-2-healthcare-data-access-auditing.svg)
 
 **Benefits**:
 - Tracks access to patient records.
