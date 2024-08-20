@@ -17,6 +17,8 @@ The AWS Serverless Audit Solutions provide a scalable, automated, and real-time 
 ### #1: Financial Services Compliance Monitoring
 **Scenario**: Banks and financial institutions must monitor and audit transactions and account activities to comply with regulations such as SOX (Sarbanes-Oxley) or AML (Anti-Money Laundering).
 
+![Scenario #1 Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/audit-services/diagrams/scenario-1-financial-data-compliance-monitoring.svg)
+
 **Benefits**:
 - Automates transaction log collection and analysis.
 - Real-time alerts for compliance breaches.

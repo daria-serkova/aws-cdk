@@ -1,0 +1,534 @@
+{
+    "configuration": {},
+    "description": "Description",
+    "documentation": {},
+    "id": 94442,
+    "lastModifiedAgent": "structurizr-cloud/dsl-editor/9e455da1-2606-41d8-8c06-d029bfed3674",
+    "lastModifiedDate": "2024-08-20T02:24:01Z",
+    "lastModifiedUser": "user@company.com",
+    "model": {
+        "people": [
+            {
+                "description": "Responsible for ensuring that financial transactions and account activities comply with regulations such as SOX and AML.",
+                "id": "1",
+                "location": "Unspecified",
+                "name": "Compliance Officer",
+                "properties": {
+                    "structurizr.dsl.identifier": "compliance_officer"
+                },
+                "relationships": [
+                    {
+                        "description": "Monitors compliance and reviews alerts",
+                        "destinationId": "7",
+                        "id": "26",
+                        "properties": {
+                            "structurizr.dsl.identifier": "1bee9b4a-fdfb-4363-bda1-1de7151186e2"
+                        },
+                        "sourceId": "1",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Person"
+            },
+            {
+                "description": "Monitors and manages risks related to financial transactions and ensures appropriate mitigation strategies.",
+                "id": "2",
+                "location": "Unspecified",
+                "name": "Risk Manager",
+                "properties": {
+                    "structurizr.dsl.identifier": "risk_manager"
+                },
+                "relationships": [
+                    {
+                        "description": "Reviews risk insights and compliance status",
+                        "destinationId": "7",
+                        "id": "25",
+                        "properties": {
+                            "structurizr.dsl.identifier": "056155fc-ef61-4ed4-a1e8-779b6cbb6402"
+                        },
+                        "sourceId": "2",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Person"
+            },
+            {
+                "description": "Analyzes transaction data to identify trends, anomalies, and potential compliance issues.",
+                "id": "3",
+                "location": "Unspecified",
+                "name": "Financial Analyst",
+                "properties": {
+                    "structurizr.dsl.identifier": "financial_analyst"
+                },
+                "relationships": [
+                    {
+                        "description": "Accesses transaction data for analysis",
+                        "destinationId": "6",
+                        "id": "12",
+                        "properties": {
+                            "structurizr.dsl.identifier": "7d3866ba-4a9c-44bc-9357-0c112a757ecb"
+                        },
+                        "sourceId": "3",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Provides input on transaction patterns and anomalies",
+                        "destinationId": "7",
+                        "id": "27",
+                        "properties": {
+                            "structurizr.dsl.identifier": "5712769c-94c4-400e-85ec-6dde93d1387b"
+                        },
+                        "sourceId": "3",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Person"
+            },
+            {
+                "description": "Manages IT infrastructure, including security configurations, access controls, and system maintenance.",
+                "id": "4",
+                "location": "Unspecified",
+                "name": "IT Administrator",
+                "properties": {
+                    "structurizr.dsl.identifier": "it_admin"
+                },
+                "relationships": [
+                    {
+                        "description": "Manages user roles and permissions",
+                        "destinationId": "9",
+                        "id": "22",
+                        "properties": {
+                            "structurizr.dsl.identifier": "f4f103a1-6636-4106-bff0-27cc18a8dde7"
+                        },
+                        "sourceId": "4",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Monitors security alerts and incidents",
+                        "destinationId": "8",
+                        "id": "23",
+                        "properties": {
+                            "structurizr.dsl.identifier": "92538083-308d-4e63-a840-7bb807724212"
+                        },
+                        "sourceId": "4",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Ensures proper configuration and security of compliance monitoring systems",
+                        "destinationId": "7",
+                        "id": "28",
+                        "properties": {
+                            "structurizr.dsl.identifier": "022e282f-54af-4b78-9970-7d3c38ac5e0b"
+                        },
+                        "sourceId": "4",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Person"
+            },
+            {
+                "description": "Conducts independent audits of financial transactions and compliance with regulations like SOX and AML.",
+                "id": "5",
+                "location": "Unspecified",
+                "name": "Auditor",
+                "properties": {
+                    "structurizr.dsl.identifier": "auditor"
+                },
+                "relationships": [
+                    {
+                        "description": "Reviews and verifies submitted compliance reports",
+                        "destinationId": "10",
+                        "id": "24",
+                        "properties": {
+                            "structurizr.dsl.identifier": "c2119777-f060-4e47-8619-890606e9f182"
+                        },
+                        "sourceId": "5",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Conducts audits and reviews compliance reports",
+                        "destinationId": "7",
+                        "id": "29",
+                        "properties": {
+                            "structurizr.dsl.identifier": "761bbe86-57b2-4283-b7f9-712fe23ffdcf"
+                        },
+                        "sourceId": "5",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Person"
+            }
+        ],
+        "softwareSystems": [
+            {
+                "description": "System where financial transactions are recorded and processed.",
+                "documentation": {},
+                "id": "6",
+                "location": "Unspecified",
+                "name": "Transaction Processing System",
+                "properties": {
+                    "structurizr.dsl.identifier": "transaction_system"
+                },
+                "relationships": [
+                    {
+                        "description": "Sends transaction logs for compliance checking",
+                        "destinationId": "7",
+                        "id": "13",
+                        "properties": {
+                            "structurizr.dsl.identifier": "4ed6d9b6-2c30-4bcb-b1fc-40e24264e6a4"
+                        },
+                        "sourceId": "6",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Software System"
+            },
+            {
+                "description": "Monitors financial transactions and account activities to ensure compliance with regulations such as SOX and AML. Includes transaction logging, real-time alerts, and compliance reporting features.",
+                "documentation": {},
+                "id": "7",
+                "location": "Unspecified",
+                "name": "Compliance Monitoring System",
+                "properties": {
+                    "structurizr.dsl.identifier": "compliance_monitoring"
+                },
+                "relationships": [
+                    {
+                        "description": "Requests additional transaction details if needed",
+                        "destinationId": "6",
+                        "id": "14",
+                        "properties": {
+                            "structurizr.dsl.identifier": "be591470-cd5e-49b2-a40f-70d38ddca766"
+                        },
+                        "sourceId": "7",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Provides compliance reports and alerts",
+                        "destinationId": "1",
+                        "id": "15",
+                        "properties": {
+                            "structurizr.dsl.identifier": "4a1a2cb0-1c1a-4671-8d8b-fb5fee51506f"
+                        },
+                        "sourceId": "7",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Provides risk-related insights and alerts",
+                        "destinationId": "2",
+                        "id": "16",
+                        "properties": {
+                            "structurizr.dsl.identifier": "15d5f17a-edc1-46c0-846e-2929322711bc"
+                        },
+                        "sourceId": "7",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Provides detailed transaction logs and compliance reports",
+                        "destinationId": "5",
+                        "id": "17",
+                        "properties": {
+                            "structurizr.dsl.identifier": "8c095f54-f4be-498b-9b41-848f694d6026"
+                        },
+                        "sourceId": "7",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Sends security-related audit logs",
+                        "destinationId": "8",
+                        "id": "18",
+                        "properties": {
+                            "structurizr.dsl.identifier": "2b253860-6778-419b-8be0-63eca4fc52b2"
+                        },
+                        "sourceId": "7",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Requests identity and access information for compliance checks",
+                        "destinationId": "9",
+                        "id": "19",
+                        "properties": {
+                            "structurizr.dsl.identifier": "95c66428-bf82-4cd1-906b-abd3cadcd538"
+                        },
+                        "sourceId": "7",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Submits compliance reports to regulatory bodies",
+                        "destinationId": "10",
+                        "id": "20",
+                        "properties": {
+                            "structurizr.dsl.identifier": "4880ad78-a6a2-4c84-8091-0b04c28ec52e"
+                        },
+                        "sourceId": "7",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Software System"
+            },
+            {
+                "description": "Aggregates and analyzes security-related data from across the organization for real-time alerts and reporting.",
+                "documentation": {},
+                "id": "8",
+                "location": "Unspecified",
+                "name": "Security Information and Event Management (SIEM) System",
+                "properties": {
+                    "structurizr.dsl.identifier": "security_info_event_mgmt"
+                },
+                "tags": "Element,Software System"
+            },
+            {
+                "description": "Manages user identities and access controls across the financial organization.",
+                "documentation": {},
+                "id": "9",
+                "location": "Unspecified",
+                "name": "Identity and Access Management (IAM) System",
+                "properties": {
+                    "structurizr.dsl.identifier": "identity_management"
+                },
+                "tags": "Element,Software System"
+            },
+            {
+                "description": "Generates and submits regulatory compliance reports to external regulatory bodies.",
+                "documentation": {},
+                "id": "10",
+                "location": "Unspecified",
+                "name": "Regulatory Reporting System",
+                "properties": {
+                    "structurizr.dsl.identifier": "regulatory_reporting"
+                },
+                "tags": "Element,Software System"
+            },
+            {
+                "description": "Monitors transaction patterns for signs of fraudulent activity and generates alerts for suspicious transactions.",
+                "documentation": {},
+                "id": "11",
+                "location": "Unspecified",
+                "name": "Fraud Detection System",
+                "properties": {
+                    "structurizr.dsl.identifier": "fraud_detection"
+                },
+                "relationships": [
+                    {
+                        "description": "Provides fraud detection alerts and data",
+                        "destinationId": "7",
+                        "id": "21",
+                        "properties": {
+                            "structurizr.dsl.identifier": "df1f6b76-b321-4e47-aeb5-7dfdcc61e607"
+                        },
+                        "sourceId": "11",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Software System"
+            }
+        ]
+    },
+    "name": "Name",
+    "properties": {
+        "structurizr.dsl": "d29ya3NwYWNlIHsKCiAgICBtb2RlbCB7CiAgICAgICAgLy8gVXNlcnMKICAgICAgICBjb21wbGlhbmNlX29mZmljZXIgPSBwZXJzb24gIkNvbXBsaWFuY2UgT2ZmaWNlciIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiUmVzcG9uc2libGUgZm9yIGVuc3VyaW5nIHRoYXQgZmluYW5jaWFsIHRyYW5zYWN0aW9ucyBhbmQgYWNjb3VudCBhY3Rpdml0aWVzIGNvbXBseSB3aXRoIHJlZ3VsYXRpb25zIHN1Y2ggYXMgU09YIGFuZCBBTUwuIgogICAgICAgIH0KCiAgICAgICAgcmlza19tYW5hZ2VyID0gcGVyc29uICJSaXNrIE1hbmFnZXIiIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIk1vbml0b3JzIGFuZCBtYW5hZ2VzIHJpc2tzIHJlbGF0ZWQgdG8gZmluYW5jaWFsIHRyYW5zYWN0aW9ucyBhbmQgZW5zdXJlcyBhcHByb3ByaWF0ZSBtaXRpZ2F0aW9uIHN0cmF0ZWdpZXMuIgogICAgICAgIH0KCiAgICAgICAgZmluYW5jaWFsX2FuYWx5c3QgPSBwZXJzb24gIkZpbmFuY2lhbCBBbmFseXN0IiB7CiAgICAgICAgICAgIGRlc2NyaXB0aW9uICJBbmFseXplcyB0cmFuc2FjdGlvbiBkYXRhIHRvIGlkZW50aWZ5IHRyZW5kcywgYW5vbWFsaWVzLCBhbmQgcG90ZW50aWFsIGNvbXBsaWFuY2UgaXNzdWVzLiIKICAgICAgICB9CgogICAgICAgIGl0X2FkbWluID0gcGVyc29uICJJVCBBZG1pbmlzdHJhdG9yIiB7CiAgICAgICAgICAgIGRlc2NyaXB0aW9uICJNYW5hZ2VzIElUIGluZnJhc3RydWN0dXJlLCBpbmNsdWRpbmcgc2VjdXJpdHkgY29uZmlndXJhdGlvbnMsIGFjY2VzcyBjb250cm9scywgYW5kIHN5c3RlbSBtYWludGVuYW5jZS4iCiAgICAgICAgfQoKICAgICAgICBhdWRpdG9yID0gcGVyc29uICJBdWRpdG9yIiB7CiAgICAgICAgICAgIGRlc2NyaXB0aW9uICJDb25kdWN0cyBpbmRlcGVuZGVudCBhdWRpdHMgb2YgZmluYW5jaWFsIHRyYW5zYWN0aW9ucyBhbmQgY29tcGxpYW5jZSB3aXRoIHJlZ3VsYXRpb25zIGxpa2UgU09YIGFuZCBBTUwuIgogICAgICAgIH0KCiAgICAgICAgLy8gSW50ZXJuYWwgU3lzdGVtcwogICAgICAgIHRyYW5zYWN0aW9uX3N5c3RlbSA9IHNvZnR3YXJlU3lzdGVtICJUcmFuc2FjdGlvbiBQcm9jZXNzaW5nIFN5c3RlbSIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiU3lzdGVtIHdoZXJlIGZpbmFuY2lhbCB0cmFuc2FjdGlvbnMgYXJlIHJlY29yZGVkIGFuZCBwcm9jZXNzZWQuIgogICAgICAgIH0KCiAgICAgICAgY29tcGxpYW5jZV9tb25pdG9yaW5nID0gc29mdHdhcmVTeXN0ZW0gIkNvbXBsaWFuY2UgTW9uaXRvcmluZyBTeXN0ZW0iIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIk1vbml0b3JzIGZpbmFuY2lhbCB0cmFuc2FjdGlvbnMgYW5kIGFjY291bnQgYWN0aXZpdGllcyB0byBlbnN1cmUgY29tcGxpYW5jZSB3aXRoIHJlZ3VsYXRpb25zIHN1Y2ggYXMgU09YIGFuZCBBTUwuIEluY2x1ZGVzIHRyYW5zYWN0aW9uIGxvZ2dpbmcsIHJlYWwtdGltZSBhbGVydHMsIGFuZCBjb21wbGlhbmNlIHJlcG9ydGluZyBmZWF0dXJlcy4iCiAgICAgICAgfQoKICAgICAgICBzZWN1cml0eV9pbmZvX2V2ZW50X21nbXQgPSBzb2Z0d2FyZVN5c3RlbSAiU2VjdXJpdHkgSW5mb3JtYXRpb24gYW5kIEV2ZW50IE1hbmFnZW1lbnQgKFNJRU0pIFN5c3RlbSIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiQWdncmVnYXRlcyBhbmQgYW5hbHl6ZXMgc2VjdXJpdHktcmVsYXRlZCBkYXRhIGZyb20gYWNyb3NzIHRoZSBvcmdhbml6YXRpb24gZm9yIHJlYWwtdGltZSBhbGVydHMgYW5kIHJlcG9ydGluZy4iCiAgICAgICAgfQoKICAgICAgICBpZGVudGl0eV9tYW5hZ2VtZW50ID0gc29mdHdhcmVTeXN0ZW0gIklkZW50aXR5IGFuZCBBY2Nlc3MgTWFuYWdlbWVudCAoSUFNKSBTeXN0ZW0iIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIk1hbmFnZXMgdXNlciBpZGVudGl0aWVzIGFuZCBhY2Nlc3MgY29udHJvbHMgYWNyb3NzIHRoZSBmaW5hbmNpYWwgb3JnYW5pemF0aW9uLiIKICAgICAgICB9CgogICAgICAgIHJlZ3VsYXRvcnlfcmVwb3J0aW5nID0gc29mdHdhcmVTeXN0ZW0gIlJlZ3VsYXRvcnkgUmVwb3J0aW5nIFN5c3RlbSIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiR2VuZXJhdGVzIGFuZCBzdWJtaXRzIHJlZ3VsYXRvcnkgY29tcGxpYW5jZSByZXBvcnRzIHRvIGV4dGVybmFsIHJlZ3VsYXRvcnkgYm9kaWVzLiIKICAgICAgICB9CgogICAgICAgIGZyYXVkX2RldGVjdGlvbiA9IHNvZnR3YXJlU3lzdGVtICJGcmF1ZCBEZXRlY3Rpb24gU3lzdGVtIiB7CiAgICAgICAgICAgIGRlc2NyaXB0aW9uICJNb25pdG9ycyB0cmFuc2FjdGlvbiBwYXR0ZXJucyBmb3Igc2lnbnMgb2YgZnJhdWR1bGVudCBhY3Rpdml0eSBhbmQgZ2VuZXJhdGVzIGFsZXJ0cyBmb3Igc3VzcGljaW91cyB0cmFuc2FjdGlvbnMuIgogICAgICAgIH0KCiAgICAgICAgLy8gUmVsYXRpb25zaGlwcwogICAgICAgIGZpbmFuY2lhbF9hbmFseXN0IC0+IHRyYW5zYWN0aW9uX3N5c3RlbSAiQWNjZXNzZXMgdHJhbnNhY3Rpb24gZGF0YSBmb3IgYW5hbHlzaXMiCiAgICAgICAgdHJhbnNhY3Rpb25fc3lzdGVtIC0+IGNvbXBsaWFuY2VfbW9uaXRvcmluZyAiU2VuZHMgdHJhbnNhY3Rpb24gbG9ncyBmb3IgY29tcGxpYW5jZSBjaGVja2luZyIKICAgICAgICBjb21wbGlhbmNlX21vbml0b3JpbmcgLT4gdHJhbnNhY3Rpb25fc3lzdGVtICJSZXF1ZXN0cyBhZGRpdGlvbmFsIHRyYW5zYWN0aW9uIGRldGFpbHMgaWYgbmVlZGVkIgogICAgICAgIGNvbXBsaWFuY2VfbW9uaXRvcmluZyAtPiBjb21wbGlhbmNlX29mZmljZXIgIlByb3ZpZGVzIGNvbXBsaWFuY2UgcmVwb3J0cyBhbmQgYWxlcnRzIgogICAgICAgIGNvbXBsaWFuY2VfbW9uaXRvcmluZyAtPiByaXNrX21hbmFnZXIgIlByb3ZpZGVzIHJpc2stcmVsYXRlZCBpbnNpZ2h0cyBhbmQgYWxlcnRzIgogICAgICAgIGNvbXBsaWFuY2VfbW9uaXRvcmluZyAtPiBhdWRpdG9yICJQcm92aWRlcyBkZXRhaWxlZCB0cmFuc2FjdGlvbiBsb2dzIGFuZCBjb21wbGlhbmNlIHJlcG9ydHMiCiAgICAgICAgY29tcGxpYW5jZV9tb25pdG9yaW5nIC0+IHNlY3VyaXR5X2luZm9fZXZlbnRfbWdtdCAiU2VuZHMgc2VjdXJpdHktcmVsYXRlZCBhdWRpdCBsb2dzIgogICAgICAgIGNvbXBsaWFuY2VfbW9uaXRvcmluZyAtPiBpZGVudGl0eV9tYW5hZ2VtZW50ICJSZXF1ZXN0cyBpZGVudGl0eSBhbmQgYWNjZXNzIGluZm9ybWF0aW9uIGZvciBjb21wbGlhbmNlIGNoZWNrcyIKICAgICAgICBjb21wbGlhbmNlX21vbml0b3JpbmcgLT4gcmVndWxhdG9yeV9yZXBvcnRpbmcgIlN1Ym1pdHMgY29tcGxpYW5jZSByZXBvcnRzIHRvIHJlZ3VsYXRvcnkgYm9kaWVzIgogICAgICAgIGZyYXVkX2RldGVjdGlvbiAtPiBjb21wbGlhbmNlX21vbml0b3JpbmcgIlByb3ZpZGVzIGZyYXVkIGRldGVjdGlvbiBhbGVydHMgYW5kIGRhdGEiCiAgICAgICAgaXRfYWRtaW4gLT4gaWRlbnRpdHlfbWFuYWdlbWVudCAiTWFuYWdlcyB1c2VyIHJvbGVzIGFuZCBwZXJtaXNzaW9ucyIKICAgICAgICBpdF9hZG1pbiAtPiBzZWN1cml0eV9pbmZvX2V2ZW50X21nbXQgIk1vbml0b3JzIHNlY3VyaXR5IGFsZXJ0cyBhbmQgaW5jaWRlbnRzIgogICAgICAgIGF1ZGl0b3IgLT4gcmVndWxhdG9yeV9yZXBvcnRpbmcgIlJldmlld3MgYW5kIHZlcmlmaWVzIHN1Ym1pdHRlZCBjb21wbGlhbmNlIHJlcG9ydHMiCiAgICAgICAgcmlza19tYW5hZ2VyIC0+IGNvbXBsaWFuY2VfbW9uaXRvcmluZyAiUmV2aWV3cyByaXNrIGluc2lnaHRzIGFuZCBjb21wbGlhbmNlIHN0YXR1cyIKCiAgICAgICAgY29tcGxpYW5jZV9vZmZpY2VyIC0+IGNvbXBsaWFuY2VfbW9uaXRvcmluZyAiTW9uaXRvcnMgY29tcGxpYW5jZSBhbmQgcmV2aWV3cyBhbGVydHMiCiAgICAgICAgZmluYW5jaWFsX2FuYWx5c3QgLT4gY29tcGxpYW5jZV9tb25pdG9yaW5nICJQcm92aWRlcyBpbnB1dCBvbiB0cmFuc2FjdGlvbiBwYXR0ZXJucyBhbmQgYW5vbWFsaWVzIgogICAgICAgIGl0X2FkbWluIC0+IGNvbXBsaWFuY2VfbW9uaXRvcmluZyAiRW5zdXJlcyBwcm9wZXIgY29uZmlndXJhdGlvbiBhbmQgc2VjdXJpdHkgb2YgY29tcGxpYW5jZSBtb25pdG9yaW5nIHN5c3RlbXMiCiAgICAgICAgYXVkaXRvciAtPiBjb21wbGlhbmNlX21vbml0b3JpbmcgIkNvbmR1Y3RzIGF1ZGl0cyBhbmQgcmV2aWV3cyBjb21wbGlhbmNlIHJlcG9ydHMiCiAgICB9CgogICAgdmlld3MgewogICAgICAgIHN5c3RlbUNvbnRleHQgY29tcGxpYW5jZV9tb25pdG9yaW5nIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgfQoKICAgICAgICB0aGVtZSBkZWZhdWx0CiAgICB9Cn0K"
+    },
+    "revision": 7,
+    "views": {
+        "configuration": {
+            "branding": {},
+            "lastSavedView": "SystemContext-001",
+            "metadataSymbols": "SquareBrackets",
+            "styles": {},
+            "terminology": {},
+            "themes": [
+                "https://static.structurizr.com/themes/default/theme.json"
+            ]
+        },
+        "systemContextViews": [
+            {
+                "dimensions": {
+                    "height": 2500,
+                    "width": 4459
+                },
+                "elements": [
+                    {
+                        "id": "1",
+                        "x": 550,
+                        "y": 115
+                    },
+                    {
+                        "id": "2",
+                        "x": 175,
+                        "y": 600
+                    },
+                    {
+                        "id": "3",
+                        "x": 1710,
+                        "y": 1615
+                    },
+                    {
+                        "id": "4",
+                        "x": 2975,
+                        "y": 450
+                    },
+                    {
+                        "id": "5",
+                        "x": 205,
+                        "y": 1215
+                    },
+                    {
+                        "id": "6",
+                        "x": 2610,
+                        "y": 1645
+                    },
+                    {
+                        "id": "7",
+                        "x": 1621,
+                        "y": 800
+                    },
+                    {
+                        "id": "8",
+                        "x": 2925,
+                        "y": 1155
+                    },
+                    {
+                        "id": "9",
+                        "x": 2235,
+                        "y": 125
+                    },
+                    {
+                        "id": "10",
+                        "x": 1025,
+                        "y": 1695
+                    },
+                    {
+                        "id": "11",
+                        "x": 1585,
+                        "y": 120
+                    }
+                ],
+                "enterpriseBoundaryVisible": true,
+                "generatedKey": true,
+                "key": "SystemContext-001",
+                "order": 1,
+                "relationships": [
+                    {
+                        "id": "12"
+                    },
+                    {
+                        "id": "13",
+                        "vertices": [
+                            {
+                                "x": 2290,
+                                "y": 1300
+                            }
+                        ]
+                    },
+                    {
+                        "id": "14",
+                        "vertices": [
+                            {
+                                "x": 2250,
+                                "y": 1620
+                            }
+                        ]
+                    },
+                    {
+                        "id": "15",
+                        "vertices": [
+                            {
+                                "x": 1490,
+                                "y": 480
+                            }
+                        ]
+                    },
+                    {
+                        "id": "16",
+                        "vertices": [
+                            {
+                                "x": 950,
+                                "y": 800
+                            }
+                        ]
+                    },
+                    {
+                        "id": "17",
+                        "vertices": [
+                            {
+                                "x": 1395,
+                                "y": 1165
+                            }
+                        ]
+                    },
+                    {
+                        "id": "18",
+                        "vertices": [
+                            {
+                                "x": 2605,
+                                "y": 1145
+                            },
+                            {
+                                "x": 2744,
+                                "y": 1185
+                            }
+                        ]
+                    },
+                    {
+                        "id": "19",
+                        "vertices": [
+                            {
+                                "x": 2170,
+                                "y": 610
+                            }
+                        ]
+                    },
+                    {
+                        "id": "20"
+                    },
+                    {
+                        "id": "21"
+                    },
+                    {
+                        "id": "22"
+                    },
+                    {
+                        "id": "23"
+                    },
+                    {
+                        "id": "24"
+                    },
+                    {
+                        "id": "25",
+                        "vertices": [
+                            {
+                                "x": 1015,
+                                "y": 1010
+                            }
+                        ]
+                    },
+                    {
+                        "id": "26",
+                        "vertices": [
+                            {
+                                "x": 1230,
+                                "y": 705
+                            }
+                        ]
+                    },
+                    {
+                        "id": "27"
+                    },
+                    {
+                        "id": "28"
+                    },
+                    {
+                        "id": "29",
+                        "vertices": [
+                            {
+                                "x": 1185,
+                                "y": 1495
+                            }
+                        ]
+                    }
+                ],
+                "softwareSystemId": "7"
+            }
+        ]
+    }
+}
