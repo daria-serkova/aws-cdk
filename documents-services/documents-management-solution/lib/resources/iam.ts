@@ -1,6 +1,7 @@
-import { AnyPrincipal, Effect, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { AnyPrincipal, Effect, Policy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { Construct } from "constructs";
+import { ResourceName } from "../resource-reference";
 
 export const createLambdaRole = (scope: Construct, name: string) => {
     return new Role(scope, name, {
@@ -20,6 +21,24 @@ export const addS3WritePolicy = (role: Role, bucketName: string) => {
         ],
     }));
 }
+export const addAuditDataStreamWritePermissions = (role: Role) => {
+    const policyName = `${ResourceName.auditDataStream}-write-policy`;
+    const policy = new Policy(role.stack, policyName, {
+        policyName: policyName,
+        statements: [
+            new PolicyStatement({
+                actions: [
+                    'firehose:PutRecord',
+                ],
+                resources: [
+                    `arn:aws:firehose:${process.env.AWS_REGION}:${process.env.AWS_ACCOUNT}:deliverystream/${ResourceName.auditDataStream}`, 
+                ],
+            }),
+        ],
+    });
+    role.attachInlinePolicy(policy);
+}
+
 export const addS3ReadPolicy = (role: Role, bucketName: string) => {
     role.addToPolicy(new PolicyStatement({
         actions: [

@@ -9,7 +9,8 @@ import {
     addS3WritePolicy,
     addDynamoDbReadPolicy,
     addS3ReadPolicy,
-    addDynamoDbIndexReadPolicy
+    addDynamoDbIndexReadPolicy,
+    addAuditDataStreamWritePermissions
 } from './iam';
 import { metadataTables, ResourceName, verificationTables } from '../resource-reference';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
@@ -90,6 +91,9 @@ const configureLambdaS3UploadListener = (scope: Construct, logGroup: LogGroup): 
     const iamRole = createLambdaRole(scope, ResourceName.iam.DOCUMENT_S3_UPLOAD_LISTENER);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     addS3ReadPolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
+    addAuditDataStreamWritePermissions(iamRole);
+
+
     let tables = metadataTables();
     tables.forEach((tableName) => {
         let name = tableName.replace('$2', '');

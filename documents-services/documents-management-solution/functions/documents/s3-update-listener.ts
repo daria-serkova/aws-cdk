@@ -2,9 +2,13 @@ import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { marshall } from "@aws-sdk/util-dynamodb";
 import { determineDocumentStatus, EventCodes, getAuditEvent, getDocumentTableNamePatternByType, resolveTableName } from "../helpers/utilities";
+import { sendEvent } from "../../helpers/audit";
+
+
 
 const s3Client = new S3Client({ region: process.env.REGION });
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
+
 const tableTypes = {
     metadata: 'metadata',
     audit: 'audit'
@@ -95,8 +99,7 @@ export const handler = async (event: any): Promise<any> => {
                 metadata.uploadinitiatedbysystemcode,
                 eventIp
             );
-            table = resolveTableName(documentType, tableTypes.audit);
-            await dynamoDb.send(new PutItemCommand({ TableName: table, Item: marshall(auditEvent) }));
+            await sendEvent();
 
         } catch (error) {
             console.error(`Failed to save data to DynamoDB`, error);

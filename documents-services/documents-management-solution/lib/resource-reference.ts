@@ -24,6 +24,7 @@ function resourceName(value: string) {
  * File is used for exporting resource names to be passed between AWS resource definitions during creation.
  */
 export const ResourceName = {
+    auditDataStream: 'ABC-AAAS-C-development-audit-events-firehose-stream',
     cloudWatch: {
         DOCUMENT_OPERATIONS_LOGS_GROUP: resourceName('document-operations-log-group'),
         DOCUMENT_WORKFLOW_LOGS_GROUP: resourceName('document-workflow-log-group'),
