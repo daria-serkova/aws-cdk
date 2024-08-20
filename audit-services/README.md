@@ -197,6 +197,9 @@ Enhances visibility into cloud resource usage and access patterns.
 9. Scales with organizational data growth to maintain consistent monitoring of backup and recovery processes.
 10. Improves overall data protection strategy by identifying and addressing potential weaknesses.
 
-## Technology Stack
+## Summary
+This repository focuses on implementing Cloud Serverless Audit Solutions using the AWS technology stack. It provides a detailed architecture and code examples tailored for AWS services, enabling scalable, automated, and real-time auditing across various business scenarios.
 
-The AWS Serverless Audit Solution is built using a variety of AWS services and serverless technologies to provide a comprehensive and efficient auditing framework:
+However, the principles and methodologies outlined here are broadly applicable and can be replicated using similar technologies available in other cloud platforms such as Google Cloud Platform (GCP) and Microsoft Azure. Each cloud provider offers equivalent services that can be used to achieve similar auditing and monitoring capabilities. For those using GCP or Azure, you can adapt the architecture by leveraging their respective serverless technologies and services to implement a comparable solution.
+
+This approach ensures flexibility and adaptability, allowing organizations to choose the cloud provider that best fits their needs while maintaining robust auditing and compliance capabilities.
