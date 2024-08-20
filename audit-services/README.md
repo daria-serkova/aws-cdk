@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Cloud Serverless Audit Solutions provide a scalable, automated, and real-time auditing framework designed to monitor, analyze, and report on various activities across an organization’s digital infrastructure. By leveraging AWS serverless technologies, this solution minimizes operational overhead while ensuring comprehensive coverage for security, compliance, and operational efficiency. It is adaptable to diverse business needs and can be tailored to fit various industry requirements.
+The Cloud Serverless Audit Solutions offer a scalable, automated, and real-time framework designed to monitor, analyze, and report on activities across an organization’s digital infrastructure. This solution minimizes operational overhead while ensuring comprehensive coverage for security, compliance, and operational efficiency. It is adaptable to diverse business needs and can be customized to meet various industry requirements.
 
 ## Benefits
 
