@@ -1,0 +1,389 @@
+{
+    "configuration": {},
+    "description": "Description",
+    "documentation": {},
+    "id": 94442,
+    "lastModifiedAgent": "structurizr-cloud/dsl-editor/0eedf01c-ca8e-4980-bfce-9c33004ce5df",
+    "lastModifiedDate": "2024-08-20T02:06:07Z",
+    "lastModifiedUser": "daria.serkova@gmail.com",
+    "model": {
+        "people": [
+            {
+                "description": "Responsible for ensuring that access to electronic health records (EHRs) complies with HIPAA regulations.",
+                "id": "1",
+                "location": "Unspecified",
+                "name": "Compliance Officer",
+                "properties": {
+                    "structurizr.dsl.identifier": "compliance_officer"
+                },
+                "relationships": [
+                    {
+                        "description": "Monitors access logs and ensures HIPAA compliance",
+                        "destinationId": "6",
+                        "id": "19",
+                        "properties": {
+                            "structurizr.dsl.identifier": "1105d6ec-6a38-48ed-9f2b-5c364027f391"
+                        },
+                        "sourceId": "1",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Person"
+            },
+            {
+                "description": "Manages the infrastructure and ensures secure access to the EHR system.",
+                "id": "2",
+                "location": "Unspecified",
+                "name": "IT Administrator",
+                "properties": {
+                    "structurizr.dsl.identifier": "it_admin"
+                },
+                "relationships": [
+                    {
+                        "description": "Manages user roles and permissions",
+                        "destinationId": "8",
+                        "id": "20",
+                        "properties": {
+                            "structurizr.dsl.identifier": "456b38a6-42cc-477f-a312-1b4ca005f1d4"
+                        },
+                        "sourceId": "2",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Person"
+            },
+            {
+                "description": "Doctors, nurses, and other medical staff who access EHRs to provide patient care.",
+                "id": "3",
+                "location": "Unspecified",
+                "name": "Healthcare Provider",
+                "properties": {
+                    "structurizr.dsl.identifier": "healthcare_provider"
+                },
+                "relationships": [
+                    {
+                        "description": "Accesses patient records",
+                        "destinationId": "5",
+                        "id": "10",
+                        "properties": {
+                            "structurizr.dsl.identifier": "d60bcb61-b4b9-442b-a533-8e8c032c6875"
+                        },
+                        "sourceId": "3",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Person"
+            },
+            {
+                "description": "Performs audits on behalf of regulatory bodies to ensure compliance with HIPAA and other regulations.",
+                "id": "4",
+                "location": "Unspecified",
+                "name": "External Auditor",
+                "properties": {
+                    "structurizr.dsl.identifier": "auditor"
+                },
+                "tags": "Element,Person"
+            }
+        ],
+        "softwareSystems": [
+            {
+                "description": "System where patient health records are stored and accessed by healthcare providers.",
+                "documentation": {},
+                "id": "5",
+                "location": "Unspecified",
+                "name": "Electronic Health Records (EHR) System",
+                "properties": {
+                    "structurizr.dsl.identifier": "ehr_system"
+                },
+                "relationships": [
+                    {
+                        "description": "Sends access logs for auditing",
+                        "destinationId": "6",
+                        "id": "11",
+                        "properties": {
+                            "structurizr.dsl.identifier": "24e95921-fcd5-4a6b-90b4-cd4c70683ae1"
+                        },
+                        "sourceId": "5",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Software System"
+            },
+            {
+                "description": "Monitors and audits access to electronic health records (EHRs) to ensure compliance with HIPAA regulations. Includes access monitoring and compliance checking features.",
+                "documentation": {},
+                "id": "6",
+                "location": "Unspecified",
+                "name": "Healthcare Data Access Auditing System",
+                "properties": {
+                    "structurizr.dsl.identifier": "audit_solution"
+                },
+                "relationships": [
+                    {
+                        "description": "Requests additional data if necessary for compliance checks",
+                        "destinationId": "5",
+                        "id": "12",
+                        "properties": {
+                            "structurizr.dsl.identifier": "eb73cc70-923d-4672-a9f6-0b4e535caf59"
+                        },
+                        "sourceId": "6",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Provides compliance reports and alerts",
+                        "destinationId": "1",
+                        "id": "13",
+                        "properties": {
+                            "structurizr.dsl.identifier": "0e89b9a7-1edf-478f-be64-17ec67b0c508"
+                        },
+                        "sourceId": "6",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Notifies about potential security or compliance issues",
+                        "destinationId": "2",
+                        "id": "14",
+                        "properties": {
+                            "structurizr.dsl.identifier": "fc28a10c-a76f-4fa3-8eef-cc36c1d258e5"
+                        },
+                        "sourceId": "6",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Provides detailed audit trails and reports",
+                        "destinationId": "4",
+                        "id": "15",
+                        "properties": {
+                            "structurizr.dsl.identifier": "437479a3-8657-4913-8bf8-04a0c2d04e69"
+                        },
+                        "sourceId": "6",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Sends security-related audit logs",
+                        "destinationId": "7",
+                        "id": "16",
+                        "properties": {
+                            "structurizr.dsl.identifier": "b9c6c52e-5251-481d-bb93-af4a1f6a7c97"
+                        },
+                        "sourceId": "6",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Requests identity and access information",
+                        "destinationId": "8",
+                        "id": "17",
+                        "properties": {
+                            "structurizr.dsl.identifier": "5083532e-1286-4650-b971-7c3246672ada"
+                        },
+                        "sourceId": "6",
+                        "tags": "Relationship"
+                    },
+                    {
+                        "description": "Submits regulatory compliance reports",
+                        "destinationId": "9",
+                        "id": "18",
+                        "properties": {
+                            "structurizr.dsl.identifier": "7569873e-d2e3-4896-89ef-0a98d7fbd206"
+                        },
+                        "sourceId": "6",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Software System"
+            },
+            {
+                "description": "Aggregates security-related data from across the organization for real-time analysis and reporting.",
+                "documentation": {},
+                "id": "7",
+                "location": "Unspecified",
+                "name": "Security Information and Event Management (SIEM) System",
+                "properties": {
+                    "structurizr.dsl.identifier": "security_info_event_mgmt"
+                },
+                "tags": "Element,Software System"
+            },
+            {
+                "description": "Manages user identities and access controls across the healthcare organization.",
+                "documentation": {},
+                "id": "8",
+                "location": "Unspecified",
+                "name": "Identity and Access Management (IAM) System",
+                "properties": {
+                    "structurizr.dsl.identifier": "identity_management"
+                },
+                "tags": "Element,Software System"
+            },
+            {
+                "description": "External service for submitting compliance reports to regulatory bodies.",
+                "documentation": {},
+                "id": "9",
+                "location": "Unspecified",
+                "name": "External Compliance Reporting System",
+                "properties": {
+                    "structurizr.dsl.identifier": "external_compliance_reporting"
+                },
+                "relationships": [
+                    {
+                        "description": "Submits compliance data for review",
+                        "destinationId": "4",
+                        "id": "21",
+                        "properties": {
+                            "structurizr.dsl.identifier": "26a21c8f-6962-4bc2-bd45-4872c2eeb80f"
+                        },
+                        "sourceId": "9",
+                        "tags": "Relationship"
+                    }
+                ],
+                "tags": "Element,Software System"
+            }
+        ]
+    },
+    "name": "Name",
+    "properties": {
+        "structurizr.dsl": "d29ya3NwYWNlIHsKCiAgICBtb2RlbCB7CiAgICAgICAgLy8gVXNlcnMKICAgICAgICBjb21wbGlhbmNlX29mZmljZXIgPSBwZXJzb24gIkNvbXBsaWFuY2UgT2ZmaWNlciIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiUmVzcG9uc2libGUgZm9yIGVuc3VyaW5nIHRoYXQgYWNjZXNzIHRvIGVsZWN0cm9uaWMgaGVhbHRoIHJlY29yZHMgKEVIUnMpIGNvbXBsaWVzIHdpdGggSElQQUEgcmVndWxhdGlvbnMuIgogICAgICAgIH0KCiAgICAgICAgaXRfYWRtaW4gPSBwZXJzb24gIklUIEFkbWluaXN0cmF0b3IiIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIk1hbmFnZXMgdGhlIGluZnJhc3RydWN0dXJlIGFuZCBlbnN1cmVzIHNlY3VyZSBhY2Nlc3MgdG8gdGhlIEVIUiBzeXN0ZW0uIgogICAgICAgIH0KCiAgICAgICAgaGVhbHRoY2FyZV9wcm92aWRlciA9IHBlcnNvbiAiSGVhbHRoY2FyZSBQcm92aWRlciIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiRG9jdG9ycywgbnVyc2VzLCBhbmQgb3RoZXIgbWVkaWNhbCBzdGFmZiB3aG8gYWNjZXNzIEVIUnMgdG8gcHJvdmlkZSBwYXRpZW50IGNhcmUuIgogICAgICAgIH0KCiAgICAgICAgYXVkaXRvciA9IHBlcnNvbiAiRXh0ZXJuYWwgQXVkaXRvciIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiUGVyZm9ybXMgYXVkaXRzIG9uIGJlaGFsZiBvZiByZWd1bGF0b3J5IGJvZGllcyB0byBlbnN1cmUgY29tcGxpYW5jZSB3aXRoIEhJUEFBIGFuZCBvdGhlciByZWd1bGF0aW9ucy4iCiAgICAgICAgfQoKICAgICAgICAvLyBJbnRlcm5hbCBTeXN0ZW1zCiAgICAgICAgZWhyX3N5c3RlbSA9IHNvZnR3YXJlU3lzdGVtICJFbGVjdHJvbmljIEhlYWx0aCBSZWNvcmRzIChFSFIpIFN5c3RlbSIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiU3lzdGVtIHdoZXJlIHBhdGllbnQgaGVhbHRoIHJlY29yZHMgYXJlIHN0b3JlZCBhbmQgYWNjZXNzZWQgYnkgaGVhbHRoY2FyZSBwcm92aWRlcnMuIgogICAgICAgIH0KCiAgICAgICAgYXVkaXRfc29sdXRpb24gPSBzb2Z0d2FyZVN5c3RlbSAiSGVhbHRoY2FyZSBEYXRhIEFjY2VzcyBBdWRpdGluZyBTeXN0ZW0iIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIk1vbml0b3JzIGFuZCBhdWRpdHMgYWNjZXNzIHRvIGVsZWN0cm9uaWMgaGVhbHRoIHJlY29yZHMgKEVIUnMpIHRvIGVuc3VyZSBjb21wbGlhbmNlIHdpdGggSElQQUEgcmVndWxhdGlvbnMuIEluY2x1ZGVzIGFjY2VzcyBtb25pdG9yaW5nIGFuZCBjb21wbGlhbmNlIGNoZWNraW5nIGZlYXR1cmVzLiIKICAgICAgICB9CgogICAgICAgIHNlY3VyaXR5X2luZm9fZXZlbnRfbWdtdCA9IHNvZnR3YXJlU3lzdGVtICJTZWN1cml0eSBJbmZvcm1hdGlvbiBhbmQgRXZlbnQgTWFuYWdlbWVudCAoU0lFTSkgU3lzdGVtIiB7CiAgICAgICAgICAgIGRlc2NyaXB0aW9uICJBZ2dyZWdhdGVzIHNlY3VyaXR5LXJlbGF0ZWQgZGF0YSBmcm9tIGFjcm9zcyB0aGUgb3JnYW5pemF0aW9uIGZvciByZWFsLXRpbWUgYW5hbHlzaXMgYW5kIHJlcG9ydGluZy4iCiAgICAgICAgfQoKICAgICAgICBpZGVudGl0eV9tYW5hZ2VtZW50ID0gc29mdHdhcmVTeXN0ZW0gIklkZW50aXR5IGFuZCBBY2Nlc3MgTWFuYWdlbWVudCAoSUFNKSBTeXN0ZW0iIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIk1hbmFnZXMgdXNlciBpZGVudGl0aWVzIGFuZCBhY2Nlc3MgY29udHJvbHMgYWNyb3NzIHRoZSBoZWFsdGhjYXJlIG9yZ2FuaXphdGlvbi4iCiAgICAgICAgfQoKICAgICAgICBleHRlcm5hbF9jb21wbGlhbmNlX3JlcG9ydGluZyA9IHNvZnR3YXJlU3lzdGVtICJFeHRlcm5hbCBDb21wbGlhbmNlIFJlcG9ydGluZyBTeXN0ZW0iIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIkV4dGVybmFsIHNlcnZpY2UgZm9yIHN1Ym1pdHRpbmcgY29tcGxpYW5jZSByZXBvcnRzIHRvIHJlZ3VsYXRvcnkgYm9kaWVzLiIKICAgICAgICB9CgogICAgICAgIC8vIFJlbGF0aW9uc2hpcHMKICAgICAgICBoZWFsdGhjYXJlX3Byb3ZpZGVyIC0+IGVocl9zeXN0ZW0gIkFjY2Vzc2VzIHBhdGllbnQgcmVjb3JkcyIKICAgICAgICBlaHJfc3lzdGVtIC0+IGF1ZGl0X3NvbHV0aW9uICJTZW5kcyBhY2Nlc3MgbG9ncyBmb3IgYXVkaXRpbmciCiAgICAgICAgYXVkaXRfc29sdXRpb24gLT4gZWhyX3N5c3RlbSAiUmVxdWVzdHMgYWRkaXRpb25hbCBkYXRhIGlmIG5lY2Vzc2FyeSBmb3IgY29tcGxpYW5jZSBjaGVja3MiCiAgICAgICAgYXVkaXRfc29sdXRpb24gLT4gY29tcGxpYW5jZV9vZmZpY2VyICJQcm92aWRlcyBjb21wbGlhbmNlIHJlcG9ydHMgYW5kIGFsZXJ0cyIKICAgICAgICBhdWRpdF9zb2x1dGlvbiAtPiBpdF9hZG1pbiAiTm90aWZpZXMgYWJvdXQgcG90ZW50aWFsIHNlY3VyaXR5IG9yIGNvbXBsaWFuY2UgaXNzdWVzIgogICAgICAgIGF1ZGl0X3NvbHV0aW9uIC0+IGF1ZGl0b3IgIlByb3ZpZGVzIGRldGFpbGVkIGF1ZGl0IHRyYWlscyBhbmQgcmVwb3J0cyIKICAgICAgICBhdWRpdF9zb2x1dGlvbiAtPiBzZWN1cml0eV9pbmZvX2V2ZW50X21nbXQgIlNlbmRzIHNlY3VyaXR5LXJlbGF0ZWQgYXVkaXQgbG9ncyIKICAgICAgICBhdWRpdF9zb2x1dGlvbiAtPiBpZGVudGl0eV9tYW5hZ2VtZW50ICJSZXF1ZXN0cyBpZGVudGl0eSBhbmQgYWNjZXNzIGluZm9ybWF0aW9uIgogICAgICAgIGF1ZGl0X3NvbHV0aW9uIC0+IGV4dGVybmFsX2NvbXBsaWFuY2VfcmVwb3J0aW5nICJTdWJtaXRzIHJlZ3VsYXRvcnkgY29tcGxpYW5jZSByZXBvcnRzIgoKICAgICAgICBjb21wbGlhbmNlX29mZmljZXIgLT4gYXVkaXRfc29sdXRpb24gIk1vbml0b3JzIGFjY2VzcyBsb2dzIGFuZCBlbnN1cmVzIEhJUEFBIGNvbXBsaWFuY2UiCiAgICAgICAgaXRfYWRtaW4gLT4gaWRlbnRpdHlfbWFuYWdlbWVudCAiTWFuYWdlcyB1c2VyIHJvbGVzIGFuZCBwZXJtaXNzaW9ucyIKICAgICAgICBleHRlcm5hbF9jb21wbGlhbmNlX3JlcG9ydGluZyAtPiBhdWRpdG9yICJTdWJtaXRzIGNvbXBsaWFuY2UgZGF0YSBmb3IgcmV2aWV3IgogICAgfQoKICAgIHZpZXdzIHsKICAgICAgICBzeXN0ZW1Db250ZXh0IGF1ZGl0X3NvbHV0aW9uIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgfQoKICAgICAgICB0aGVtZSBkZWZhdWx0CiAgICB9Cn0K"
+    },
+    "revision": 5,
+    "views": {
+        "configuration": {
+            "branding": {},
+            "lastSavedView": "SystemContext-001",
+            "metadataSymbols": "SquareBrackets",
+            "styles": {},
+            "terminology": {},
+            "themes": [
+                "https://static.structurizr.com/themes/default/theme.json"
+            ]
+        },
+        "systemContextViews": [
+            {
+                "dimensions": {
+                    "height": 2216,
+                    "width": 4033
+                },
+                "elements": [
+                    {
+                        "id": "1",
+                        "x": 1816,
+                        "y": 170
+                    },
+                    {
+                        "id": "2",
+                        "x": 891,
+                        "y": 180
+                    },
+                    {
+                        "id": "4",
+                        "x": 2676,
+                        "y": 180
+                    },
+                    {
+                        "id": "5",
+                        "x": 1820,
+                        "y": 1750
+                    },
+                    {
+                        "id": "6",
+                        "x": 1831,
+                        "y": 1120
+                    },
+                    {
+                        "id": "7",
+                        "x": 2690,
+                        "y": 1725
+                    },
+                    {
+                        "id": "8",
+                        "x": 881,
+                        "y": 1160
+                    },
+                    {
+                        "id": "9",
+                        "x": 2660,
+                        "y": 1110
+                    }
+                ],
+                "enterpriseBoundaryVisible": true,
+                "generatedKey": true,
+                "key": "SystemContext-001",
+                "order": 1,
+                "relationships": [
+                    {
+                        "id": "11",
+                        "vertices": [
+                            {
+                                "x": 1931,
+                                "y": 1645
+                            }
+                        ]
+                    },
+                    {
+                        "id": "12",
+                        "vertices": [
+                            {
+                                "x": 2271,
+                                "y": 1645
+                            }
+                        ]
+                    },
+                    {
+                        "id": "13",
+                        "vertices": [
+                            {
+                                "x": 2180,
+                                "y": 776
+                            }
+                        ]
+                    },
+                    {
+                        "id": "14"
+                    },
+                    {
+                        "id": "15",
+                        "vertices": [
+                            {
+                                "x": 2426,
+                                "y": 855
+                            }
+                        ]
+                    },
+                    {
+                        "id": "16"
+                    },
+                    {
+                        "id": "17",
+                        "vertices": [
+                            {
+                                "x": 1851,
+                                "y": 1290
+                            },
+                            {
+                                "x": 1686,
+                                "y": 1295
+                            }
+                        ]
+                    },
+                    {
+                        "id": "18"
+                    },
+                    {
+                        "id": "19",
+                        "vertices": [
+                            {
+                                "x": 1880,
+                                "y": 789
+                            }
+                        ]
+                    },
+                    {
+                        "id": "20"
+                    },
+                    {
+                        "id": "21"
+                    }
+                ],
+                "softwareSystemId": "6"
+            }
+        ]
+    }
+}

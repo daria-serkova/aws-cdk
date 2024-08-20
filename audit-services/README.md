@@ -2,7 +2,7 @@
 
 ## Overview
 
-The AWS Serverless Audit Solution provides a scalable, automated, and real-time auditing framework designed to monitor, analyze, and report on various activities across an organization’s digital infrastructure. By leveraging AWS serverless technologies, this solution minimizes operational overhead while ensuring comprehensive coverage for security, compliance, and operational efficiency. It is adaptable to diverse business needs and can be tailored to fit various industry requirements.
+The AWS Serverless Audit Solutions provide a scalable, automated, and real-time auditing framework designed to monitor, analyze, and report on various activities across an organization’s digital infrastructure. By leveraging AWS serverless technologies, this solution minimizes operational overhead while ensuring comprehensive coverage for security, compliance, and operational efficiency. It is adaptable to diverse business needs and can be tailored to fit various industry requirements.
 
 ## Benefits
 
@@ -14,7 +14,7 @@ The AWS Serverless Audit Solution provides a scalable, automated, and real-time 
 
 ## Business Scenarios
 
-### 1. Financial Services Compliance Monitoring
+### #1: Financial Services Compliance Monitoring
 **Scenario**: Banks and financial institutions must monitor and audit transactions and account activities to comply with regulations such as SOX (Sarbanes-Oxley) or AML (Anti-Money Laundering).
 
 **Benefits**:
@@ -22,8 +22,10 @@ The AWS Serverless Audit Solution provides a scalable, automated, and real-time 
 - Real-time alerts for compliance breaches.
 - Centralized audit trails for regulatory reporting.
 
-### 2. Healthcare Data Access Auditing
+### #2: Healthcare Data Access Auditing
 **Scenario**: Healthcare providers need to audit access to electronic health records (EHRs) to comply with HIPAA (Health Insurance Portability and Accountability Act).
+
+![Scenario #2 Context Diagram](https://github.com/daria-serkova/aws-cdk/tree/main/audit-services/diagrams/scenario-2-healthcare-data-access-auditing.svg)
 
 **Benefits**:
 - Tracks access to patient records.
