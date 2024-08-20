@@ -36,9 +36,16 @@ The AWS Serverless Audit Solutions provide a scalable, automated, and real-time 
 ![Scenario #2 Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/audit-services/diagrams/scenario-2-healthcare-data-access-auditing.svg)
 
 **Benefits**:
-- Tracks access to patient records.
-- Alerts for unauthorized access.
-- Detailed audit trails for compliance and investigations.
+1. Tracks and monitors access to electronic health records (EHRs) to ensure compliance with HIPAA regulations.
+2. Provides real-time alerts for unauthorized or suspicious access attempts.
+3. Generates detailed and accurate audit trails for comprehensive compliance reporting and investigations.
+4. Enhances security by detecting and responding to potential breaches or policy violations.
+5. Automates record-keeping and access logging to streamline compliance processes.
+6. Supports scalable monitoring to accommodate growing volumes of access data.
+7. Offers secure storage of audit logs to prevent tampering or data loss.
+8. Facilitates easy retrieval of historical access data for audits and reviews.
+9. Integrates with existing EHR systems to provide a seamless compliance solution.
+10. Reduces administrative overhead and operational costs with automated auditing solutions.
 
 ### 3. Cloud Infrastructure Security Monitoring
 **Scenario**: Organizations using cloud services need to monitor and audit access to cloud resources such as S3 buckets, EC2 instances, and databases to ensure security.
