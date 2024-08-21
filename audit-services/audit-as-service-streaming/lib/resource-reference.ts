@@ -3,7 +3,7 @@ config();
 // Pattern for resources names to keep consistency across all application resources.
 const AWS_RESOURCES_NAMING_CONVENTION : string = `${process.env.AWS_RESOURCES_NAME_PREFIX}-${process.env.TAG_ENVIRONMENT}-$`;
 /**
- * Ffunction is used to generate standardized resource names by appending
+ * Function is used to generate standardized resource names by appending
  * appropriate prefixes or suffixes to the base resource names.
  * @param name - unique AWS resource name
  * @returns string with organization's prefix and unique resource name

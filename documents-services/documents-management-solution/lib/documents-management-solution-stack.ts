@@ -13,8 +13,6 @@ export class DocumentsManagementSolutionStack extends cdk.Stack {
     const logGroups: { 
       documentOperations: LogGroup,
       documentWorkflow: LogGroup,
-      documentNotifications: LogGroup,
-      documentAudit: LogGroup
     } = configureCloudWatchResources(this);
     configureLambdaResources(this, logGroups);
     configureS3Resources(this);

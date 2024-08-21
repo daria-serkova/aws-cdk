@@ -1,6 +1,6 @@
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { EventCodes, getDocumentTableNamePatternByType, resolveTableName } from "../helpers/utilities";
+import { EventCodes, getDocumentTableNamePatternByType, resolveTableName } from "../../helpers/utilities";
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const tableType = 'metadata';

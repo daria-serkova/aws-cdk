@@ -1,6 +1,11 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
-import { DocumentStatuses, generateUUID, getAuditEventCode, resolveTableName } from '../helpers/utilities';
+import { 
+  DocumentStatuses, 
+  generateUUID, 
+  getAuditEventCode, 
+  resolveTableName 
+} from '../../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const tableType = 'verification';

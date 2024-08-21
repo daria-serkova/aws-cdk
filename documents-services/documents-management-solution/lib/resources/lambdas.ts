@@ -53,8 +53,7 @@ const defaultLambdaSettings = {
 export default function configureLambdaResources(
         scope: Construct, 
         logGroups: { 
-            documentOperations: LogGroup, 
-            documentAudit: LogGroup    
+            documentOperations: LogGroup
 }) {
     documentGeneratePreSignedUploadUrlsLambdaInstance = configureLambdaGeneratePreSignedUploadUrls(scope, logGroups.documentOperations);
     documentS3UploadListenerLambdaInstance = configureLambdaS3UploadListener(scope, logGroups.documentOperations);
@@ -215,6 +214,7 @@ const configureLambdaDocumentGeneratePreSignedUrl = (scope: Construct, logGroup:
     tables.forEach((tableName) => {
         let name = tableName.replace('$2', '');
         addDynamoDbReadPolicy(iamRole, name);
+        //addOrUpdateDynamoDbReadPolicy(iamRole, name);
     });
     addS3ReadPolicy(iamRole, ResourceName.s3Buckets.DOCUMENTS_BUCKET);
     const lambda = new NodejsFunction(scope, ResourceName.lambdas.DOCUMENT_GENERATE_PRESIGNED_URL, {

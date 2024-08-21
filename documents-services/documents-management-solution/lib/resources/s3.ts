@@ -5,10 +5,10 @@ import { isProduction } from "../../helpers/utilities";
 import { Duration, RemovalPolicy } from "aws-cdk-lib";
 import { documentS3UploadListenerLambda } from "./lambdas";
 import { S3EventSource } from "aws-cdk-lib/aws-lambda-event-sources";
-import { DocumentStatusFolderNames, SupportedUploadFolders } from "../../functions/helpers/utilities";
+import { DocumentStatusFolderNames, SupportedUploadFolders } from "../../helpers/utilities";
 
 /**
- * Function creates and configure S3 buckets.
+ * Function creates and configure S3 buckets and associated lifecycle rules.
  * @param scope 
  */
 export default function configureS3Resources(scope: Construct) {

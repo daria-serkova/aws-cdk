@@ -20,7 +20,7 @@ export const sendUploadEvent = async (event) => {
 
 }
 
-export const sendEvent = async (event) => {
+export const sendEvent = async (event: any) => {
     const record = {
         Data: JSON.stringify({
             initiatorsystemcode: "ABC_DE_WEB",

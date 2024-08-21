@@ -1,6 +1,6 @@
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
-import { resolveTableIndexName, resolveTableName } from '../helpers/utilities';
+import { resolveTableIndexName, resolveTableName } from '../../helpers/utilities';
 import { ResourceName } from '../../lib/resource-reference';
 
 const client = new DynamoDBClient({ region: process.env.REGION });

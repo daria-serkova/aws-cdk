@@ -1,35 +1,25 @@
 import { config } from 'dotenv';
 config(); 
-/**
- * Pattern for API Gateway Request models.
- */
-export const AWS_REQUEST_MODEL_NAMING_CONVENTION = `${process.env.TAG_APPLICATION_CODE?.replace(
-    /-/g,
-    ""
-)}`;
-
-  /**
- * Pattern for resources names to keep consistency across all application resources.
- */
-const AWS_RESOURCES_NAMING_CONVENTION = `${process.env.AWS_RESOURCES_NAME_PREFIX}-$-${process.env.TAG_ENVIRONMENT}`;
+// Pattern for API Gateway models' names to keep consistency across all application resources.
+const AWS_REQUEST_MODEL_NAMING_CONVENTION : string  = `${process.env.TAG_APPLICATION_CODE?.replace(/-/g, "")}`;
+// Pattern for resources names to keep consistency across all application resources.
+const AWS_RESOURCES_NAMING_CONVENTION : string = `${process.env.AWS_RESOURCES_NAME_PREFIX}-${process.env.TAG_ENVIRONMENT}-$`;
 
 /**
- * Creates name for AWS resource, that match company's naming convention.
+ * Function is used to generate standardized resource names by appending
+ * appropriate prefixes or suffixes to the base resource names.
+ * @param name - unique AWS resource name
+ * @returns string with organization's prefix and unique resource name
  */
-function resourceName(value: string) {
-    return AWS_RESOURCES_NAMING_CONVENTION.replace('$', value);
-}
+const resourceName = (name: string) : string => AWS_RESOURCES_NAMING_CONVENTION.replace('$', name);
 
 /**
  * File is used for exporting resource names to be passed between AWS resource definitions during creation.
  */
 export const ResourceName = {
-    auditDataStream: 'ABC-AAAS-C-development-audit-events-firehose-stream',
     cloudWatch: {
         DOCUMENT_OPERATIONS_LOGS_GROUP: resourceName('document-operations-log-group'),
         DOCUMENT_WORKFLOW_LOGS_GROUP: resourceName('document-workflow-log-group'),
-        DOCMENT_NOTIFICATIONS_LOGS_GROUP: resourceName('document-notifications-log-group'),
-        DOCUMENT_AUDIT_LOGS_GROUP: resourceName('document-audit-log-group'),
     },
     s3Buckets: {
         DOCUMENTS_BUCKET: resourceName('documents-bucket').toLowerCase(),
@@ -56,9 +46,6 @@ export const ResourceName = {
         INDEX_NAMES_SUFFIXES: {
             DOCUMENT_ID_AND_STATUS: 'index-doc-id-and-status',
             DOCUMENT_ID: 'index-doc-id',
-            //Audit indexes
-            DOCUMENT_ID_AND_EVENT_INITIATOR: 'index-doc-id-and-event-initiator',
-            EVENT_INITIATOR_AND_DOC_ID: 'index-event-initiator-and-doc-id',
             STATUS_AND_OWNER: 'index-status-and-owner',
             OWNER: 'index-owner',
         }
@@ -69,7 +56,6 @@ export const ResourceName = {
         DOCUMENTS_SERVCIE_API_KEY: resourceName('documents-api-key'),
         DOCUMENTS_SERVCIE_API_REQUEST_VALIDATOR: resourceName('documents-api-request-validator'),
         
-        DOCUMENTS_SERVCIE_REQUEST_MODEL_DOCUMENT_UPLOAD_BASE64: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentUploadBase64`,
         DOCUMENTS_REQUEST_MODEL_DOCUMENT_UPLOAD: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentUpload`,
         DOCUMENTS_REQUEST_MODEL_DOCUMENT_GET_DETAILS: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetDetails`,
         DOCUMENTS_REQUEST_MODEL_DOCUMENT_GET_URL: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}DocumentGetUrl`,
@@ -80,6 +66,7 @@ export const ResourceName = {
         VERIFY_REQUEST_MODEL_UPDATE_TRAIL: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}VerifyUpdateTrail`
     },
     iam: {
+
         /* Lambdas roles */
         DOCUMENT_GENERATE_PRESIGN_UPLOAD_URLS: resourceName('document-generate-upload-urls-lbd-role'),
         DOCUMENT_S3_UPLOAD_LISTENER: resourceName('document-s3-upload-listener-lbd-role'),
