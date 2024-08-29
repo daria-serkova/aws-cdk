@@ -49,11 +49,11 @@ export const SupportedLanguages : string [] = [
     'ru', // Russian
     'fr', // French
 ];
- // Sort by the "name" values alphabetically
-export const filterByName = (filteredItems: any[]) => {
+ // Sort by the "label" values alphabetically
+export const filterByLabel = (filteredItems: any[]) => {
      filteredItems.sort((a, b) => {
-        const valueA = a.name.toLowerCase();
-        const valueB = b.name.toLowerCase();
+        const valueA = a.label.toLowerCase();
+        const valueB = b.label.toLowerCase();
         return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
     });
     return filteredItems;

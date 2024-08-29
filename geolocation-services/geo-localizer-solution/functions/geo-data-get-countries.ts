@@ -2,7 +2,7 @@ import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
 import { ResourceName } from '../lib/resource-reference';
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { filterByName } from '../helpers/utilities';
+import { filterByLabel } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({ 
     region: process.env.REGION 
@@ -20,19 +20,18 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         const { language } = JSON.parse(event.body);
         const scanResult = await dynamoDb.send(new ScanCommand({
             TableName: table,
-            ProjectionExpression: `geonameId, countryCode, ${language}`,
+            ProjectionExpression: `countryCode, ${language}`,
         }));
         const filteredItems = (scanResult.Items || []).map(item => {
             const unmarshalledItem = unmarshall(item);
             return {
-                geonameId: unmarshalledItem.geonameId,
-                countryCode: unmarshalledItem.countryCode,
-                name: unmarshalledItem[language],
+                value: unmarshalledItem.countryCode,
+                label: unmarshalledItem[language],
             };
-        }).filter(item => item.name !== undefined);
+        }).filter(item => item.label !== undefined);
         return {
             statusCode: 200,
-            body: JSON.stringify(filterByName(filteredItems)),
+            body: JSON.stringify(filterByLabel(filteredItems)),
         };
     } catch (error) {
         console.error('Error fetching data:', error);

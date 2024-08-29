@@ -2,7 +2,7 @@ import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { ResourceName } from '../lib/resource-reference';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
-import { filterByName } from '../helpers/utilities';
+import { filterByLabel } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const tableName = ResourceName.dynamoDb.GEO_DATA_STATES_TABLE;
@@ -25,21 +25,20 @@ const tableIndex = ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE;
             ExpressionAttributeValues: {
                 ':countryCode': { S: countryCode },
             },
-            ProjectionExpression: `geonameId, stateCode, ${language}`,
+            ProjectionExpression: `stateCode, ${language}`,
         });
 
         const result = await dynamoDb.send(queryCommand);
         const filteredItems = (result.Items || []).map(item => {
             const unmarshalledItem = unmarshall(item);
             return {
-                geonameId: unmarshalledItem.geonameId,
-                stateCode: unmarshalledItem.stateCode,
-                name: unmarshalledItem[language],
+                value: unmarshalledItem.stateCode,
+                label: unmarshalledItem[language],
             };
-        }).filter(item => item.name !== undefined);
+        }).filter(item => item.label !== undefined);
         return {
             statusCode: 200,
-            body: JSON.stringify(filterByName(filteredItems)),
+            body: JSON.stringify(filterByLabel(filteredItems)),
         };
     } catch (error) {
         console.error('Error retrieving states:', error);

@@ -52,259 +52,208 @@ Sample of the response from AWS service:
 ```
 [
     {
-        "geonameId": 4829764,
-        "stateCode": "AL",
-        "name": "Alabama"
+        "value": "AL",
+        "label": "Alabama"
     },
     {
-        "geonameId": 5879092,
-        "stateCode": "AK",
-        "name": "Alaska"
+        "value": "AK",
+        "label": "Alaska"
     },
     {
-        "geonameId": 5551752,
-        "stateCode": "AZ",
-        "name": "Arizona"
+        "value": "AZ",
+        "label": "Arizona"
     },
     {
-        "geonameId": 4099753,
-        "stateCode": "AR",
-        "name": "Arkansas"
+        "value": "AR",
+        "label": "Arkansas"
     },
     {
-        "geonameId": 5332921,
-        "stateCode": "CA",
-        "name": "California"
+        "value": "CA",
+        "label": "California"
     },
     {
-        "geonameId": 5417618,
-        "stateCode": "CO",
-        "name": "Colorado"
+        "value": "CO",
+        "label": "Colorado"
     },
     {
-        "geonameId": 4831725,
-        "stateCode": "CT",
-        "name": "Connecticut"
+        "value": "CT",
+        "label": "Connecticut"
     },
     {
-        "geonameId": 4142224,
-        "stateCode": "DE",
-        "name": "Delaware"
+        "value": "DE",
+        "label": "Delaware"
     },
     {
-        "geonameId": 4138106,
-        "stateCode": "DC",
-        "name": "District of Columbia"
+        "value": "DC",
+        "label": "District of Columbia"
     },
     {
-        "geonameId": 4155751,
-        "stateCode": "FL",
-        "name": "Florida"
+        "value": "FL",
+        "label": "Florida"
     },
     {
-        "geonameId": 4197000,
-        "stateCode": "GA",
-        "name": "Georgia"
+        "value": "GA",
+        "label": "Georgia"
     },
     {
-        "geonameId": 5855797,
-        "stateCode": "HI",
-        "name": "Hawaii"
+        "value": "HI",
+        "label": "Hawaii"
     },
     {
-        "geonameId": 5596512,
-        "stateCode": "ID",
-        "name": "Idaho"
+        "value": "ID",
+        "label": "Idaho"
     },
     {
-        "geonameId": 4896861,
-        "stateCode": "IL",
-        "name": "Illinois"
+        "value": "IL",
+        "label": "Illinois"
     },
     {
-        "geonameId": 4921868,
-        "stateCode": "IN",
-        "name": "Indiana"
+        "value": "IN",
+        "label": "Indiana"
     },
     {
-        "geonameId": 4862182,
-        "stateCode": "IA",
-        "name": "Iowa"
+        "value": "IA",
+        "label": "Iowa"
     },
     {
-        "geonameId": 4273857,
-        "stateCode": "KS",
-        "name": "Kansas"
+        "value": "KS",
+        "label": "Kansas"
     },
     {
-        "geonameId": 6254925,
-        "stateCode": "KY",
-        "name": "Kentucky"
+        "value": "KY",
+        "label": "Kentucky"
     },
     {
-        "geonameId": 4331987,
-        "stateCode": "LA",
-        "name": "Louisiana"
+        "value": "LA",
+        "label": "Louisiana"
     },
     {
-        "geonameId": 4971068,
-        "stateCode": "ME",
-        "name": "Maine"
+        "value": "ME",
+        "label": "Maine"
     },
     {
-        "geonameId": 4361885,
-        "stateCode": "MD",
-        "name": "Maryland"
+        "value": "MD",
+        "label": "Maryland"
     },
     {
-        "geonameId": 6254926,
-        "stateCode": "MA",
-        "name": "Massachusetts"
+        "value": "MA",
+        "label": "Massachusetts"
     },
     {
-        "geonameId": 5001836,
-        "stateCode": "MI",
-        "name": "Michigan"
+        "value": "MI",
+        "label": "Michigan"
     },
     {
-        "geonameId": 5037779,
-        "stateCode": "MN",
-        "name": "Minnesota"
+        "value": "MN",
+        "label": "Minnesota"
     },
     {
-        "geonameId": 4436296,
-        "stateCode": "MS",
-        "name": "Mississippi"
+        "value": "MS",
+        "label": "Mississippi"
     },
     {
-        "geonameId": 4398678,
-        "stateCode": "MO",
-        "name": "Missouri"
+        "value": "MO",
+        "label": "Missouri"
     },
     {
-        "geonameId": 5667009,
-        "stateCode": "MT",
-        "name": "Montana"
+        "value": "MT",
+        "label": "Montana"
     },
     {
-        "geonameId": 5073708,
-        "stateCode": "NE",
-        "name": "Nebraska"
+        "value": "NE",
+        "label": "Nebraska"
     },
     {
-        "geonameId": 5509151,
-        "stateCode": "NV",
-        "name": "Nevada"
+        "value": "NV",
+        "label": "Nevada"
     },
     {
-        "geonameId": 5090174,
-        "stateCode": "NH",
-        "name": "New Hampshire"
+        "value": "NH",
+        "label": "New Hampshire"
     },
     {
-        "geonameId": 5101760,
-        "stateCode": "NJ",
-        "name": "New Jersey"
+        "value": "NJ",
+        "label": "New Jersey"
     },
     {
-        "geonameId": 5481136,
-        "stateCode": "NM",
-        "name": "New Mexico"
+        "value": "NM",
+        "label": "New Mexico"
     },
     {
-        "geonameId": 5128638,
-        "stateCode": "NY",
-        "name": "New York"
+        "value": "NY",
+        "label": "New York"
     },
     {
-        "geonameId": 4482348,
-        "stateCode": "NC",
-        "name": "North Carolina"
+        "value": "NC",
+        "label": "North Carolina"
     },
     {
-        "geonameId": 5690763,
-        "stateCode": "ND",
-        "name": "North Dakota"
+        "value": "ND",
+        "label": "North Dakota"
     },
     {
-        "geonameId": 5165418,
-        "stateCode": "OH",
-        "name": "Ohio"
+        "value": "OH",
+        "label": "Ohio"
     },
     {
-        "geonameId": 4544379,
-        "stateCode": "OK",
-        "name": "Oklahoma"
+        "value": "OK",
+        "label": "Oklahoma"
     },
     {
-        "geonameId": 5744337,
-        "stateCode": "OR",
-        "name": "Oregon"
+        "value": "OR",
+        "label": "Oregon"
     },
     {
-        "geonameId": 6254927,
-        "stateCode": "PA",
-        "name": "Pennsylvania"
+        "value": "PA",
+        "label": "Pennsylvania"
     },
     {
-        "geonameId": 5224323,
-        "stateCode": "RI",
-        "name": "Rhode Island"
+        "value": "RI",
+        "label": "Rhode Island"
     },
     {
-        "geonameId": 4597040,
-        "stateCode": "SC",
-        "name": "South Carolina"
+        "value": "SC",
+        "label": "South Carolina"
     },
     {
-        "geonameId": 5769223,
-        "stateCode": "SD",
-        "name": "South Dakota"
+        "value": "SD",
+        "label": "South Dakota"
     },
     {
-        "geonameId": 4662168,
-        "stateCode": "TN",
-        "name": "Tennessee"
+        "value": "TN",
+        "label": "Tennessee"
     },
     {
-        "geonameId": 4736286,
-        "stateCode": "TX",
-        "name": "Texas"
+        "value": "TX",
+        "label": "Texas"
     },
     {
-        "geonameId": 5549030,
-        "stateCode": "UT",
-        "name": "Utah"
+        "value": "UT",
+        "label": "Utah"
     },
     {
-        "geonameId": 5242283,
-        "stateCode": "VT",
-        "name": "Vermont"
+        "value": "VT",
+        "label": "Vermont"
     },
     {
-        "geonameId": 6254928,
-        "stateCode": "VA",
-        "name": "Virginia"
+        "value": "VA",
+        "label": "Virginia"
     },
     {
-        "geonameId": 5815135,
-        "stateCode": "WA",
-        "name": "Washington"
+        "value": "WA",
+        "label": "Washington"
     },
     {
-        "geonameId": 4826850,
-        "stateCode": "WV",
-        "name": "West Virginia"
+        "value": "WV",
+        "label": "West Virginia"
     },
     {
-        "geonameId": 5279468,
-        "stateCode": "WI",
-        "name": "Wisconsin"
+        "value": "WI",
+        "label": "Wisconsin"
     },
     {
-        "geonameId": 5843591,
-        "stateCode": "WY",
-        "name": "Wyoming"
+        "value": "WY",
+        "label": "Wyoming"
     }
 ]
 ```

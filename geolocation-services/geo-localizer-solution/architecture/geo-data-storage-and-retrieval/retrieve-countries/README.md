@@ -51,19 +51,20 @@ Sample of the response from AWS service:
 ```
 [
     {
-        "geonameId": 6251999,
-        "countryCode": "CA",
-        "name": "Canada"
+        "value": "CA",
+        "label": "Canada"
     },
     {
-        "geonameId": 1269750,
-        "countryCode": "IN",
-        "name": "India"
+        "value": "IN",
+        "label": "India"
     },
     {
-        "geonameId": 6252001,
-        "countryCode": "US",
-        "name": "United States"
+        "value": "RU",
+        "label": "Russia"
+    },
+    {
+        "value": "US",
+        "label": "United States"
     }
 ]
 ```
