@@ -1,0 +1,29 @@
+@startmindmap Document Upload API Validation
+* Document Upload API Validation
+** initiatorsystemcode
+*** Type: STRING
+*** Enum: SupportedInitiatorSystemCodes
+*** Required: Yes
+** requestorid
+*** Type: STRING
+*** Required: Yes
+** files
+*** Type: ARRAY
+*** Required: Yes
+**** File Object
+***** documentownerid
+****** Type: STRING
+****** Required: Yes
+***** documentformat
+****** Type: STRING
+****** Enum: SupportedDocumentsFormats
+****** Required: Yes
+***** documentcategory
+****** Type: STRING
+****** Enum: SupportedDocumentsCategories
+****** Required: Yes
+***** documentsize
+****** Type: NUMBER
+****** Maximum: AllowedDocumentSize
+****** Required: Yes
+@endmindmap

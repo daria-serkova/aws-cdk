@@ -1,0 +1,25 @@
+@startuml Get Document Details Workflow
+actor User
+participant "UI" as UI
+participant "API Gateway" as APIGW
+participant "Step Function" as SF
+participant "Metadata Service" as Metadata
+participant "S3" as S3
+participant "Audit Service" as Audit
+
+User -> UI : Clicks to open document and metadata
+UI -> APIGW : Request to open document and metadata
+APIGW -> SF : Trigger Step Function
+
+SF -> Metadata : Retrieve metadata of the document
+Metadata -> SF : Return metadata
+
+SF -> S3 : Generate pre-signed URL
+S3 -> SF : Return pre-signed URL
+
+SF -> Audit : Record audit events
+
+SF -> UI : Return metadata and pre-signed URL
+UI -> User : Display document and metadata
+
+@enduml

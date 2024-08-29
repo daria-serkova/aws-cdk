@@ -1,0 +1,36 @@
+@startuml Security View Diagram
+actor User
+actor "AWS Cognito" as Cognito
+
+rectangle "Document Management Solution" {
+    User -> Cognito : "Login"
+    Cognito -> User : "JWT Token"
+
+    User -> [Upload Document] : "Upload Document"
+    [Upload Document] -> Cognito : "Validate Token"
+
+    [Upload Document] -> [S3] : "Store Document"
+    [Upload Document] -> [DynamoDB] : "Store Metadata"
+    [Upload Document] -> [Audit Log] : "Record Upload Event"
+
+    Cognito -> [Upload Document] : "Token Validated"
+}
+
+note bottom of Cognito
+  - Authentication
+  - Authorization
+end note
+
+note bottom of [S3]
+  - Encrypted at Rest
+end note
+
+note bottom of [DynamoDB]
+  - Encrypted at Rest
+end note
+
+note bottom of [Audit Log]
+  - Records Events
+end note
+
+@enduml

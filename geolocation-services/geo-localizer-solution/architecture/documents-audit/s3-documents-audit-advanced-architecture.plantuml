@@ -1,0 +1,38 @@
+@startuml Documents Audit
+!define RECTANGLE class
+
+actor User
+actor ComplianceOfficer
+
+package "AWS Cloud" {
+    [Amazon API Gateway] as APIGateway
+    [Document Upload Lambda] as UploadLambda
+    [S3 Event Lambda] as S3Lambda
+    [Documents S3] as S3
+    [Audit DynamoDB] as DynamoDB
+    [AWS Glue] as Glue
+    [Amazon Athena] as Athena
+    [Amazon QuickSight] as QuickSight
+}
+
+[Upload Dashboard] as UploadDashboard
+
+' User interactions
+User --> UploadDashboard : Request Uploading document
+UploadDashboard --> APIGateway : Request Pre-Signed URL
+APIGateway --> UploadLambda : Generate Pre-Signed URL
+UploadLambda --> APIGateway : Return Pre-Signed URL
+APIGateway --> UploadDashboard : Return Pre-Signed URL
+UploadDashboard --> S3 : Upload document via Pre-Signed URL
+S3 --> S3Lambda : Create event triggers Lambda
+S3Lambda --> DynamoDB: Saves audit event
+
+' Data Processing for Advanced Analytics
+Glue --> DynamoDB : Extract and transform audit logs
+Glue --> Athena : Load transformed logs for querying
+Athena --> QuickSight : Query audit logs for visualization
+
+' Compliance Officer advanced analytics
+ComplianceOfficer --> QuickSight : View advanced dashboards and reports
+
+@enduml

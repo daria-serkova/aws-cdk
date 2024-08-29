@@ -1,0 +1,26 @@
+@startmindmap Supported Documents
+* Supported Documents
+** Size
+*** 5MB max
+** Formats
+*** PDF
+*** JPG
+*** JPEG
+*** PNG
+** Types and Categories
+*** providers
+**** MEDICAL_LICENSE
+**** PROFESSIONAL_PHOTO
+**** ...
+*** insurance
+**** INSURANCE_CLAIM
+**** PRE-AUTH-REQUEST
+*** billing
+**** BILLING_STATEMENT
+**** PAYMENT_RECEIPT
+*** patients
+**** INFORMED_CONSENT_FOR_PROCEDURE
+**** PRESCRIPTION
+**** RADIOLOGY_IMAGE
+**** ...
+@endmindmap
