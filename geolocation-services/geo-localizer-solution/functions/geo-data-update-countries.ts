@@ -2,6 +2,7 @@ import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 import { ResourceName } from '../lib/resource-reference';
 import { getCurrentTime, SupportedCountries, SupportedLanguages } from '../helpers/utilities';
+import { APIGatewayProxyHandler } from 'aws-lambda';
 
 const table = ResourceName.dynamoDb.GEO_DATA_COUNTRIES_TABLE;
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
@@ -16,8 +17,12 @@ interface Country {
 interface GeoNamesResponse<T> {
     geonames?: T[];
 }
-
-exports.handler = async () => {
+/**
+ * AWS Lambda function that retrieves countries data from GeoNames API and store it in the DynamoDB table.
+ * 
+ * @returns The response object containing the status code and the JSON body with the results or error message.
+ */
+ export const handler: APIGatewayProxyHandler = async () => {
     try {
         const fetchCountriesPromises = SupportedLanguages.map(async (language) => {
             const url = geoNamesUrl.replace('$1', language);
@@ -37,8 +42,6 @@ exports.handler = async () => {
 
         // Wait for all fetch operations to complete
         const countriesResults = await Promise.all(fetchCountriesPromises);
-
-        // Aggregate country names by geonameId
         const updatedAt = getCurrentTime();
         const countriesMap = countriesResults.flat().reduce((acc, country) => {
             if (!acc[country.geonameId]) {

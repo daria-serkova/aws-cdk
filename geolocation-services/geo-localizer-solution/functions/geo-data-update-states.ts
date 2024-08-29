@@ -2,6 +2,7 @@ import { DynamoDBClient, QueryCommand, PutItemCommand, ScanCommand } from '@aws-
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { ResourceName } from '../lib/resource-reference';
 import { getCurrentTime, SupportedLanguages } from '../helpers/utilities';
+import { APIGatewayProxyHandler } from 'aws-lambda';
 
 const dynamoDb = new DynamoDBClient({
     region: process.env.REGION,
@@ -21,18 +22,22 @@ interface State {
     countryCode: string;
     geonameId: number;
 }
-
 interface GeoNamesResponse<T> {
     geonames?: T[];
 }
-
-exports.handler = async (event: any) => {
-    const { countryCode } = JSON.parse(event.body);
-    let geonameIds: number[] = [];
+/**
+ * AWS Lambda function that retrieves state data from GeoNames API and store it in the DynamoDB table.
+ * 
+ * @param event - The input event to the Lambda function, containing the request body with the `countryCode` parameter.
+ * @returns The response object containing the status code and the JSON body with the results or error message.
+ */
+export const handler: APIGatewayProxyHandler = async (event) => {
     try {
-        // Step 1: Retrieve geonameId(s) from the country table based on the provided countryCode
+        const { countryCode } = JSON.parse(event.body);
+        let geonameIds: number[] = [];
+        let command: QueryCommand | ScanCommand;
         if (countryCode && countryCode !== '*') {
-            const queryCommand = new QueryCommand({
+            command = new QueryCommand({
                 TableName: countryTable,
                 IndexName: countryTableIndex,
                 KeyConditionExpression: 'countryCode = :countryCode',
@@ -41,23 +46,14 @@ exports.handler = async (event: any) => {
                 },
                 ProjectionExpression: 'geonameId',
             });
-            const { Items } = await dynamoDb.send(queryCommand);
-            if (Items && Items.length > 0) {
-                geonameIds = Items.map(item => unmarshall(item).geonameId);
-            } else {
-                throw new Error(`No record found for countryCode: ${countryCode}`);
-            }
         } else {
-            const scanCommand = {
+            command = new ScanCommand({
                 TableName: countryTable,
                 ProjectionExpression: 'geonameId',
-            };
-
-            const scanResult = await dynamoDb.send(new ScanCommand(scanCommand));
-            geonameIds = scanResult.Items.map(item => unmarshall(item).geonameId);
+            });
         }
-
-        // Step 2: Fetch state data for each geonameId in all supported languages and store them in the states table
+        const { Items } = await dynamoDb.send(command);
+        geonameIds = Items.map(item => unmarshall(item).geonameId);
         const fetchStatesPromises = geonameIds.flatMap((geonameId) =>
             SupportedLanguages.map(async (language) => {
                 const url = geoNamesUrl.replace('$1', geonameId.toString()).replace('$2', language);
@@ -76,10 +72,8 @@ exports.handler = async (event: any) => {
                 }));
             })
         );
-
+        // Wait for all fetch operations to complete
         const statesResults = await Promise.all(fetchStatesPromises.flat());
-
-        // Step 3: Aggregate and store state data in DynamoDB
         const updatedAt = getCurrentTime();
         const statesMap = statesResults.flat().reduce((acc, state) => {
             const key = `${state.stateCode}#${state.geonameId}`;
@@ -95,7 +89,7 @@ exports.handler = async (event: any) => {
             acc[key][state.language] = state.stateName;
             return acc;
         }, {} as Record<string, any>);
-
+        // Create DynamoDB write operations for states
         const writeStatesPromises = Object.values(statesMap).map(state => {
             const entry = {
                 TableName: stateTable,
@@ -103,12 +97,12 @@ exports.handler = async (event: any) => {
             };
             return dynamoDb.send(new PutItemCommand(entry));
         });
-
+        // Wait for all DynamoDB write operations to complete for states
         await Promise.all(writeStatesPromises);
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'State information stored successfully' }),
+            body: JSON.stringify({ message: 'State information updated successfully' }),
         };
     } catch (error) {
         console.error('Error fetching or storing state info:', error);

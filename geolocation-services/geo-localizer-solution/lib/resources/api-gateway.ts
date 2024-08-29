@@ -9,7 +9,7 @@ import {
     RestApi
 } from 'aws-cdk-lib/aws-apigateway';
 import { ResourceName } from '../resource-reference';
-import { isProduction, SupportedLanguages } from '../../helpers/utilities';
+import { isProduction, SupportedCountries, SupportedLanguages } from '../../helpers/utilities';
 
 import { 
     getGeoDataCitiesLambda, 
@@ -141,7 +141,7 @@ const requestModelGetCountriesList = (apiGateway: RestApi) => {
  */
  const requestModelUpdateStatesList = (apiGateway: RestApi) => {
     const requestModel = createRequestModel(`${serviceName}: Request Model - Update States List API`, {
-        countryCode: createStringProperty([...SupportedLanguages, '*']),
+        countryCode: createStringProperty([...SupportedCountries, '*']),
     }, ['countryCode']);
     return apiGateway.addModel(ResourceName.apiGateway.REQUEST_MODEL_GEO_STATES_UPDATE_LIST, requestModel);
 };
