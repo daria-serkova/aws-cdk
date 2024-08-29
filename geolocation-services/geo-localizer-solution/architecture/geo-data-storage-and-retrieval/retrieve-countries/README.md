@@ -30,7 +30,7 @@ Security header X-API-Key (generated API Gateway key) is required.
 
 API endpoint conducts following validation checks on the request's body before routing it for processing.
 
-![API Validation]()
+![API Validation](https://github.com/daria-serkova/aws-cdk/blob/main/geolocation-services/geo-localizer-solution/architecture/geo-data-storage-and-retrieval/retrieve-countries/request-validation.svg)
 
 List of supported languages for body parameter value, is configured in the [Utilities file](https://github.com/daria-serkova/aws-cdk/blob/main/geolocation-services/geo-localizer-solution/helpers/utilities.ts).
 
