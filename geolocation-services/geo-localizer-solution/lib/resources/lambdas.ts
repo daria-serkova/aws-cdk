@@ -101,7 +101,7 @@ const configureLambdaUpdateGeoDataStates = (scope: Construct, logGroup: LogGroup
 const configureLambdaGetGeoDataStates = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.LAMBDA_GET_GEO_DATA_STATES);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbIndexReadPolicy(iamRole, ResourceName.dynamoDb.GEO_DATA_COUNTRIES_TABLE, ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE);
+    addDynamoDbIndexReadPolicy(iamRole, ResourceName.dynamoDb.GEO_DATA_STATES_TABLE, ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE);
     const lambda = new NodejsFunction(scope, ResourceName.lambda.LAMBDA_GET_GEO_DATA_STATES, {
         functionName: ResourceName.lambda.LAMBDA_GET_GEO_DATA_STATES,
         description: 'Get geo data (states)',
