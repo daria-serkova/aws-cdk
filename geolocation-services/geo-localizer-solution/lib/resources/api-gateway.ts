@@ -96,7 +96,7 @@ export default function configureApiGatewayResources(scope: Construct) {
     configureEndpoint(apiNodes.country, 'update', updateGeoDataCountriesLambda, null, requestValidatorInstance);
     configureEndpoint(apiNodes.country, 'get-list', getGeoDataCountriesLambda, requestModelGetCountriesList(apiGatewayInstance), requestValidatorInstance);
     
-    configureEndpoint(apiNodes.state, 'update', updateGeoDataStatesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.state, 'update', updateGeoDataStatesLambda, requestModelUpdateStatesList(apiGatewayInstance), requestValidatorInstance);
     configureEndpoint(apiNodes.state, 'get-list', getGeoDataStatesLambda, null, requestValidatorInstance);
     
     configureEndpoint(apiNodes.city, 'update', updateGeoDataCitiesLambda, null, requestValidatorInstance);
@@ -132,6 +132,18 @@ const requestModelGetCountriesList = (apiGateway: RestApi) => {
         language: createStringProperty(SupportedLanguages),
     }, ['language']);
     return apiGateway.addModel(ResourceName.apiGateway.REQUEST_MODEL_GEO_COUNTRY_GET_LIST, requestModel);
+};
+/**
+ * Creates a request model for the Update States API endpoint.
+ * 
+ * @param {RestApi} apiGateway - The API Gateway instance where the model will be added.
+ * @returns The request model to be used for validating the pdate States API.
+ */
+ const requestModelUpdateStatesList = (apiGateway: RestApi) => {
+    const requestModel = createRequestModel(`${serviceName}: Request Model - Update States List API`, {
+        countryCode: createStringProperty([...SupportedLanguages, '*']),
+    }, ['countryCode']);
+    return apiGateway.addModel(ResourceName.apiGateway.REQUEST_MODEL_GEO_STATES_UPDATE_LIST, requestModel);
 };
 
 /**

@@ -4,7 +4,7 @@ The Update State Data process is an essential part of the data management framew
 
 The process involves fetching state data in multiple supported languages, which is then organized and stored in the DynamoDB table. This approach ensures a reliable, scalable, and multilingual repository of state information, enabling seamless access and integration across various applications. The process is critical to maintaining the accuracy and relevance of state-specific data within the system, supporting a wide range of functionalities that rely on up-to-date geographical information.
 
-## Components View
+## Process
 
 ![Components View](#)
 
@@ -18,7 +18,7 @@ Lists of countries and languages, which state data should be copied to the organ
 
 ### API Endpoint
 
-{{API_GATEWAY_URL}}/geo/state/update
+```{{API_GATEWAY_URL}}/geo/state/update```
 
 ### API Supported Methods
 
