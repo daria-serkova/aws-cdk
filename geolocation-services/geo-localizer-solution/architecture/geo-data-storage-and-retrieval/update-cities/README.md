@@ -14,7 +14,7 @@ The process involves fetching city data in multiple supported languages, which i
 
 This endpoint is designed for use when an organization needs to update city data in the system. Given that city information can change over time, updates are conducted as needed to ensure that the system reflects accurate and current details about cities worldwide.
 
-Lists of countries, states and languages, which city data should be copied to the organization's database from GeoNames, are configured in the [Utilities file](https://github.com/daria-serkova/aws-cdk/blob/main/geolocation-services/geo-localizer-solution/helpers/utilities.ts).
+Lists of countries and languages, which city data should be copied to the organization's database from GeoNames, are configured in the [Utilities file](https://github.com/daria-serkova/aws-cdk/blob/main/geolocation-services/geo-localizer-solution/helpers/utilities.ts).
 
 
 ### API Endpoint
