@@ -19,7 +19,7 @@ Lists of countries and languages, which state data should be copied to the organ
 ### API Endpoint
 
 ```
-{{API_GATEWAY_URL}}/geo/state/update
+{{API_GATEWAY_URL}}/geo/state/update-list
 ```
 
 ### API Supported Methods

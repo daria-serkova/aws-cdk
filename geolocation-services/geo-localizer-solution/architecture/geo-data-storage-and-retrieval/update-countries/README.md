@@ -18,7 +18,7 @@ Lists of countries and languages, which data should be copied to organization's 
 ### API Endpoint
 
 ```
-{{API_GATEWAY_URL}}/geo/country/update
+{{API_GATEWAY_URL}}/geo/country/update-list
 ```
 
 ### API Supported Methods
