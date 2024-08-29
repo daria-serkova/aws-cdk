@@ -43,3 +43,6 @@ Sample of the response from AWS service:
     "message": "Country information updated successfully"
 }
 ```
+### API Limitations
+
+If the list of supported countries is extensive, the API Gateway request may encounter a 'Timeout' response due to the processing time, which can take several minutes. The maximum allowed timeout configuration for API Gateway is 29 seconds. You can monitor the status of the execution through the CloudWatch Log Group. Successful executions will log the result for review for long time running operations.

@@ -99,7 +99,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
         });
         // Wait for all DynamoDB write operations to complete for states
         await Promise.all(writeStatesPromises);
-
+        console.info('State information updated successfully');
         return {
             statusCode: 200,
             body: JSON.stringify({ message: 'State information updated successfully' }),

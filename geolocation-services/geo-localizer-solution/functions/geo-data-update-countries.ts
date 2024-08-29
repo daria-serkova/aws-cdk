@@ -68,6 +68,7 @@ interface GeoNamesResponse<T> {
 
         // Wait for all DynamoDB write operations to complete for countries
         await Promise.all(writeCountriesPromises);
+        console.info('Country information updated successfully');
         return {
             statusCode: 200,
             body: JSON.stringify({ message: 'Country information updated successfully' }),
