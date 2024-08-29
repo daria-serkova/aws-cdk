@@ -8,7 +8,7 @@ import {
     Resource, RestApi
 } from 'aws-cdk-lib/aws-apigateway';
 import { ResourceName } from '../resource-reference';
-import { isProduction } from '../../helpers/utilities';
+import { isProduction, SupportedLanguages } from '../../helpers/utilities';
 
 import { getGeoDataCitiesLambda, getGeoDataCountriesLambda, getGeoDataStatesLambda, updateGeoDataCitiesLambda, updateGeoDataCountriesLambda, updateGeoDataStatesLambda } from './lambdas';
 
@@ -77,7 +77,7 @@ export default function configureApiGatewayResources(scope: Construct) {
     };
 
     configureEndpoint(apiNodes.country, 'update', updateGeoDataCountriesLambda, null, requestValidatorInstance);
-    configureEndpoint(apiNodes.country, 'get-list', getGeoDataCountriesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.country, 'get-list', getGeoDataCountriesLambda, requestModelGetCountriesList, requestValidatorInstance);
     
     configureEndpoint(apiNodes.state, 'update', updateGeoDataStatesLambda, null, requestValidatorInstance);
     configureEndpoint(apiNodes.state, 'get-list', getGeoDataStatesLambda, null, requestValidatorInstance);
@@ -111,3 +111,41 @@ function configureEndpoint(node: Resource, resourceName: string, handler: any, r
         apiKeyRequired: true
     });
 }
+/**
+ * Creates a request model for API Gateway to validate incoming request bodies. 
+ * This model is typically used in API Gateway to ensure that incoming requests adhere to a predefined format and contain all necessary fields.
+ */
+ function createRequestModel(description: string, properties: any, required: string[]) {
+    return {
+        contentType: 'application/json',
+        description,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties,
+            required,
+        },
+    };
+}
+
+/**
+ * Creates a JSON schema property definition for a string type.
+ * 
+ * @param {string[]} [enumValues] - An optional array of string values that the property is allowed to take. If provided, the property will be restricted to these values.
+ * @param {string} [pattern] - An optional regular expression pattern that the property value must match. If provided, the property value will be validated against this pattern.
+ * 
+ * This function is typically used to generate JSON schema definitions for string properties in an API Gateway request model. The returned property object can be used to enforce specific value constraints, such as restricting values to a predefined set of strings or ensuring that the string matches a particular format.
+ */
+
+function createStringProperty(enumValues?: string[], pattern?: string) {
+    const property: any = { type: JsonSchemaType.STRING };
+    if (enumValues) property.enum = enumValues;
+    if (pattern) property.pattern = pattern;
+    return property;
+}
+/**
+ * Generates a JSON schema model that defines the structure and validation rules for the body of the Get Countries List API endpoint.
+ */
+ const requestModelGetCountriesList = () => 
+    createRequestModel(`${serviceName}: Request Model - Get Countries List API`, {
+        language: createStringProperty(SupportedLanguages),
+    }, ['language']);
