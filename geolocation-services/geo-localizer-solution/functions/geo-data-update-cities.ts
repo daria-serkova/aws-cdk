@@ -11,7 +11,7 @@ const dynamoDb = new DynamoDBClient({
     },
 });
 
-const geoNamesUrl = `http://api.geonames.org/searchJSON?username=${process.env.GEONAMES_USERNAME}&lang=$1&adminCode1=$2&country=$3&fcode=PPLA&fcode=PPLA2`;
+const geoNamesUrl = `http://api.geonames.org/searchJSON?username=${process.env.GEONAMES_USERNAME}&lang=$1&adminCode1=$2&country=$3&fcode=PPLA&fcode=PPLA2&maxRows=1000`;
 const stateTable = ResourceName.dynamoDb.GEO_DATA_STATES_TABLE;
 const stateTableIndex = ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE;
 const cityTable = ResourceName.dynamoDb.GEO_DATA_CITIES_TABLE;
@@ -79,21 +79,23 @@ exports.handler = async (event: any) => {
         );
 
         const citiesResults = await Promise.all(fetchCitiesPromises.flat());
-
+        
         // Step 3: Aggregate and store city data in DynamoDB
         const updatedAt = getCurrentTime();
-        const citiesMap = citiesResults.reduce((acc, city: any) => {
+        const citiesMap = citiesResults.flat().reduce((acc, city) => {
             const key = `${city.stateCode}#${city.geonameId}`;
-            if (!acc[key]) {
-                acc[key] = {
-                    stateCode: city.stateCode,
-                    countryCode: city.countryCode,
-                    geonameId: city.geonameId,
-                    ...Object.fromEntries(SupportedLanguages.map(lang => [lang, ''])),
-                    updatedAt
-                };
-            }
-            acc[key][city.language] = city.cityName;
+           
+                if (!acc[key]) {
+                    acc[key] = {
+                        stateCode: city.stateCode,
+                        countryCode: city.countryCode,
+                        geonameId: city.geonameId,
+                        ...Object.fromEntries(SupportedLanguages.map(lang => [lang, ''])),
+                        updatedAt
+                    };
+                }
+                acc[key][city.language] = city.cityName;
+           
             return acc;
         }, {} as Record<string, any>);
 

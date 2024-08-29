@@ -3,7 +3,13 @@ import { Construct } from 'constructs';
 import { Duration } from 'aws-cdk-lib';
 import { resolve, dirname } from 'path';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
-import { addCloudWatchPutPolicy, addDynamoDbIndexReadPolicy, addDynamoDbReadPolicy, addDynamoDbWritePolicy, createLambdaRole } from './iam';
+import { 
+    createLambdaRole,
+    addCloudWatchPutPolicy, 
+    addDynamoDbIndexReadPolicy, 
+    addDynamoDbReadPolicy, 
+    addDynamoDbWritePolicy 
+} from './iam';
 import { ResourceName } from '../resource-reference';
 
 const lambdaFilesLocation = '../../functions';
@@ -11,8 +17,10 @@ const lambdaFilesLocation = '../../functions';
 let updateGeoDataCountriesLambdaInstance: NodejsFunction;
 let updateGeoDataStatesLambdaInstance: NodejsFunction;
 let updateGeoDataCitiesLambdaInstance: NodejsFunction;
+
 let getGeoDataCountriesLambdaInstance: NodejsFunction;
 let getGeoDataStatesLambdaInstance: NodejsFunction;
+let getGeoDataCitiesLambdaInstance: NodejsFunction;
 
 export const updateGeoDataCountriesLambda = () => updateGeoDataCountriesLambdaInstance;
 export const updateGeoDataStatesLambda = () => updateGeoDataStatesLambdaInstance;
@@ -20,6 +28,7 @@ export const updateGeoDataCitiesLambda = () => updateGeoDataCitiesLambdaInstance
 
 export const getGeoDataCountriesLambda = () => getGeoDataCountriesLambdaInstance;
 export const getGeoDataStatesLambda = () => getGeoDataStatesLambdaInstance;
+export const getGeoDataCitiesLambda = () => getGeoDataCitiesLambdaInstance;
 
 const defaultLambdaSettings = {
     memorySize: 256,
@@ -38,7 +47,7 @@ export default function configureLambdaResources(scope: Construct, logGroup: Log
     getGeoDataStatesLambdaInstance = configureLambdaGetGeoDataStates(scope, logGroup);
 
     updateGeoDataCitiesLambdaInstance = configureLambdaUpdateGeoDataCities(scope, logGroup);
-    //getGeoDataLambdaInstance = configureLambdaGetGeoData(scope, logGroup);
+    getGeoDataCitiesLambdaInstance = configureLambdaGetGeoDataCities(scope, logGroup);
 }
 
 const configureLambdaUpdateGeoDataCountries = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
@@ -116,9 +125,8 @@ const configureLambdaGetGeoDataStates = (scope: Construct, logGroup: LogGroup): 
             REGION: process.env.AWS_REGION || '',
             AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
             TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
-            GEONAMES_USERNAME: process.env.GEONAMES_USERNAME || ''
         },
-        ...defaultLambdaSettings
+        ...defaultLambdaSettings,
     });
     return lambda;   
 }
@@ -144,20 +152,20 @@ const configureLambdaUpdateGeoDataCities = (scope: Construct, logGroup: LogGroup
             TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
             GEONAMES_USERNAME: process.env.GEONAMES_USERNAME || ''
         },
-        ...defaultLambdaSettings
+        ...defaultLambdaSettings,
+        timeout: Duration.minutes(15),
     });
     return lambda;   
 }
-/*
-const configureLambdaGetGeoData = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
-    const iamRole = createLambdaRole(scope, ResourceName.iam.LAMBDA_GET_GEO_DATA);
+
+const configureLambdaGetGeoDataCities = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+    const iamRole = createLambdaRole(scope, ResourceName.iam.LAMBDA_GET_GEO_DATA_CITIES);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
-    addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDb.GEO_DATA_TABLE);
-    
-    const lambda = new NodejsFunction(scope, ResourceName.lambda.LAMBDA_GET_GEO_DATA, {
-        functionName: ResourceName.lambda.LAMBDA_GET_GEO_DATA,
-        description: 'Retrives geo data with latest values',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/geo-data-get.ts`),
+    addDynamoDbIndexReadPolicy(iamRole, ResourceName.dynamoDb.GEO_DATA_CITIES_TABLE, ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE);
+    const lambda = new NodejsFunction(scope, ResourceName.lambda.LAMBDA_GET_GEO_DATA_CITIES, {
+        functionName: ResourceName.lambda.LAMBDA_GET_GEO_DATA_CITIES,
+        description: 'Get geo data (cities)',
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/geo-data-get-cities.ts`),
         logGroup: logGroup,
         role: iamRole,
         environment: {
@@ -165,8 +173,7 @@ const configureLambdaGetGeoData = (scope: Construct, logGroup: LogGroup): Nodejs
             AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
             TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
         },
-        ...defaultLambdaSettings
+        ...defaultLambdaSettings,
     });
     return lambda;   
 }
-*/

@@ -10,7 +10,7 @@ import {
 import { ResourceName } from '../resource-reference';
 import { isProduction } from '../../helpers/utilities';
 
-import { getGeoDataCountriesLambda, getGeoDataStatesLambda, updateGeoDataCitiesLambda, updateGeoDataCountriesLambda, updateGeoDataStatesLambda } from './lambdas';
+import { getGeoDataCitiesLambda, getGeoDataCountriesLambda, getGeoDataStatesLambda, updateGeoDataCitiesLambda, updateGeoDataCountriesLambda, updateGeoDataStatesLambda } from './lambdas';
 
 const apiVersion = 'v1';
 interface ApiNodes {
@@ -71,14 +71,12 @@ export default function configureApiGatewayResources(scope: Construct) {
     };
 
     configureEndpoint(apiNodes.geoData, 'update-countries', updateGeoDataCountriesLambda, null, requestValidatorInstance);
-    configureEndpoint(apiNodes.geoData, 'get-countries', getGeoDataCountriesLambda, null, requestValidatorInstance);
-    
     configureEndpoint(apiNodes.geoData, 'update-states', updateGeoDataStatesLambda, null, requestValidatorInstance);
-    configureEndpoint(apiNodes.geoData, 'get-states', getGeoDataStatesLambda, null, requestValidatorInstance);
-    
     configureEndpoint(apiNodes.geoData, 'update-cities', updateGeoDataCitiesLambda, null, requestValidatorInstance);
     
-
+    configureEndpoint(apiNodes.geoData, 'get-countries', getGeoDataCountriesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.geoData, 'get-states', getGeoDataStatesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.geoData, 'get-cities', getGeoDataCitiesLambda, null, requestValidatorInstance);
 }
 
 /**

@@ -40,7 +40,8 @@ export default function configureDynamoDbResources(scope: Construct ) {
     });
     cities.addGlobalSecondaryIndex({
         indexName: ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE,
-        partitionKey: { name: 'stateCode', type: AttributeType.STRING },
+        partitionKey: { name: 'countryCode', type: AttributeType.STRING },
+        sortKey: { name: 'stateCode', type: AttributeType.STRING },
         projectionType: ProjectionType.ALL,
     });
 }
