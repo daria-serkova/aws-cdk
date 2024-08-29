@@ -10,9 +10,9 @@ const countriesParams = SupportedCountries.map(country => `country=${encodeURICo
 const geoNamesUrl = `http://api.geonames.org/countryInfoJSON?username=${process.env.GEONAMES_USERNAME}&lang=$1&${countriesParams}`;
 
 interface Country {
+    geonameId: number;
     countryCode: string;
     countryName: string;
-    geonameId: number;
 }
 interface GeoNamesResponse<T> {
     geonames?: T[];

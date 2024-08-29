@@ -2,6 +2,7 @@ import { DynamoDBClient, QueryCommand, PutItemCommand } from '@aws-sdk/client-dy
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { ResourceName } from '../lib/resource-reference';
 import { getCurrentTime, SupportedCountries, SupportedLanguages } from '../helpers/utilities';
+import { APIGatewayProxyHandler } from 'aws-lambda';
 
 const dynamoDb = new DynamoDBClient({
     region: process.env.REGION,
@@ -27,19 +28,17 @@ interface GeoNamesResponse<T> {
     geonames?: T[];
 }
 
-exports.handler = async (event: any) => {
-    const { countryCode, stateCode } = JSON.parse(event.body);
-
-    if (!SupportedCountries.includes(countryCode)) {
-        return {
-            statusCode: 400,
-            body: JSON.stringify({ error: 'Attempt to update list of cities for unsupported country' }),
-        };
-    }
-
+/**
+ * AWS Lambda function that retrieves cities data from GeoNames API and store it in the DynamoDB table.
+ * 
+ * @param event - The input event to the Lambda function, containing the request body with the `countryCode` and `stateCode` parameters.
+ * @returns The response object containing the status code and the JSON body with the results or error message.
+ */
+ export const handler: APIGatewayProxyHandler = async (event) => {
     try {
-        // Step 1: Retrieve state data from DynamoDB if stateCode is '*'
+        const { countryCode, stateCode } = JSON.parse(event.body);
         let states: string[] = [];
+        // Retrieve state data from DynamoDB if stateCode is '*'
         if (stateCode === '*') {
             const queryCommand = new QueryCommand({
                 TableName: stateTable,
@@ -55,8 +54,7 @@ exports.handler = async (event: any) => {
         } else {
             states = [stateCode];
         }
-
-        // Step 2: Fetch and store city data for each state
+        // Fetch and store city data for each state
         const fetchCitiesPromises = states.flatMap((state: string) =>
             SupportedLanguages.map(async (language) => {
                 const url = geoNamesUrl.replace('$1', language)
@@ -79,23 +77,20 @@ exports.handler = async (event: any) => {
         );
 
         const citiesResults = await Promise.all(fetchCitiesPromises.flat());
-        
-        // Step 3: Aggregate and store city data in DynamoDB
+        // Aggregate and store city data in DynamoDB
         const updatedAt = getCurrentTime();
         const citiesMap = citiesResults.flat().reduce((acc, city) => {
             const key = `${city.stateCode}#${city.geonameId}`;
-           
-                if (!acc[key]) {
-                    acc[key] = {
-                        stateCode: city.stateCode,
-                        countryCode: city.countryCode,
-                        geonameId: city.geonameId,
-                        ...Object.fromEntries(SupportedLanguages.map(lang => [lang, ''])),
-                        updatedAt
-                    };
-                }
-                acc[key][city.language] = city.cityName;
-           
+            if (!acc[key]) {
+                acc[key] = {
+                    stateCode: city.stateCode,
+                    countryCode: city.countryCode,
+                    geonameId: city.geonameId,
+                    ...Object.fromEntries(SupportedLanguages.map(lang => [lang, ''])),
+                    updatedAt
+                };
+            }
+            acc[key][city.language] = city.cityName;
             return acc;
         }, {} as Record<string, any>);
 
@@ -105,20 +100,19 @@ exports.handler = async (event: any) => {
                 Object.entries(city).filter(([_, value]) => value !== undefined)
             );
         });
-
         const writeCitiesPromises = cleanCitiesMap.map(city => {
             const entry = {
                 TableName: cityTable,
-                Item: marshall(city, { removeUndefinedValues: true }),  // Remove undefined values during marshalling
+                Item: marshall(city, { removeUndefinedValues: true }),
             };
             return dynamoDb.send(new PutItemCommand(entry));
         });
 
         await Promise.all(writeCitiesPromises);
-
+        console.info('City information updated successfully');
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'City information stored successfully' }),
+            body: JSON.stringify({ message: 'City information updated successfully' }),
         };
     } catch (error) {
         console.error('Error fetching or storing city info:', error);

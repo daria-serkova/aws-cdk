@@ -17,10 +17,10 @@ const countryTableIndex = ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE;
 const stateTable = ResourceName.dynamoDb.GEO_DATA_STATES_TABLE;
 
 interface State {
+    geonameId: number;
     adminCode1: string;
     adminName1: string;
     countryCode: string;
-    geonameId: number;
 }
 interface GeoNamesResponse<T> {
     geonames?: T[];
