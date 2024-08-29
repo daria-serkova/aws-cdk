@@ -93,13 +93,13 @@ export default function configureApiGatewayResources(scope: Construct) {
     };
 
     // Configure endpoints for each geo data resource (country, state, city).
-    configureEndpoint(apiNodes.country, 'update', updateGeoDataCountriesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.country, 'update-list', updateGeoDataCountriesLambda, null, requestValidatorInstance);
     configureEndpoint(apiNodes.country, 'get-list', getGeoDataCountriesLambda, requestModelGetCountriesList(apiGatewayInstance), requestValidatorInstance);
     
-    configureEndpoint(apiNodes.state, 'update', updateGeoDataStatesLambda, requestModelUpdateStatesList(apiGatewayInstance), requestValidatorInstance);
+    configureEndpoint(apiNodes.state, 'update-list', updateGeoDataStatesLambda, requestModelUpdateStatesList(apiGatewayInstance), requestValidatorInstance);
     configureEndpoint(apiNodes.state, 'get-list', getGeoDataStatesLambda, null, requestValidatorInstance);
     
-    configureEndpoint(apiNodes.city, 'update', updateGeoDataCitiesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.city, 'update-list', updateGeoDataCitiesLambda, null, requestValidatorInstance);
     configureEndpoint(apiNodes.city, 'get-list', getGeoDataCitiesLambda, null, requestValidatorInstance);
 }
 
