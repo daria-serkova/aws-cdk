@@ -76,7 +76,7 @@ exports.handler = async () => {
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Country information stored successfully' }),
+            body: JSON.stringify({ message: 'Country information updated successfully' }),
         };
     } catch (error) {
         console.error('Error fetching or storing country info:', error);
