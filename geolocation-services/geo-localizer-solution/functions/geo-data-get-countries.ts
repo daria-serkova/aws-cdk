@@ -10,7 +10,7 @@ const dynamoDb = new DynamoDBClient({
 const table = ResourceName.dynamoDb.GEO_DATA_COUNTRIES_TABLE;
 
 /**
- * AWS Lambda function that retrieves and processes country data from a DynamoDB table.
+ * AWS Lambda function that retrieves country data from a DynamoDB table.
  * 
  * @param event - The input event to the Lambda function, containing the request body with the `language` parameter.
  * @returns The response object containing the status code and the JSON body with the results or error message.

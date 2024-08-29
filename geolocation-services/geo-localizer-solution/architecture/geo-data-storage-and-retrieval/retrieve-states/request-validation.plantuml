@@ -1,0 +1,11 @@
+@startmindmap API Validation
+* API Validation
+** language
+*** Type: STRING
+*** Enum: SupportedLanguages
+*** Required: Yes
+** countryCode
+*** Type: STRING
+*** Enum: SupportedCountries
+*** Required: Yes
+@endmindmap

@@ -97,7 +97,7 @@ export default function configureApiGatewayResources(scope: Construct) {
     configureEndpoint(apiNodes.country, 'get-list', getGeoDataCountriesLambda, requestModelGetCountriesList(apiGatewayInstance), requestValidatorInstance);
     
     configureEndpoint(apiNodes.state, 'update-list', updateGeoDataStatesLambda, requestModelUpdateStatesList(apiGatewayInstance), requestValidatorInstance);
-    configureEndpoint(apiNodes.state, 'get-list', getGeoDataStatesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.state, 'get-list', getGeoDataStatesLambda, requestModelGetStatesList(apiGatewayInstance), requestValidatorInstance);
     
     configureEndpoint(apiNodes.city, 'update-list', updateGeoDataCitiesLambda, null, requestValidatorInstance);
     configureEndpoint(apiNodes.city, 'get-list', getGeoDataCitiesLambda, null, requestValidatorInstance);
@@ -120,7 +120,38 @@ function configureEndpoint(node: Resource, resourceName: string, handler: any, r
         requestValidator: validator,
     });
 }
-
+/**
+ * Creates a JSON schema property definition for a string type.
+ * 
+ * @param {string[]} [enumValues] - An optional array of string values that the property is allowed to take.
+ * @param {string} [pattern] - An optional regex pattern that the property value must match.
+ * @returns A JSON schema definition for a string property.
+ */
+ function createStringProperty(enumValues?: string[], pattern?: string) {
+    const property: any = { type: JsonSchemaType.STRING };
+    if (enumValues) property.enum = enumValues;
+    if (pattern) property.pattern = pattern;
+    return property;
+}
+/**
+ * Creates a request model with specified properties and validation rules.
+ * 
+ * @param {string} description - A description of the request model.
+ * @param {any} properties - The JSON schema properties for the model.
+ * @param {string[]} required - An array of required properties for the model.
+ * @returns A JSON schema model for validating API request bodies.
+ */
+ function createRequestModel(description: string, properties: any, required: string[]) {
+    return {
+        contentType: 'application/json',
+        description,
+        schema: {
+            type: JsonSchemaType.OBJECT,
+            properties,
+            required,
+        },
+    };
+}
 /**
  * Creates a request model for the Get Countries List API endpoint.
  * 
@@ -137,7 +168,7 @@ const requestModelGetCountriesList = (apiGateway: RestApi) => {
  * Creates a request model for the Update States API endpoint.
  * 
  * @param {RestApi} apiGateway - The API Gateway instance where the model will be added.
- * @returns The request model to be used for validating the pdate States API.
+ * @returns The request model to be used for validating the Update States API.
  */
  const requestModelUpdateStatesList = (apiGateway: RestApi) => {
     const requestModel = createRequestModel(`${serviceName}: Request Model - Update States List API`, {
@@ -145,37 +176,16 @@ const requestModelGetCountriesList = (apiGateway: RestApi) => {
     }, ['countryCode']);
     return apiGateway.addModel(ResourceName.apiGateway.REQUEST_MODEL_GEO_STATES_UPDATE_LIST, requestModel);
 };
-
 /**
- * Creates a request model with specified properties and validation rules.
+ * Creates a request model for the Get States API endpoint.
  * 
- * @param {string} description - A description of the request model.
- * @param {any} properties - The JSON schema properties for the model.
- * @param {string[]} required - An array of required properties for the model.
- * @returns A JSON schema model for validating API request bodies.
+ * @param {RestApi} apiGateway - The API Gateway instance where the model will be added.
+ * @returns The request model to be used for validating the Get States API.
  */
-function createRequestModel(description: string, properties: any, required: string[]) {
-    return {
-        contentType: 'application/json',
-        description,
-        schema: {
-            type: JsonSchemaType.OBJECT,
-            properties,
-            required,
-        },
-    };
-}
-
-/**
- * Creates a JSON schema property definition for a string type.
- * 
- * @param {string[]} [enumValues] - An optional array of string values that the property is allowed to take.
- * @param {string} [pattern] - An optional regex pattern that the property value must match.
- * @returns A JSON schema definition for a string property.
- */
-function createStringProperty(enumValues?: string[], pattern?: string) {
-    const property: any = { type: JsonSchemaType.STRING };
-    if (enumValues) property.enum = enumValues;
-    if (pattern) property.pattern = pattern;
-    return property;
-}
+ const requestModelGetStatesList = (apiGateway: RestApi) => {
+    const requestModel = createRequestModel(`${serviceName}: Request Model - Get States List API`, {
+        countryCode: createStringProperty(SupportedCountries),
+        language: createStringProperty(SupportedLanguages),
+    }, ['countryCode', 'language']);
+    return apiGateway.addModel(ResourceName.apiGateway.REQUEST_MODEL_GEO_STATES_GET_LIST, requestModel);
+};
