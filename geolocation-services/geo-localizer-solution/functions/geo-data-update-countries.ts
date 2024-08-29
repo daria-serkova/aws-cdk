@@ -1,7 +1,7 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 import { ResourceName } from '../lib/resource-reference';
-import { SupportedLanguages } from '../helpers/utilities';
+import { getCurrentTime, SupportedLanguages } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
 const geoNamesUrl = `http://api.geonames.org/countryInfoJSON?username=${process.env.GEONAMES_USERNAME}&lang=$1`;
@@ -52,7 +52,8 @@ exports.handler = async () => {
                 acc[country.geonameId] = {
                     geonameId: country.geonameId,
                     countryCode: country.countryCode,
-                    ...Object.fromEntries(SupportedLanguages.map(lang => [lang, '']))
+                    ...Object.fromEntries(SupportedLanguages.map(lang => [lang, ''])),
+                    updatedAt: getCurrentTime(),
                 };
             }
             acc[country.geonameId][country.language] = country.countryName;

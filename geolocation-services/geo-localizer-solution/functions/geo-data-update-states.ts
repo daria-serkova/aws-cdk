@@ -1,7 +1,7 @@
 import { DynamoDBClient, QueryCommand, PutItemCommand, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { ResourceName } from '../lib/resource-reference';
-import { SupportedLanguages } from '../helpers/utilities';
+import { getCurrentTime, SupportedLanguages } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({
     region: process.env.REGION,
@@ -87,7 +87,8 @@ exports.handler = async (event: any) => {
                     stateCode: state.stateCode,
                     countryCode: state.countryCode,
                     geonameId: state.geonameId,
-                    ...Object.fromEntries(SupportedLanguages.map(lang => [lang, '']))
+                    ...Object.fromEntries(SupportedLanguages.map(lang => [lang, ''])),
+                    updatedAt: getCurrentTime(),
                 };
             }
             acc[key][state.language] = state.stateName;

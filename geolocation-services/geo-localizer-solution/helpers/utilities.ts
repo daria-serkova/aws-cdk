@@ -12,6 +12,11 @@ export const isProduction = process.env.TAG_ENVIRONMENT === 'production';
  */
 export const generateUUID = (): string => uuidv4();
 /**
+ * Generates current date in unified format across application.
+ * @returns {string} - timestamp value.
+ */
+export const getCurrentTime = (): string => new Date().getTime().toString();
+/**
  * Generates a unique UUID value with length of 8 characters.
  * @returns {string} - A UUID string representing a unique identifier for name's suffix.
  */
