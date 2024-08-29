@@ -1,29 +1,25 @@
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { marshall } from '@aws-sdk/util-dynamodb';
+import { DynamoDBClient, QueryCommand, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { ResourceName } from '../lib/resource-reference';
-import { SupportedLanguages } from '../helpers/utilities';
+import { getCurrentTime, SupportedCountries, SupportedLanguages } from '../helpers/utilities';
 
-const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
-const geoNamesUrls = {
-    countries: `http://api.geonames.org/countryInfoJSON?username=${process.env.GEONAMES_USERNAME}&lang=$1`,
-    states: `http://api.geonames.org/childrenJSON?geonameId=$1&username=${process.env.GEONAMES_USERNAME}&lang=$2`
-};
-const tables = {
-    countries: ResourceName.dynamoDb.GEO_DATA_COUNTRIES_TABLE,
-    states: ResourceName.dynamoDb.GEO_DATA_STATES_TABLE,
-    cities: ResourceName.dynamoDb.GEO_DATA_CITIES_TABLE
-};
+const dynamoDb = new DynamoDBClient({
+    region: process.env.REGION,
+    requestHandler: {
+        requestTimeout: 3000,
+        httpsAgent: { maxSockets: 25 },
+    },
+});
 
-// Define TypeScript interfaces for the GeoNames API responses
-interface Country {
-    countryCode: string;
-    countryName: string;
-    geonameId: number; // Add geonameId
-}
+const geoNamesUrl = `http://api.geonames.org/searchJSON?username=${process.env.GEONAMES_USERNAME}&lang=$1&adminCode1=$2&country=$3&fcode=PPLA&fcode=PPLA2`;
+const stateTable = ResourceName.dynamoDb.GEO_DATA_STATES_TABLE;
+const stateTableIndex = ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE;
+const cityTable = ResourceName.dynamoDb.GEO_DATA_CITIES_TABLE;
 
-interface State {
+interface City {
+    geonameId: number;
+    name: string;
     adminCode1: string;
-    adminName1: string;
     countryCode: string;
 }
 
@@ -31,64 +27,102 @@ interface GeoNamesResponse<T> {
     geonames?: T[];
 }
 
-exports.handler = async () => {
+exports.handler = async (event: any) => {
+    const { countryCode, stateCode } = JSON.parse(event.body);
+
+    if (!SupportedCountries.includes(countryCode)) {
+        return {
+            statusCode: 400,
+            body: JSON.stringify({ error: 'Attempt to update list of cities for unsupported country' }),
+        };
+    }
+
     try {
-        // Fetch country data in different languages
-        const fetchCountriesPromises = SupportedLanguages.map(async (language) => {
-            const url = geoNamesUrls.countries.replace('$1', language);
-            const response = await fetch(url);
-            const data: GeoNamesResponse<Country> = await response.json();
-            if (!data.geonames || !data.geonames.length) {
-                console.warn(`No data found for language ${language}`);
-                return [];
-            }
-            return data.geonames.map((country) => ({
-                countryCode: country.countryCode,
-                countryName: country.countryName,
-                geonameId: country.geonameId,
-                language: language
-            }));
-        });
+        // Step 1: Retrieve state data from DynamoDB if stateCode is '*'
+        let states: string[] = [];
+        if (stateCode === '*') {
+            const queryCommand = new QueryCommand({
+                TableName: stateTable,
+                IndexName: stateTableIndex,
+                KeyConditionExpression: 'countryCode = :countryCode',
+                ExpressionAttributeValues: {
+                    ':countryCode': { S: countryCode },
+                },
+                ProjectionExpression: 'stateCode',
+            });
+            const { Items } = await dynamoDb.send(queryCommand);
+            states = Items?.map(item => unmarshall(item).stateCode) || [];
+        } else {
+            states = [stateCode];
+        }
 
-        // Wait for all fetch operations to complete
-        const countriesResults = await Promise.all(fetchCountriesPromises);
+        // Step 2: Fetch and store city data for each state
+        const fetchCitiesPromises = states.flatMap((state: string) =>
+            SupportedLanguages.map(async (language) => {
+                const url = geoNamesUrl.replace('$1', language)
+                                      .replace('$2', state)
+                                      .replace('$3', countryCode);
+                const response = await fetch(url);
+                const data: GeoNamesResponse<City> = await response.json();
+                if (!data.geonames || !data.geonames.length) {
+                    console.warn(`No city data found for stateCode ${state} and countryCode ${countryCode}`);
+                    return [];
+                }
+                return data.geonames.map((city) => ({
+                    geonameId: city.geonameId,
+                    countryCode: city.countryCode,
+                    stateCode: city.adminCode1,
+                    language: language,
+                    cityName: city.name,
+                }));
+            })
+        );
 
-        // Aggregate country names by geonameId
-        const countriesMap = countriesResults.flat().reduce((acc, country) => {
-            if (!acc[country.geonameId]) {
-                acc[country.geonameId] = {
-                    geonameId: country.geonameId,
-                    countryCode: country.countryCode,
-                    ...Object.fromEntries(SupportedLanguages.map(lang => [lang, '']))
+        const citiesResults = await Promise.all(fetchCitiesPromises.flat());
+
+        // Step 3: Aggregate and store city data in DynamoDB
+        const updatedAt = getCurrentTime();
+        const citiesMap = citiesResults.reduce((acc, city: any) => {
+            const key = `${city.stateCode}#${city.geonameId}`;
+            if (!acc[key]) {
+                acc[key] = {
+                    stateCode: city.stateCode,
+                    countryCode: city.countryCode,
+                    geonameId: city.geonameId,
+                    ...Object.fromEntries(SupportedLanguages.map(lang => [lang, ''])),
+                    updatedAt
                 };
             }
-            acc[country.geonameId][country.language] = country.countryName;
+            acc[key][city.language] = city.cityName;
             return acc;
-        }, {} as Record<number, any>);
+        }, {} as Record<string, any>);
 
-        // Create DynamoDB write operations for countries
-        const writeCountriesPromises = Object.values(countriesMap).map(country => {
+        // Remove undefined values before marshalling
+        const cleanCitiesMap = Object.values(citiesMap).map(city => {
+            return Object.fromEntries(
+                Object.entries(city).filter(([_, value]) => value !== undefined)
+            );
+        });
+
+        const writeCitiesPromises = cleanCitiesMap.map(city => {
             const entry = {
-                TableName: tables.countries,
-                Item: marshall(country),
+                TableName: cityTable,
+                Item: marshall(city, { removeUndefinedValues: true }),  // Remove undefined values during marshalling
             };
-
             return dynamoDb.send(new PutItemCommand(entry));
         });
 
-        // Wait for all DynamoDB write operations to complete for countries
-        await Promise.all(writeCountriesPromises);
+        await Promise.all(writeCitiesPromises);
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Country information stored successfully' }),
+            body: JSON.stringify({ message: 'City information stored successfully' }),
         };
     } catch (error) {
-        console.error('Error fetching or storing country info:', error);
-
+        console.error('Error fetching or storing city info:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to fetch or store country information' }),
+            body: JSON.stringify({ error: 'Failed to fetch or store city information' }),
         };
     }
 };

@@ -17,6 +17,7 @@ let getGeoDataStatesLambdaInstance: NodejsFunction;
 export const updateGeoDataCountriesLambda = () => updateGeoDataCountriesLambdaInstance;
 export const updateGeoDataStatesLambda = () => updateGeoDataStatesLambdaInstance;
 export const updateGeoDataCitiesLambda = () => updateGeoDataCitiesLambdaInstance;
+
 export const getGeoDataCountriesLambda = () => getGeoDataCountriesLambdaInstance;
 export const getGeoDataStatesLambda = () => getGeoDataStatesLambdaInstance;
 
@@ -32,9 +33,11 @@ const defaultLambdaSettings = {
 export default function configureLambdaResources(scope: Construct, logGroup: LogGroup) {
     updateGeoDataCountriesLambdaInstance = configureLambdaUpdateGeoDataCountries(scope, logGroup);
     getGeoDataCountriesLambdaInstance = configureLambdaGetGeoDataCountries(scope, logGroup);
+    
     updateGeoDataStatesLambdaInstance = configureLambdaUpdateGeoDataStates(scope, logGroup);
     getGeoDataStatesLambdaInstance = configureLambdaGetGeoDataStates(scope, logGroup);
-    //updateGeoDataCitiesLambdaInstance = configureLambdaUpdateGeoDataCities(scope, logGroup);
+
+    updateGeoDataCitiesLambdaInstance = configureLambdaUpdateGeoDataCities(scope, logGroup);
     //getGeoDataLambdaInstance = configureLambdaGetGeoData(scope, logGroup);
 }
 
@@ -126,6 +129,8 @@ const configureLambdaGetGeoDataStates = (scope: Construct, logGroup: LogGroup): 
 const configureLambdaUpdateGeoDataCities = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.LAMBDA_UPDATE_GEO_DATA_CITIES);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
+    addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDb.GEO_DATA_STATES_TABLE);
+    addDynamoDbIndexReadPolicy(iamRole, ResourceName.dynamoDb.GEO_DATA_STATES_TABLE, ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE);
     addDynamoDbWritePolicy(iamRole, ResourceName.dynamoDb.GEO_DATA_CITIES_TABLE);
     const lambda = new NodejsFunction(scope, ResourceName.lambda.LAMBDA_UPDATE_GEO_DATA_CITIES, {
         functionName: ResourceName.lambda.LAMBDA_UPDATE_GEO_DATA_CITIES,

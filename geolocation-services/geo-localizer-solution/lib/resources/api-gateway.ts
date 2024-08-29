@@ -76,6 +76,7 @@ export default function configureApiGatewayResources(scope: Construct) {
     configureEndpoint(apiNodes.geoData, 'update-states', updateGeoDataStatesLambda, null, requestValidatorInstance);
     configureEndpoint(apiNodes.geoData, 'get-states', getGeoDataStatesLambda, null, requestValidatorInstance);
     
+    configureEndpoint(apiNodes.geoData, 'update-cities', updateGeoDataCitiesLambda, null, requestValidatorInstance);
     
 
 }
