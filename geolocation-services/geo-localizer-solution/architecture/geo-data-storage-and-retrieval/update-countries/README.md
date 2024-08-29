@@ -37,7 +37,7 @@ The API endpoint does not require any parameters or request body.
 
 ### API Response Format
 
-Sample of the response from AWS service with S3 pre-signed urls per each document:
+Sample of the response from AWS service:
 ```
 {
     "message": "Country information updated successfully"

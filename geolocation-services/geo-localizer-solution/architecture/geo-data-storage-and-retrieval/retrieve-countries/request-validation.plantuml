@@ -1,0 +1,7 @@
+@startmindmap API Validation
+* API Validation
+** language
+*** Type: STRING
+*** Enum: SupportedLanguages
+*** Required: Yes
+@endmindmap
