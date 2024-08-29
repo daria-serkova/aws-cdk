@@ -1,0 +1,7 @@
+@startmindmap API Validation
+* API Validation
+** countryCode
+*** Type: STRING
+*** Enum: SupportedCountries OR '*'
+*** Required: Yes
+@endmindmap
