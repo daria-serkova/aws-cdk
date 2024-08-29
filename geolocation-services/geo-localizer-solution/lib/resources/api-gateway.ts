@@ -13,8 +13,11 @@ import { isProduction } from '../../helpers/utilities';
 import { getGeoDataCitiesLambda, getGeoDataCountriesLambda, getGeoDataStatesLambda, updateGeoDataCitiesLambda, updateGeoDataCountriesLambda, updateGeoDataStatesLambda } from './lambdas';
 
 const apiVersion = 'v1';
+const serviceName = 'Geolocation Service';
 interface ApiNodes {
-    geoData: Resource;
+    country: Resource,
+    state: Resource,
+    city: Resource
 }
 /**
  * Function creates and configure API Gateway resources.
@@ -23,7 +26,7 @@ interface ApiNodes {
 export default function configureApiGatewayResources(scope: Construct) {
     const apiGatewayInstance = new RestApi(scope, ResourceName.apiGateway.API_GATEWAY, {
         restApiName: ResourceName.apiGateway.API_GATEWAY,
-        description: 'Geolocation Service: API Layer',
+        description: `${serviceName}: API Layer`,
         deployOptions: {
             stageName: isProduction ? 'prod' : 'dev',
             tracingEnabled: true,
@@ -36,7 +39,7 @@ export default function configureApiGatewayResources(scope: Construct) {
 
     const usagePlan = apiGatewayInstance.addUsagePlan(ResourceName.apiGateway.API_USAGE_PLAN, {
         name: ResourceName.apiGateway.API_USAGE_PLAN,
-        description: 'Geolocation Service: Usage plan',
+        description: `${serviceName}: Usage Plan`,
         apiStages: [{
             api: apiGatewayInstance,
             stage: apiGatewayInstance.deploymentStage,
@@ -53,7 +56,7 @@ export default function configureApiGatewayResources(scope: Construct) {
 
     const apiKey = apiGatewayInstance.addApiKey(ResourceName.apiGateway.API_KEY, {
         apiKeyName: ResourceName.apiGateway.API_KEY,
-        description: 'Geolocation Service: API Key',
+        description: `${serviceName}: API Key`,
     });
     usagePlan.addApiKey(apiKey);
 
@@ -66,17 +69,21 @@ export default function configureApiGatewayResources(scope: Construct) {
         }
     );
     const version = apiGatewayInstance.root.addResource(apiVersion);
+    const parentNode =  version.addResource('geo');
     const apiNodes: ApiNodes = {
-        geoData: version.addResource('geo-data'),
+        country: parentNode.addResource('country'),
+        state: parentNode.addResource('state'),
+        city: parentNode.addResource('city'),
     };
 
-    configureEndpoint(apiNodes.geoData, 'update-countries', updateGeoDataCountriesLambda, null, requestValidatorInstance);
-    configureEndpoint(apiNodes.geoData, 'update-states', updateGeoDataStatesLambda, null, requestValidatorInstance);
-    configureEndpoint(apiNodes.geoData, 'update-cities', updateGeoDataCitiesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.country, 'update', updateGeoDataCountriesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.country, 'get-list', getGeoDataCountriesLambda, null, requestValidatorInstance);
     
-    configureEndpoint(apiNodes.geoData, 'get-countries', getGeoDataCountriesLambda, null, requestValidatorInstance);
-    configureEndpoint(apiNodes.geoData, 'get-states', getGeoDataStatesLambda, null, requestValidatorInstance);
-    configureEndpoint(apiNodes.geoData, 'get-cities', getGeoDataCitiesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.state, 'update', updateGeoDataStatesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.state, 'get-list', getGeoDataStatesLambda, null, requestValidatorInstance);
+    
+    configureEndpoint(apiNodes.city, 'update', updateGeoDataCitiesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.city, 'get-list', getGeoDataCitiesLambda, null, requestValidatorInstance);
 }
 
 /**
