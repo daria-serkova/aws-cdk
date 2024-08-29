@@ -47,13 +47,14 @@ exports.handler = async () => {
         const countriesResults = await Promise.all(fetchCountriesPromises);
 
         // Aggregate country names by geonameId
+        const updatedAt = getCurrentTime();
         const countriesMap = countriesResults.flat().reduce((acc, country) => {
             if (!acc[country.geonameId]) {
                 acc[country.geonameId] = {
                     geonameId: country.geonameId,
                     countryCode: country.countryCode,
                     ...Object.fromEntries(SupportedLanguages.map(lang => [lang, ''])),
-                    updatedAt: getCurrentTime(),
+                    updatedAt
                 };
             }
             acc[country.geonameId][country.language] = country.countryName;

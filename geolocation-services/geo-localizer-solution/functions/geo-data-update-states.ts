@@ -80,6 +80,7 @@ exports.handler = async (event: any) => {
         const statesResults = await Promise.all(fetchStatesPromises.flat());
 
         // Step 3: Aggregate and store state data in DynamoDB
+        const updatedAt = getCurrentTime();
         const statesMap = statesResults.flat().reduce((acc, state) => {
             const key = `${state.stateCode}#${state.geonameId}`;
             if (!acc[key]) {
@@ -88,7 +89,7 @@ exports.handler = async (event: any) => {
                     countryCode: state.countryCode,
                     geonameId: state.geonameId,
                     ...Object.fromEntries(SupportedLanguages.map(lang => [lang, ''])),
-                    updatedAt: getCurrentTime(),
+                    updatedAt
                 };
             }
             acc[key][state.language] = state.stateName;
