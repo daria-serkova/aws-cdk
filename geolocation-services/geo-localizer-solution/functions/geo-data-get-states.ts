@@ -50,13 +50,14 @@ const tableIndex = ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE;
             ExpressionAttributeValues: {
                 ':countryCode': { S: countryCode },
             },
-            ProjectionExpression: `geonameId, ${language}`,
+            ProjectionExpression: `geonameId, stateCode, ${language}`,
         });
 
         const result = await dynamoDb.send(queryCommand);
 
         const states = result.Items ? result.Items.map(item => ({
             geonameId: item.geonameId.N,
+            stateCode: item.stateCode.S,
             name: item[language].S,
         })).sort((a, b) => a.name.localeCompare(b.name)) : [];
 

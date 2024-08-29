@@ -3,7 +3,7 @@ import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 import { ResourceName } from '../lib/resource-reference';
 import { SupportedLanguages } from '../helpers/utilities';
 
-const dynamoDb = new DynamoDBClient({ 
+const dynamoDb = new DynamoDBClient({
     region: process.env.REGION,
     requestHandler: {
         requestTimeout: 3000,
@@ -12,13 +12,8 @@ const dynamoDb = new DynamoDBClient({
 });
 const geoNamesUrl = `http://api.geonames.org/childrenJSON?geonameId=$1&username=${process.env.GEONAMES_USERNAME}&lang=$2`;
 const countryTable = ResourceName.dynamoDb.GEO_DATA_COUNTRIES_TABLE;
+const countryTableIndex = ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE;
 const stateTable = ResourceName.dynamoDb.GEO_DATA_STATES_TABLE;
-
-interface Country {
-    countryCode: string;
-    countryName: string;
-    geonameId: number;
-}
 
 interface State {
     adminCode1: string;
@@ -32,24 +27,25 @@ interface GeoNamesResponse<T> {
 }
 
 exports.handler = async (event: any) => {
-    const { geonameId } = JSON.parse(event.body);
+    const { countryCode } = JSON.parse(event.body);
     let geonameIds: number[] = [];
     try {
-        if (geonameId) {
-            // Fetch geonameId for the provided countryCode
+        // Step 1: Retrieve geonameId(s) from the country table based on the provided countryCode
+        if (countryCode) {
             const queryCommand = new QueryCommand({
                 TableName: countryTable,
-                KeyConditionExpression: 'geonameId = :geonameId',
+                IndexName: countryTableIndex,
+                KeyConditionExpression: 'countryCode = :countryCode',
                 ExpressionAttributeValues: {
-                    ':geonameId': { N: geonameId },
+                    ':countryCode': { S: countryCode },
                 },
+                ProjectionExpression: 'geonameId',
             });
-
             const { Items } = await dynamoDb.send(queryCommand);
             if (Items && Items.length > 0) {
-                geonameIds.push(geonameId);
+                geonameIds = Items.map(item => unmarshall(item).geonameId);
             } else {
-                throw new Error(`No record found for geonameId: ${geonameId}`);
+                throw new Error(`No record found for countryCode: ${countryCode}`);
             }
         } else {
             const scanCommand = {
