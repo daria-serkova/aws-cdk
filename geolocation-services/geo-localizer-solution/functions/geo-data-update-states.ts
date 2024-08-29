@@ -31,7 +31,7 @@ exports.handler = async (event: any) => {
     let geonameIds: number[] = [];
     try {
         // Step 1: Retrieve geonameId(s) from the country table based on the provided countryCode
-        if (countryCode) {
+        if (countryCode && countryCode !== '*') {
             const queryCommand = new QueryCommand({
                 TableName: countryTable,
                 IndexName: countryTableIndex,
