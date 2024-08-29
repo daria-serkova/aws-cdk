@@ -4,7 +4,7 @@ The Update Country Data process is a crucial component of the data management fr
 
 The process involves fetching country data in multiple supported languages, which is then organized and stored in the DynamoDB table. This ensures a reliable, scalable, and multilingual repository of country information, enabling seamless access and integration across various applications. The process is integral to maintaining the accuracy and relevance of country-specific data in the system.
 
-## Components View
+## Process
 
 ![Components View](#)
 
@@ -17,7 +17,9 @@ Lists of countries and languages, which data should be copied to organization's 
 
 ### API Endpoint
 
+```
 {{API_GATEWAY_URL}}/geo/country/update
+```
 
 ### API Supported Methods
 
