@@ -4,7 +4,7 @@ The Get Countries List process is an essential part of the data access layer, de
 
 This API endpoint fetches the list of countries in the language specified in the request. The information is organized and retrieved from the DynamoDB table, ensuring quick and accurate access to country data. The process is vital for applications that require a multilingual repository of country information, enabling seamless integration and access across various services.
 
-## Components View
+## Process
 
 ![Components View](#)
 
@@ -16,7 +16,9 @@ This endpoint is used to retrieve a list of countries from the system’s Dynamo
 
 ### API Endpoint
 
+```
 {{API_GATEWAY_URL}}/geo/country/get-list
+```
 
 ### API Supported Methods
 
