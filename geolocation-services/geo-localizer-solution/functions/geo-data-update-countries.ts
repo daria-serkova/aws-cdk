@@ -1,32 +1,24 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { marshall } from '@aws-sdk/util-dynamodb';
 import { ResourceName } from '../lib/resource-reference';
-import { getCurrentTime, SupportedLanguages } from '../helpers/utilities';
+import { getCurrentTime, SupportedCountries, SupportedLanguages } from '../helpers/utilities';
 
-const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
-const geoNamesUrl = `http://api.geonames.org/countryInfoJSON?username=${process.env.GEONAMES_USERNAME}&lang=$1`;
 const table = ResourceName.dynamoDb.GEO_DATA_COUNTRIES_TABLE;
+const dynamoDb = new DynamoDBClient({ region: process.env.REGION });
+const countriesParams = SupportedCountries.map(country => `country=${encodeURIComponent(country)}`).join('&');
+const geoNamesUrl = `http://api.geonames.org/countryInfoJSON?username=${process.env.GEONAMES_USERNAME}&lang=$1&${countriesParams}`;
 
-// Define TypeScript interfaces for the GeoNames API responses
 interface Country {
     countryCode: string;
     countryName: string;
-    geonameId: number; // Add geonameId
+    geonameId: number;
 }
-
-interface State {
-    adminCode1: string;
-    adminName1: string;
-    countryCode: string;
-}
-
 interface GeoNamesResponse<T> {
     geonames?: T[];
 }
 
 exports.handler = async () => {
     try {
-        // Fetch country data in different languages
         const fetchCountriesPromises = SupportedLanguages.map(async (language) => {
             const url = geoNamesUrl.replace('$1', language);
             const response = await fetch(url);
@@ -73,14 +65,12 @@ exports.handler = async () => {
 
         // Wait for all DynamoDB write operations to complete for countries
         await Promise.all(writeCountriesPromises);
-
         return {
             statusCode: 200,
             body: JSON.stringify({ message: 'Country information updated successfully' }),
         };
     } catch (error) {
         console.error('Error fetching or storing country info:', error);
-
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Failed to fetch or store country information' }),

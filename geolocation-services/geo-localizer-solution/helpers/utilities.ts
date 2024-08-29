@@ -27,4 +27,25 @@ export const getCurrentTime = (): string => new Date().getTime().toString();
 export const SupportedParamsPatterns = {
     IP: "^((25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$"
 }
-export const SupportedLanguages = ['en', 'hi', 'ru', 'fr'];
+/**
+ * List of supported countries for the application.
+ * The country codes listed here must match the values provided by the GeoNames API.
+ * This ensures consistency and accurate data retrieval when interacting with GeoNames.
+ */
+export const SupportedCountries : string [] = [
+    'US', // United States
+    'IN', // India
+    'CA', // Canada
+    'RU', // Russia 
+];
+/**
+ * List of supported languages for the application.
+ * The language codes listed here must match the values provided by the GeoNames API.
+ * This ensures consistency and accurate data retrieval when interacting with GeoNames.
+ */
+export const SupportedLanguages : string [] = [
+    'en', // English
+    'hi', // Hindi
+    'ru', // Russian
+    'fr', // French
+];
