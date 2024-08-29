@@ -10,13 +10,22 @@ The process involves fetching country data in multiple supported languages, whic
 
 ## API Details
 
+### Overview
 This endpoint is designed for use when an organization needs to update country data in the system. Since country information does not change frequently, updates are rare and typically occur only when there are significant changes or additions.
 
-List of supported countries and languages are configured in the [Utilities file](https://github.com/daria-serkova/aws-cdk/blob/main/geolocation-services/geo-localizer-solution/helpers/utilities.ts)
+List of supported countries and languages are configured in the [Utilities file](https://github.com/daria-serkova/aws-cdk/blob/main/geolocation-services/geo-localizer-solution/helpers/utilities.ts).
 
-- **API endpoint:** {{API_GATEWAY_URL}}/geo-data/update-countries
-- **API supported methods:** POST
-- **API authorization:** Security header X-API-Key (generated API Gateway key) is required.
+### API Endpoint
+
+{{API_GATEWAY_URL}}/geo-data/update-countries
+
+### API Supported Methods
+
+POST
+
+### API Authorization
+
+Security header X-API-Key (generated API Gateway key) is required.
 
 ### API Request Model Validation
 
