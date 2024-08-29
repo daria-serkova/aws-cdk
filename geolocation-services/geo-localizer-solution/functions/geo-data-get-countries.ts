@@ -2,6 +2,7 @@ import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
 import { ResourceName } from '../lib/resource-reference';
 import { APIGatewayProxyHandler } from 'aws-lambda';
+import { filterByName } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({ 
     region: process.env.REGION 
@@ -29,16 +30,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                 name: unmarshalledItem[language],
             };
         }).filter(item => item.name !== undefined);
-
-        // Sort by the "name" values alphabetically
-        filteredItems.sort((a, b) => {
-            const valueA = a.name.toLowerCase();
-            const valueB = b.name.toLowerCase();
-            return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
-        });
         return {
             statusCode: 200,
-            body: JSON.stringify(filteredItems),
+            body: JSON.stringify(filterByName(filteredItems)),
         };
     } catch (error) {
         console.error('Error fetching data:', error);

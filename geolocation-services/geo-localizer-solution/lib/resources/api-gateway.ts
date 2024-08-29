@@ -5,25 +5,36 @@ import {
     LambdaIntegration, 
     Period, 
     RequestValidator, 
-    Resource, RestApi
+    Resource, 
+    RestApi
 } from 'aws-cdk-lib/aws-apigateway';
 import { ResourceName } from '../resource-reference';
 import { isProduction, SupportedLanguages } from '../../helpers/utilities';
 
-import { getGeoDataCitiesLambda, getGeoDataCountriesLambda, getGeoDataStatesLambda, updateGeoDataCitiesLambda, updateGeoDataCountriesLambda, updateGeoDataStatesLambda } from './lambdas';
+import { 
+    getGeoDataCitiesLambda, 
+    getGeoDataCountriesLambda, 
+    getGeoDataStatesLambda, 
+    updateGeoDataCitiesLambda, 
+    updateGeoDataCountriesLambda, 
+    updateGeoDataStatesLambda 
+} from './lambdas';
 
 const apiVersion = 'v1';
 const serviceName = 'Geolocation Service';
+
 interface ApiNodes {
     country: Resource,
     state: Resource,
     city: Resource
 }
+
 /**
- * Function creates and configure API Gateway resources.
- * @param scope 
+ * Function creates and configures API Gateway resources for the Geolocation Service.
+ * @param scope - The CDK construct scope within which the API Gateway is defined.
  */
 export default function configureApiGatewayResources(scope: Construct) {
+    // Create a new RestApi instance with CORS and stage configuration.
     const apiGatewayInstance = new RestApi(scope, ResourceName.apiGateway.API_GATEWAY, {
         restApiName: ResourceName.apiGateway.API_GATEWAY,
         description: `${serviceName}: API Layer`,
@@ -37,6 +48,7 @@ export default function configureApiGatewayResources(scope: Construct) {
         },
     });
 
+    // Set up a usage plan with quotas and throttling limits.
     const usagePlan = apiGatewayInstance.addUsagePlan(ResourceName.apiGateway.API_USAGE_PLAN, {
         name: ResourceName.apiGateway.API_USAGE_PLAN,
         description: `${serviceName}: Usage Plan`,
@@ -54,12 +66,14 @@ export default function configureApiGatewayResources(scope: Construct) {
         },
     });
 
+    // Add an API key for secure access to the API.
     const apiKey = apiGatewayInstance.addApiKey(ResourceName.apiGateway.API_KEY, {
         apiKeyName: ResourceName.apiGateway.API_KEY,
         description: `${serviceName}: API Key`,
     });
     usagePlan.addApiKey(apiKey);
 
+    // Create a request validator that validates the request body.
     const requestValidatorInstance = new RequestValidator(scope, 
         ResourceName.apiGateway.API_REQUEST_VALIDATOR, {
             restApi: apiGatewayInstance,
@@ -68,16 +82,19 @@ export default function configureApiGatewayResources(scope: Construct) {
             validateRequestParameters: false,
         }
     );
+
+    // Set up the API version and main resource nodes.
     const version = apiGatewayInstance.root.addResource(apiVersion);
-    const parentNode =  version.addResource('geo');
+    const parentNode = version.addResource('geo');
     const apiNodes: ApiNodes = {
         country: parentNode.addResource('country'),
         state: parentNode.addResource('state'),
         city: parentNode.addResource('city'),
     };
 
+    // Configure endpoints for each geo data resource (country, state, city).
     configureEndpoint(apiNodes.country, 'update', updateGeoDataCountriesLambda, null, requestValidatorInstance);
-    configureEndpoint(apiNodes.country, 'get-list', getGeoDataCountriesLambda, requestModelGetCountriesList, requestValidatorInstance);
+    configureEndpoint(apiNodes.country, 'get-list', getGeoDataCountriesLambda, requestModelGetCountriesList(apiGatewayInstance), requestValidatorInstance);
     
     configureEndpoint(apiNodes.state, 'update', updateGeoDataStatesLambda, null, requestValidatorInstance);
     configureEndpoint(apiNodes.state, 'get-list', getGeoDataStatesLambda, null, requestValidatorInstance);
@@ -94,28 +111,38 @@ export default function configureApiGatewayResources(scope: Construct) {
  * @param {any} handler - The handler function (Lambda or Step Functions) to be invoked by the endpoint.
  * @param {any} requestModel - The request model to be used for validating the request body.
  * @param {RequestValidator} validator - The request validator that will be used to validate the incoming request.
- * 
- * This function adds a POST method to the specified API Gateway resource. If the `isStepFunction` flag is true, it integrates with AWS Step Functions by starting an execution using the provided handler. If false, it integrates with a Lambda function. The method is secured with an API key and validates incoming requests using the provided request model and validator.
  */
-
 function configureEndpoint(node: Resource, resourceName: string, handler: any, requestModel: any, validator: RequestValidator) {
     const method = new LambdaIntegration(handler());
-    requestModel ? 
     node.addResource(resourceName).addMethod('POST', method, {
         apiKeyRequired: true,
-        requestModels: { 'application/json': requestModel },
+        requestModels: requestModel ? { 'application/json': requestModel } : undefined,
         requestValidator: validator,
-    })
-    : 
-    node.addResource(resourceName).addMethod('POST', method, {
-        apiKeyRequired: true
     });
 }
+
 /**
- * Creates a request model for API Gateway to validate incoming request bodies. 
- * This model is typically used in API Gateway to ensure that incoming requests adhere to a predefined format and contain all necessary fields.
+ * Creates a request model for the Get Countries List API endpoint.
+ * 
+ * @param {RestApi} apiGateway - The API Gateway instance where the model will be added.
+ * @returns The request model to be used for validating the Get Countries List API.
  */
- function createRequestModel(description: string, properties: any, required: string[]) {
+const requestModelGetCountriesList = (apiGateway: RestApi) => {
+    const requestModel = createRequestModel(`${serviceName}: Request Model - Get Countries List API`, {
+        language: createStringProperty(SupportedLanguages),
+    }, ['language']);
+    return apiGateway.addModel(ResourceName.apiGateway.REQUEST_MODEL_GEO_COUNTRY_GET_LIST, requestModel);
+};
+
+/**
+ * Creates a request model with specified properties and validation rules.
+ * 
+ * @param {string} description - A description of the request model.
+ * @param {any} properties - The JSON schema properties for the model.
+ * @param {string[]} required - An array of required properties for the model.
+ * @returns A JSON schema model for validating API request bodies.
+ */
+function createRequestModel(description: string, properties: any, required: string[]) {
     return {
         contentType: 'application/json',
         description,
@@ -130,22 +157,13 @@ function configureEndpoint(node: Resource, resourceName: string, handler: any, r
 /**
  * Creates a JSON schema property definition for a string type.
  * 
- * @param {string[]} [enumValues] - An optional array of string values that the property is allowed to take. If provided, the property will be restricted to these values.
- * @param {string} [pattern] - An optional regular expression pattern that the property value must match. If provided, the property value will be validated against this pattern.
- * 
- * This function is typically used to generate JSON schema definitions for string properties in an API Gateway request model. The returned property object can be used to enforce specific value constraints, such as restricting values to a predefined set of strings or ensuring that the string matches a particular format.
+ * @param {string[]} [enumValues] - An optional array of string values that the property is allowed to take.
+ * @param {string} [pattern] - An optional regex pattern that the property value must match.
+ * @returns A JSON schema definition for a string property.
  */
-
 function createStringProperty(enumValues?: string[], pattern?: string) {
     const property: any = { type: JsonSchemaType.STRING };
     if (enumValues) property.enum = enumValues;
     if (pattern) property.pattern = pattern;
     return property;
 }
-/**
- * Generates a JSON schema model that defines the structure and validation rules for the body of the Get Countries List API endpoint.
- */
- const requestModelGetCountriesList = () => 
-    createRequestModel(`${serviceName}: Request Model - Get Countries List API`, {
-        language: createStringProperty(SupportedLanguages),
-    }, ['language']);

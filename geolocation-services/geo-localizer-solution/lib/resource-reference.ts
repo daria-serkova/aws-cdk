@@ -52,6 +52,6 @@ export const ResourceName = {
         API_KEY: resourceName('documents-api-key'),
         API_REQUEST_VALIDATOR: resourceName('documents-api-request-validator'),
         
-        REQUEST_MODEL_GEO_DATA_UPDATE: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}GeoDataUpdate`,
+        REQUEST_MODEL_GEO_COUNTRY_GET_LIST: `${AWS_REQUEST_MODEL_NAMING_CONVENTION}GeoCountryGetList`,
     },
 }
