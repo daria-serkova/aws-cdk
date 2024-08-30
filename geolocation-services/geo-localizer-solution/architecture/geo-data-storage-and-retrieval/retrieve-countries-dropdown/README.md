@@ -1,8 +1,8 @@
-# Process: Get Countries List
+# Process: Get Localized Country Dropdown values
 
-The Get Countries List process is an essential part of the data access layer, designed to retrieve a list of countries stored in DynamoDB. This process enables applications to access up-to-date country information efficiently, which is crucial for various functions such as localization, country-specific configurations, and internationalization.
+The Get Localized Country Dropdown Values process is a key element within the data access layer, designed to provide applications with an efficient and reliable method to retrieve a list of countries stored inside organization's data layer. This process is essential for functionalities that require accurate and up-to-date country information, such as global configurations, country-specific services, and localization.
 
-This API endpoint fetches the list of countries in the language specified in the request. The information is organized and retrieved from the DynamoDB table, ensuring quick and accurate access to country data. The process is vital for applications that require a multilingual repository of country information, enabling seamless integration and access across various services.
+This API endpoint retrieves the list of countries in the language specified in the request, ensuring that the information is relevant and understandable to the user. By organizing and accessing the data from data base, the process guarantees prompt and precise retrieval of country data. This is crucial for applications that require a multilingual repository of country information, enabling seamless integration and access across various services.
 
 ## Process
 
@@ -12,12 +12,12 @@ This API endpoint fetches the list of countries in the language specified in the
 
 ### Overview
 
-This endpoint is used to retrieve a list of countries from the system’s DynamoDB table. The API allows specifying the language in which the country names should be returned, supporting internationalization and localization efforts.
+The Get Localized Country Dropdown Values API is designed to streamline the retrieval of country information in the format {label: '', value: ''}, making it ideal for scenarios where global applications require accurate and localized country data. 
 
 ### API Endpoint
 
 ```
-{{API_GATEWAY_URL}}/geo/country/get-list
+{{API_GATEWAY_URL}}/geo/country/get-dropdown-values
 ```
 
 ### API Supported Methods
@@ -32,9 +32,9 @@ Security header X-API-Key (generated API Gateway key) is required.
 
 API endpoint conducts following validation checks on the request's body before routing it for processing.
 
-![API Validation](https://github.com/daria-serkova/aws-cdk/blob/main/geolocation-services/geo-localizer-solution/architecture/geo-data-storage-and-retrieval/retrieve-countries/request-validation.svg)
+![API Validation](request-validation.svg)
 
-List of supported languages for body parameter value, is configured in the [Utilities file](https://github.com/daria-serkova/aws-cdk/blob/main/geolocation-services/geo-localizer-solution/helpers/utilities.ts).
+Lists of supported languages and countryCodes for body parameter value, are configured in the [Utilities file](./../../../helpers/utilities.ts).
 
 ### API Request Format
 
@@ -47,7 +47,7 @@ Body format:
 
 ### API Response Format
 
-Sample of the response from AWS service:
+Sample of the response from AWS service (English):
 ```
 [
     {
@@ -65,6 +65,27 @@ Sample of the response from AWS service:
     {
         "value": "US",
         "label": "United States"
+    }
+]
+```
+Sample of the response from AWS service (Hindi):
+```
+[
+    {
+        "value": "CA",
+        "label": "कनाडा"
+    },
+    {
+        "value": "IN",
+        "label": "भारत"
+    },
+    {
+        "value": "RU",
+        "label": "रूस"
+    },
+    {
+        "value": "US",
+        "label": "संयुक्त राज्य अमेरिका"
     }
 ]
 ```
