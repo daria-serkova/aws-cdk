@@ -11,10 +11,10 @@ import {
 import { ResourceName } from '../resource-reference';
 import { isProduction, SupportedCountries, SupportedLanguages } from '../../helpers/utilities';
 
-import { 
-    getGeoDataCitiesLambda, 
-    getGeoDataCountriesLambda, 
-    getGeoDataStatesLambda, 
+import {  
+    getGeoDataCountriesGetDropdownLambda, 
+    getGeoDataStatesGetDropdownLambda, 
+    getGeoDataCitiesGetDropdownLambda,
     updateGeoDataCitiesLambda, 
     updateGeoDataCountriesLambda, 
     updateGeoDataStatesLambda 
@@ -94,13 +94,13 @@ export default function configureApiGatewayResources(scope: Construct) {
 
     // Configure endpoints for each geo data resource (country, state, city).
     configureEndpoint(apiNodes.country, 'update-list', updateGeoDataCountriesLambda, null, requestValidatorInstance);
-    configureEndpoint(apiNodes.country, 'get-list', getGeoDataCountriesLambda, requestModelGetCountriesList(apiGatewayInstance), requestValidatorInstance);
+    configureEndpoint(apiNodes.country, 'get-dropdown-values', getGeoDataCountriesGetDropdownLambda, requestModelGetCountriesList(apiGatewayInstance), requestValidatorInstance);
     
     configureEndpoint(apiNodes.state, 'update-list', updateGeoDataStatesLambda, requestModelUpdateStatesList(apiGatewayInstance), requestValidatorInstance);
-    configureEndpoint(apiNodes.state, 'get-list', getGeoDataStatesLambda, requestModelGetStatesList(apiGatewayInstance), requestValidatorInstance);
+    configureEndpoint(apiNodes.state, 'get-dropdown-values', getGeoDataStatesGetDropdownLambda, requestModelGetStatesList(apiGatewayInstance), requestValidatorInstance);
     
     configureEndpoint(apiNodes.city, 'update-list', updateGeoDataCitiesLambda, null, requestValidatorInstance);
-    configureEndpoint(apiNodes.city, 'get-list', getGeoDataCitiesLambda, null, requestValidatorInstance);
+    configureEndpoint(apiNodes.city, 'get-dropdown-values', getGeoDataCitiesGetDropdownLambda, null, requestValidatorInstance);
 }
 
 /**

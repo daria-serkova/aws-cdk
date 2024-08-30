@@ -18,17 +18,17 @@ let updateGeoDataCountriesLambdaInstance: NodejsFunction;
 let updateGeoDataStatesLambdaInstance: NodejsFunction;
 let updateGeoDataCitiesLambdaInstance: NodejsFunction;
 
-let getGeoDataCountriesLambdaInstance: NodejsFunction;
-let getGeoDataStatesLambdaInstance: NodejsFunction;
-let getGeoDataCitiesLambdaInstance: NodejsFunction;
+let getGeoDataCountriesGetDropdownLambdaInstance: NodejsFunction;
+let getGeoDataStatesGetDropdownLambdaInstance: NodejsFunction;
+let getGeoDataCitiesGetDropdownLambdaInstance: NodejsFunction;
 
 export const updateGeoDataCountriesLambda = () => updateGeoDataCountriesLambdaInstance;
 export const updateGeoDataStatesLambda = () => updateGeoDataStatesLambdaInstance;
 export const updateGeoDataCitiesLambda = () => updateGeoDataCitiesLambdaInstance;
 
-export const getGeoDataCountriesLambda = () => getGeoDataCountriesLambdaInstance;
-export const getGeoDataStatesLambda = () => getGeoDataStatesLambdaInstance;
-export const getGeoDataCitiesLambda = () => getGeoDataCitiesLambdaInstance;
+export const getGeoDataCountriesGetDropdownLambda = () => getGeoDataCountriesGetDropdownLambdaInstance;
+export const getGeoDataStatesGetDropdownLambda = () => getGeoDataStatesGetDropdownLambdaInstance;
+export const getGeoDataCitiesGetDropdownLambda = () => getGeoDataCitiesGetDropdownLambdaInstance;
 
 const defaultLambdaSettings = {
     memorySize: 256,
@@ -41,13 +41,13 @@ const defaultLambdaSettings = {
  */
 export default function configureLambdaResources(scope: Construct, logGroup: LogGroup) {
     updateGeoDataCountriesLambdaInstance = configureLambdaUpdateGeoDataCountries(scope, logGroup);
-    getGeoDataCountriesLambdaInstance = configureLambdaGetGeoDataCountries(scope, logGroup);
+    getGeoDataCountriesGetDropdownLambdaInstance = configureLambdaGetGeoDataCountriesDropdown(scope, logGroup);
     
     updateGeoDataStatesLambdaInstance = configureLambdaUpdateGeoDataStates(scope, logGroup);
-    getGeoDataStatesLambdaInstance = configureLambdaGetGeoDataStates(scope, logGroup);
+    getGeoDataStatesGetDropdownLambdaInstance = configureLambdaGetGeoDataStatesDropdown(scope, logGroup);
 
     updateGeoDataCitiesLambdaInstance = configureLambdaUpdateGeoDataCities(scope, logGroup);
-    getGeoDataCitiesLambdaInstance = configureLambdaGetGeoDataCities(scope, logGroup);
+    getGeoDataCitiesGetDropdownLambdaInstance = configureLambdaGetGeoDataCitiesDropdown(scope, logGroup);
 }
 
 const configureLambdaUpdateGeoDataCountries = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
@@ -70,14 +70,14 @@ const configureLambdaUpdateGeoDataCountries = (scope: Construct, logGroup: LogGr
     });
     return lambda;   
 }
-const configureLambdaGetGeoDataCountries = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+const configureLambdaGetGeoDataCountriesDropdown = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.LAMBDA_GET_GEO_DATA_COUNTRIES);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     addDynamoDbReadPolicy(iamRole, ResourceName.dynamoDb.GEO_DATA_COUNTRIES_TABLE);
     const lambda = new NodejsFunction(scope, ResourceName.lambda.LAMBDA_GET_GEO_DATA_COUNTRIES, {
         functionName: ResourceName.lambda.LAMBDA_GET_GEO_DATA_COUNTRIES,
         description: 'Retreives geo data (countries)',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/geo-data-get-countries.ts`),
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/geo-data-get-countries-dropdown-values.ts`),
         logGroup: logGroup,
         role: iamRole,
         environment: {
@@ -111,14 +111,14 @@ const configureLambdaUpdateGeoDataStates = (scope: Construct, logGroup: LogGroup
     });
     return lambda;   
 }
-const configureLambdaGetGeoDataStates = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+const configureLambdaGetGeoDataStatesDropdown = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.LAMBDA_GET_GEO_DATA_STATES);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     addDynamoDbIndexReadPolicy(iamRole, ResourceName.dynamoDb.GEO_DATA_STATES_TABLE, ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE);
     const lambda = new NodejsFunction(scope, ResourceName.lambda.LAMBDA_GET_GEO_DATA_STATES, {
         functionName: ResourceName.lambda.LAMBDA_GET_GEO_DATA_STATES,
         description: 'Get geo data (states)',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/geo-data-get-states.ts`),
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/geo-data-get-states-dropdown-values.ts`),
         logGroup: logGroup,
         role: iamRole,
         environment: {
@@ -130,10 +130,6 @@ const configureLambdaGetGeoDataStates = (scope: Construct, logGroup: LogGroup): 
     });
     return lambda;   
 }
-
-
-
-
 const configureLambdaUpdateGeoDataCities = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.LAMBDA_UPDATE_GEO_DATA_CITIES);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
@@ -158,14 +154,14 @@ const configureLambdaUpdateGeoDataCities = (scope: Construct, logGroup: LogGroup
     return lambda;   
 }
 
-const configureLambdaGetGeoDataCities = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
+const configureLambdaGetGeoDataCitiesDropdown = (scope: Construct, logGroup: LogGroup): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.LAMBDA_GET_GEO_DATA_CITIES);
     addCloudWatchPutPolicy(iamRole, logGroup.logGroupName);
     addDynamoDbIndexReadPolicy(iamRole, ResourceName.dynamoDb.GEO_DATA_CITIES_TABLE, ResourceName.dynamoDb.GEO_DATA_INDEX_COUNTRY_CODE);
     const lambda = new NodejsFunction(scope, ResourceName.lambda.LAMBDA_GET_GEO_DATA_CITIES, {
         functionName: ResourceName.lambda.LAMBDA_GET_GEO_DATA_CITIES,
         description: 'Get geo data (cities)',
-        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/geo-data-get-cities.ts`),
+        entry: resolve(dirname(__filename), `${lambdaFilesLocation}/geo-data-get-cities-dropdown-values.ts`),
         logGroup: logGroup,
         role: iamRole,
         environment: {
