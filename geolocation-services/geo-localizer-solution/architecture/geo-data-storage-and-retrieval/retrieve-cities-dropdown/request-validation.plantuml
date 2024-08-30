@@ -1,0 +1,21 @@
+@startmindmap API Validation
+skinparam node {
+    BackgroundColor #0047AB
+    FontColor #FFFFFF
+    BorderColor #0047AB
+    BorderThickness 1
+    FontStyle bold
+}
+* API Validation
+** language
+*** Type: STRING
+*** Enum: SupportedLanguages
+*** Required: Yes
+** countryCode
+*** Type: STRING
+*** Enum: SupportedCountries
+*** Required: Yes
+** stateCode
+*** Type: STRING
+*** Required: Yes
+@endmindmap
