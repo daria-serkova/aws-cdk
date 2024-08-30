@@ -1,0 +1,20 @@
+@startmindmap Supported Processes
+skinparam node {
+    BackgroundColor #0047AB
+    FontColor #FFFFFF
+    BorderColor #0047AB
+    BorderThickness 1
+    FontStyle bold
+}
+* Supported Processes
+** Geo Data Management
+*** Countries
+****  Update Country Data from GeoNames Database
+****  Get Localized Country Dropdown values
+*** States / Regions
+****  Update States/Regions Data from GeoNames Database
+****  Get Localized State/Region Dropdown values
+*** Cities
+****  Update Cities Data from GeoNames Database
+****  Get Localized City Dropdown values
+@endmindmap

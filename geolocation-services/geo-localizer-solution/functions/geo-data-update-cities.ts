@@ -8,7 +8,7 @@ const dynamoDb = new DynamoDBClient({
     region: process.env.REGION,
     requestHandler: {
         requestTimeout: 3000,
-        httpsAgent: { maxSockets: 25 },
+        httpsAgent: { maxSockets: 50 },
     },
 });
 
