@@ -7,8 +7,8 @@ In any geolocation data management system focused on storing information about g
 ![Supported Processes](supported-processes.svg)
 
 1. [Update Country Data from GeoNames Database](./update-countries/)
-2. [Get Localized Country Dropdown values](./retrieve-countries-dropdown/)
-3. [Update States/Regions Data from GeoNames Database](./update-states/)
-4. [Get Localized State/Region Dropdown values](./retrieve-states-dropdown/)
-5. [Update Cities Data from GeoNames Database](./update-cities/)
+2. [Update States/Regions Data from GeoNames Database](./update-states/)
+3. [Update Cities Data from GeoNames Database](./update-cities/)
+4. [Get Localized Country Dropdown values](./retrieve-countries-dropdown/)
+5. [Get Localized State/Region Dropdown values](./retrieve-states-dropdown/)
 6. [Get Localized City Dropdown values](./retrieve-cities-dropdown/)
