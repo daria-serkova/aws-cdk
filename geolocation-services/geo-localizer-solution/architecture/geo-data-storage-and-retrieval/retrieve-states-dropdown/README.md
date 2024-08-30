@@ -1,8 +1,8 @@
-# Process: Get States List
+# Process: Get Localized State Dropdown Values
 
-The Get States List process is a crucial component of the data access layer, designed to retrieve a list of states stored in DynamoDB. This process provides applications with efficient access to up-to-date state information, which is essential for various functionalities such as regional configurations, state-specific services, and localization.
+The Get Localized State Dropdown Values process is a key component within the data access layer, designed to provide applications with an efficient and reliable method to retrieve a list of states stored inside the organization's data layer. This process is essential for functionalities that require accurate and up-to-date state information, such as regional configurations, state-specific services, and localization.
 
-This API endpoint retrieves the list of states in the language specified in the request. The information is organized and accessed from the DynamoDB table, ensuring prompt and accurate retrieval of state data. This process is vital for applications that need a multilingual repository of state information, facilitating smooth integration and access across diverse services.
+This API endpoint retrieves the list of states in the language specified in the request, ensuring that the information is relevant and understandable to the user. By organizing and accessing the data from the database, the process guarantees prompt and precise retrieval of state data. This is crucial for applications that require a multilingual repository of state information, enabling seamless integration and access across various services.
 
 ## Process
 
@@ -12,12 +12,12 @@ This API endpoint retrieves the list of states in the language specified in the 
 
 ### Overview
 
-This endpoint is used to retrieve a list of states from the system’s DynamoDB table. The API allows specifying the language in which the state names should be returned, supporting internationalization and localization efforts.
+The Get Localized States Dropdown Values API is designed to streamline the retrieval of states/regions information in the format {label: '', value: ''}, making it ideal for scenarios where global applications require accurate and localized states/regions data. 
 
 ### API Endpoint
 
 ```
-{{API_GATEWAY_URL}}/geo/state/get-list
+{{API_GATEWAY_URL}}/geo/state/get-dropdown-values
 ```
 
 ### API Supported Methods
@@ -32,9 +32,9 @@ Security header X-API-Key (generated API Gateway key) is required.
 
 API endpoint conducts following validation checks on the request's body before routing it for processing.
 
-![API Validation](https://github.com/daria-serkova/aws-cdk/blob/main/geolocation-services/geo-localizer-solution/architecture/geo-data-storage-and-retrieval/retrieve-states/request-validation.svg)
+![API Validation](request-validation.svg)
 
-Lists of supported languages and countryCodes for body parameter value, are configured in the [Utilities file](https://github.com/daria-serkova/aws-cdk/blob/main/geolocation-services/geo-localizer-solution/helpers/utilities.ts).
+Lists of supported languages and countryCodes for body parameter value, are configured in the [Utilities file](./../../../helpers/utilities.ts).
 
 ### API Request Format
 
@@ -48,7 +48,7 @@ Body format:
 
 ### API Response Format
 
-Sample of the response from AWS service:
+Sample of the response from AWS service (English):
 ```
 [
     {
