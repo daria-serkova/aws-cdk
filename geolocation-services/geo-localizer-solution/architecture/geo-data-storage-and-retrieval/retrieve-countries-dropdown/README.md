@@ -89,3 +89,6 @@ Sample of the response from AWS service (Hindi):
     }
 ]
 ```
+### API Limitations
+
+Data, retrieved by API endpoint is sourced from [GeoNames database](https://www.geonames.org/). For some of the languages there is no translation in place and has to be managed manually by organization if needed. For example this is a list of translations for USA states in Hindi language (some values are not translated and present in English only)

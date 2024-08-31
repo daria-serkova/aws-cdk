@@ -257,3 +257,215 @@ Sample of the response from AWS service (English):
     }
 ]
 ```
+
+### API Limitations
+
+Data, retrieved by API endpoint is sourced from [GeoNames database](https://www.geonames.org/). For some of the languages there is no translation in place and has to be managed manually by organization if needed. For example this is a list of translations for USA states in Hindi language (some values are not translated and present in English only):
+```
+[
+    {
+        "value": "DC",
+        "label": "Washington DC"
+    },
+    {
+        "value": "AR",
+        "label": "अरकांसास"
+    },
+    {
+        "value": "AL",
+        "label": "अलाबामा"
+    },
+    {
+        "value": "AK",
+        "label": "अलास्का"
+    },
+    {
+        "value": "ID",
+        "label": "आयडहो"
+    },
+    {
+        "value": "IA",
+        "label": "आयोवा"
+    },
+    {
+        "value": "IN",
+        "label": "इण्डियाना"
+    },
+    {
+        "value": "IL",
+        "label": "इलिनॉय"
+    },
+    {
+        "value": "ND",
+        "label": "उत्तर डेकोटा"
+    },
+    {
+        "value": "NC",
+        "label": "उत्तरी केरोलिना"
+    },
+    {
+        "value": "AZ",
+        "label": "एरीजोना"
+    },
+    {
+        "value": "OK",
+        "label": "ओक्लाहोमा"
+    },
+    {
+        "value": "OH",
+        "label": "ओहायो"
+    },
+    {
+        "value": "OR",
+        "label": "औरिगन"
+    },
+    {
+        "value": "CT",
+        "label": "कनेक्टिकट"
+    },
+    {
+        "value": "KY",
+        "label": "केन्टकी"
+    },
+    {
+        "value": "KS",
+        "label": "केन्सास"
+    },
+    {
+        "value": "CA",
+        "label": "कैलिफ़ोर्निया"
+    },
+    {
+        "value": "CO",
+        "label": "कॉलराडो"
+    },
+    {
+        "value": "GA",
+        "label": "जॉर्जिया"
+    },
+    {
+        "value": "TX",
+        "label": "टॅक्सस"
+    },
+    {
+        "value": "TN",
+        "label": "टेनेसी"
+    },
+    {
+        "value": "DE",
+        "label": "डेलावेयर"
+    },
+    {
+        "value": "SC",
+        "label": "दक्षिणी केरोलाइना"
+    },
+    {
+        "value": "NM",
+        "label": "नया मेक्सिको"
+    },
+    {
+        "value": "NH",
+        "label": "नया हेम्पशायर"
+    },
+    {
+        "value": "NE",
+        "label": "नेब्रास्का"
+    },
+    {
+        "value": "NV",
+        "label": "नेवाडा"
+    },
+    {
+        "value": "NJ",
+        "label": "न्यू जर्सी"
+    },
+    {
+        "value": "NY",
+        "label": "न्यूयॉर्क"
+    },
+    {
+        "value": "WV",
+        "label": "पश्चिमी वर्जीनिया"
+    },
+    {
+        "value": "PA",
+        "label": "पेन्सिलवेनिया"
+    },
+    {
+        "value": "FL",
+        "label": "फ़्लोरिडा"
+    },
+    {
+        "value": "MN",
+        "label": "मिनेसोटा"
+    },
+    {
+        "value": "MI",
+        "label": "मिशिगन"
+    },
+    {
+        "value": "MS",
+        "label": "मिसिसिप्पी"
+    },
+    {
+        "value": "MO",
+        "label": "मिसौरी"
+    },
+    {
+        "value": "ME",
+        "label": "मेन"
+    },
+    {
+        "value": "MD",
+        "label": "मैरीलैंड"
+    },
+    {
+        "value": "MA",
+        "label": "मैसाचूसिट्स"
+    },
+    {
+        "value": "MT",
+        "label": "मोन्टाना"
+    },
+    {
+        "value": "UT",
+        "label": "यूटाह"
+    },
+    {
+        "value": "RI",
+        "label": "रोड आइलैंड"
+    },
+    {
+        "value": "LA",
+        "label": "लुईज़ियाना"
+    },
+    {
+        "value": "VA",
+        "label": "वर्जीनिया"
+    },
+    {
+        "value": "VT",
+        "label": "वर्मांट"
+    },
+    {
+        "value": "WY",
+        "label": "वायोमिंग"
+    },
+    {
+        "value": "WI",
+        "label": "विस्कॉन्सिन"
+    },
+    {
+        "value": "WA",
+        "label": "वॉशिंगटन राज्य"
+    },
+    {
+        "value": "SD",
+        "label": "साउथ डकोटा"
+    },
+    {
+        "value": "HI",
+        "label": "हवाई"
+    }
+]
+```

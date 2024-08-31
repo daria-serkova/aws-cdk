@@ -2,6 +2,7 @@ import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { ResourceName } from '../lib/resource-reference';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
+import { filterByLabel } from '../helpers/utilities';
 
 const dynamoDb = new DynamoDBClient({
     region: process.env.REGION
@@ -35,12 +36,18 @@ export const handler: APIGatewayProxyHandler = async (event) => {
                 ":countryCode": { S: countryCode },
                 ...(stateCode !== '*' ? { ":stateCode": { S: stateCode } } : {})
             },
-            ProjectionExpression: `geonameId, countryCode, stateCode, ${language}`,
+            ProjectionExpression: `geonameId, ${language}`,
         }));
-        const cities = Items.map(item => unmarshall(item));
+        const cities = Items.map(item => {
+            const unmarshalledItem = unmarshall(item);
+            return {
+                value: unmarshalledItem.geonameId,
+                label: unmarshalledItem[language]
+            };
+        });
         return {
             statusCode: 200,
-            body: JSON.stringify({ cities }),
+            body: JSON.stringify(filterByLabel(cities)),
         };
     } catch (error) {
         console.error('Error retrieving city data:', error);
