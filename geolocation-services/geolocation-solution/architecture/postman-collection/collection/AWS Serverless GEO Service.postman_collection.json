@@ -1,0 +1,274 @@
+{
+	"info": {
+		"_postman_id": "f1858756-459d-4c29-87d0-78aea674b7b1",
+		"name": "AWS Serverless GEO Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Countries",
+			"item": [
+				{
+					"name": "Country: Update data from GeoNames API (for supported countries and languages list)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/geo/country/update-list",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"geo",
+								"country",
+								"update-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Country: Get Dropdown Values (for specified language)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"language\": \"hi\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/geo/country/get-dropdown-values",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"geo",
+								"country",
+								"get-dropdown-values"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "States",
+			"item": [
+				{
+					"name": "State: Update data from GeoNames API (for specified country)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"countryCode\": \"US\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/geo/state/update-list",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"geo",
+								"state",
+								"update-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "State: Update data from GeoNames API (for all supported countries)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"countryCode\": \"*\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/geo/state/update-list",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"geo",
+								"state",
+								"update-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "State: Get Dropdown Values (for specified country and language)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"language\": \"en\",\n    \"countryCode\": \"US\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/geo/state/get-dropdown-values",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"geo",
+								"state",
+								"get-dropdown-values"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cities",
+			"item": [
+				{
+					"name": "City: Update data from GeoNames API (all states in specified country)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"countryCode\": \"US\",\n    \"stateCode\": \"*\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/geo/city/update-list",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"geo",
+								"city",
+								"update-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "City: Update data from GeoNames API (specified state in specified country)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"countryCode\": \"US\",\n    \"stateCode\": \"PA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/geo/city/update-list",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"geo",
+								"city",
+								"update-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "City: Get Dropdown Values (for specified country and language)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"language\": \"en\",\n    \"countryCode\": \"US\",\n    \"stateCode\": \"PA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_GATEWAY_URL}}/geo/city/get-dropdown-values",
+							"host": [
+								"{{API_GATEWAY_URL}}"
+							],
+							"path": [
+								"geo",
+								"city",
+								"get-dropdown-values"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "{{API_GATEWAY_KEY}}",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "X-API-Key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

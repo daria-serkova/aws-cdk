@@ -30,5 +30,8 @@ Detailed view of the solution's architecture at the container level. It illustra
 ## Processes Documentation
 
 1. [Geo Data Storage and Retrieval](./geo-data-storage-and-retrieval/)
+
     
 Please refer to the respective documents and diagrams within this folder for details.
+
+Please use [Postman collection for API details](./postman-collection/)
