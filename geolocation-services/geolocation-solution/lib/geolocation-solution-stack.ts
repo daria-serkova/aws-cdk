@@ -5,7 +5,7 @@ import configureCloudWatchResources from './resources/cloud-watch';
 import configureLambdaResources from './resources/lambdas';
 import configureApiGatewayResources from './resources/api-gateway';
 import configureDynamoDbResources from './resources/dynamo-db';
-export class GeoLocalizerSolutionStack extends cdk.Stack {
+export class GeoLocationSolutionStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     const logGroup: LogGroup = configureCloudWatchResources(this);

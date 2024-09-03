@@ -1,8 +1,8 @@
 {
-  "name": "geo-localizer-solution",
+  "name": "geolocation-solution",
   "version": "0.1.0",
   "bin": {
-    "geo-localizer-solution": "bin/geo-localizer-solution.ts"
+    "geo-localizer-solution": "bin/geolocation-solution.ts"
   },
   "scripts": {
     "build": "tsc",
