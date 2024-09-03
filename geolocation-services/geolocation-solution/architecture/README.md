@@ -15,7 +15,9 @@ Detailed view of the solution's architecture at the container level. It illustra
 
 ![Container Diagram](./tbd-container-diagram.svg)
 
-## Architecture Highlights:
+## Architecture Highlights
+
+### Technology Stack
 
 1. **API Gateway:** Serves as the entry point for all API requests, directing them to the appropriate backend services. It handles request routing, validation, and authorization, ensuring that only authorized requests reach the system.
 
