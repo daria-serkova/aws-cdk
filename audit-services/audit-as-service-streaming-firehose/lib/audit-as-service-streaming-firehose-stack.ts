@@ -12,7 +12,7 @@ import configureLambdaResources from './resources/lambdas';
  * S3 buckets, and data streaming resources. The configuration of these resources is managed through separate modules
  * which are imported and utilized in the stack constructor. 
  */
-export class AuditAsServiceStack extends cdk.Stack {
+export class AuditAsServiceStreamingFirehoseStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     configureCloudWatchResources(this);

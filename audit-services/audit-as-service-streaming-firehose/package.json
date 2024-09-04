@@ -1,8 +1,8 @@
 {
-  "name": "audit-as-service",
+  "name": "audit-as-service-streaming-firehose",
   "version": "0.1.0",
   "bin": {
-    "audit-as-service": "bin/audit-as-service.js"
+    "audit-as-service-streaming-firehose": "bin/audit-as-service-streaming-firehose.js"
   },
   "scripts": {
     "build": "tsc",
