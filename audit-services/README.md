@@ -18,7 +18,7 @@ Below are several business scenarios where Cloud Serverless Audit Solutions can 
 ### #1: Financial Services Compliance Monitoring
 **Scenario**: Banks and financial institutions must monitor and audit transactions and account activities to comply with regulations such as SOX (Sarbanes-Oxley) or AML (Anti-Money Laundering).
 
-![Scenario #1 Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/audit-services/readme-images/scenario-1-financial-data-compliance-monitoring.svg)
+![Scenario #1 Context Diagram](./readme-images/scenario-1-financial-data-compliance-monitoring.svg)
 
 **Benefits**:
 1. Automates compliance monitoring and auditing processes.
@@ -34,7 +34,7 @@ Below are several business scenarios where Cloud Serverless Audit Solutions can 
 ### #2: Healthcare Data Access Auditing
 **Scenario**: Healthcare providers need to audit access to electronic health records (EHRs) to comply with HIPAA (Health Insurance Portability and Accountability Act).
 
-![Scenario #2 Context Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/audit-services/readme-images/scenario-2-healthcare-data-access-auditing.svg)
+![Scenario #2 Context Diagram](./readme-images/scenario-2-healthcare-data-access-auditing.svg)
 
 **Benefits**:
 1. Tracks and monitors access to electronic health records (EHRs) to ensure compliance with HIPAA regulations.
@@ -51,6 +51,8 @@ Below are several business scenarios where Cloud Serverless Audit Solutions can 
 ### #3: Cloud Infrastructure Security Monitoring
 **Scenario**: Organizations using cloud services need to monitor and audit access to cloud resources such as S3 buckets, EC2 instances, and databases to ensure security.
 
+![Scenario #3 Context Diagram](#)
+
 **Benefits**:
 1. Provides real-time monitoring of access to cloud resources like S3 buckets, EC2 instances, and databases.
 2. Sends instant alerts for unauthorized or suspicious access to ensure prompt action.
@@ -65,6 +67,8 @@ Enhances visibility into cloud resource usage and access patterns.
 
 ### #4: Application Performance and Usage Auditing
 **Scenario**: SaaS providers need to audit application usage and performance to ensure service level agreements (SLAs) and optimize performance.
+
+![Scenario #4 Context Diagram](#)
 
 **Benefits**:
 1. Gathers comprehensive performance metrics and usage data for in-depth analysis.
@@ -81,6 +85,8 @@ Enhances visibility into cloud resource usage and access patterns.
 ### #5: Regulatory Compliance for Data Privacy
 **Scenario**: Organizations in various sectors need to ensure compliance with data privacy regulations such as GDPR (General Data Protection Regulation) or CCPA (California Consumer Privacy Act).
 
+![Scenario #5 Context Diagram](#)
+
 **Benefits**:
 1. Monitors and tracks data processing activities to ensure adherence to data privacy regulations.
 2. Provides real-time alerts for any data access violations or breaches of privacy policies.
@@ -95,6 +101,8 @@ Enhances visibility into cloud resource usage and access patterns.
 
 ### #6: Operational Auditing for IT Environments
 **Scenario**: IT departments need to audit changes and configurations in infrastructure, including software deployments and system updates.
+
+![Scenario #6 Context Diagram](#)
 
 **Benefits**:
 1. Logs and tracks all configuration changes and software deployments for detailed oversight.
@@ -111,6 +119,8 @@ Enhances visibility into cloud resource usage and access patterns.
 ### #7: Supply Chain and Logistics Monitoring
 **Scenario**: Retail and manufacturing companies need to audit supply chain activities, including inventory management and supplier interactions.
 
+![Scenario #7 Context Diagram](#)
+
 **Benefits**:
 1. Monitors and tracks supply chain events and transactions for comprehensive oversight.
 2. Provides real-time alerts for discrepancies or anomalies in inventory management and supplier interactions.
@@ -125,6 +135,8 @@ Enhances visibility into cloud resource usage and access patterns.
 
 ### #8: User Activity and Access Control Auditing
 **Scenario**: Organizations need to audit user activity and access control to ensure adherence to internal policies and security practices.
+
+![Scenario #8 Context Diagram](#)
 
 **Benefits**:
 1. Monitors and tracks user logins and changes to access permissions for thorough oversight.
@@ -141,6 +153,8 @@ Enhances visibility into cloud resource usage and access patterns.
 ### #9: Incident Response and Forensics
 **Scenario**: Security teams need to investigate security incidents, such as data breaches or cyberattacks.
 
+![Scenario #9 Context Diagram](#)
+
 **Benefits**:
 1. Collects and aggregates incident-related logs for thorough investigation and analysis.
 2. Provides real-time alerts for suspicious activities to enable swift response to potential threats.
@@ -155,6 +169,8 @@ Enhances visibility into cloud resource usage and access patterns.
 
 ### #10: Operational Efficiency and Cost Management
 **Scenario**: Organizations need to audit cloud resource usage and operational costs to optimize spending.
+
+![Scenario #10 Context Diagram](#)
 
 **Benefits**:
 1. Tracks and monitors cloud resource usage and associated costs for accurate financial oversight.
@@ -171,6 +187,8 @@ Enhances visibility into cloud resource usage and access patterns.
 ### #11: Customer Data Management and Security
 **Scenario**: E-commerce and customer-focused businesses need to audit customer data management practices to ensure data security.
 
+![Scenario #11 Context Diagram](#)
+
 **Benefits**:
 1. Monitors and tracks customer data access and processing to ensure proper management and security.
 2. Provides real-time alerts for potential data breaches or unauthorized access to safeguard customer information.
@@ -185,6 +203,8 @@ Enhances visibility into cloud resource usage and access patterns.
 
 ### #12: Data Backup and Recovery Auditing
 **Scenario**: Organizations need to audit data backup and recovery processes to ensure data integrity and availability.
+
+![Scenario #12 Context Diagram](#)
 
 **Benefits**:
 1. Monitors and tracks data backup activities and recovery processes to ensure data integrity and availability.
@@ -202,5 +222,3 @@ Enhances visibility into cloud resource usage and access patterns.
 This repository focuses on implementing Cloud Serverless Audit Solutions using the AWS technology stack. It provides a detailed architecture and code examples tailored for AWS services, enabling scalable, automated, and real-time auditing across various business scenarios.
 
 However, the principles and methodologies outlined here are broadly applicable and can be replicated using similar technologies available in other cloud platforms such as Google Cloud Platform (GCP) and Microsoft Azure. Each cloud provider offers equivalent services that can be used to achieve similar auditing and monitoring capabilities. For those using GCP or Azure, you can adapt the architecture by leveraging their respective serverless technologies and services to implement a comparable solution.
-
-This approach ensures flexibility and adaptability, allowing organizations to choose the cloud provider that best fits their needs while maintaining robust auditing and compliance capabilities.
