@@ -32,7 +32,7 @@ TAG_APPLICATION=Geolocation Service
 # Module code within solution.
 TAG_APPLICATION_CODE=DVS-GEO
 
-# Prefix, that will be added to names of all AWS Resources, created for this application. S
+# Prefix, that will be added to names of all AWS Resources, created for this application.
 AWS_RESOURCES_NAME_PREFIX=DVS-GEO-A
 
 # Environment. Possible values: 

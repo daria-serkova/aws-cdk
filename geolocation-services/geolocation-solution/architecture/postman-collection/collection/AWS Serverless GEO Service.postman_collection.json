@@ -234,6 +234,125 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "GeoNames Web Services",
+			"item": [
+				{
+					"name": "Get List of Countries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://api.geonames.org/countryInfoJSON?lang=en&username=tbd",
+							"protocol": "http",
+							"host": [
+								"api",
+								"geonames",
+								"org"
+							],
+							"path": [
+								"countryInfoJSON"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "en"
+								},
+								{
+									"key": "username",
+									"value": "tbd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List of States",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://api.geonames.org/childrenJSON?geonameId=3041565&lang=en&username=tbd",
+							"protocol": "http",
+							"host": [
+								"api",
+								"geonames",
+								"org"
+							],
+							"path": [
+								"childrenJSON"
+							],
+							"query": [
+								{
+									"key": "geonameId",
+									"value": "3041565"
+								},
+								{
+									"key": "lang",
+									"value": "en"
+								},
+								{
+									"key": "username",
+									"value": "tbd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get List of Cities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://api.geonames.org/searchJSON?lang=en&adminCode1=PA&country=US&fcode=PPLA&fcode=PPLA2&maxRows=1000&username=tbd",
+							"protocol": "http",
+							"host": [
+								"api",
+								"geonames",
+								"org"
+							],
+							"path": [
+								"searchJSON"
+							],
+							"query": [
+								{
+									"key": "lang",
+									"value": "en"
+								},
+								{
+									"key": "adminCode1",
+									"value": "PA"
+								},
+								{
+									"key": "country",
+									"value": "US"
+								},
+								{
+									"key": "fcode",
+									"value": "PPLA"
+								},
+								{
+									"key": "fcode",
+									"value": "PPLA2"
+								},
+								{
+									"key": "maxRows",
+									"value": "1000"
+								},
+								{
+									"key": "username",
+									"value": "tbd"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
