@@ -1,4 +1,4 @@
-# User Access: Supported Audit Events
+# Supported Audit Events: User Access
 
 Managing user access effectively is critical for maintaining security and ensuring that users have appropriate permissions to perform their roles. Here’s a comprehensive list of events that are typically sent from such a service to an audit log (and supported out-of-the-box in this service).
 
