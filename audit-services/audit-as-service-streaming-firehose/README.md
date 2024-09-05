@@ -9,6 +9,7 @@
   - [Prerequisites](#prerequisites)
   - [Deployment](#deployment)
   - [Usage](#usage)
+  - [Architecture Diagrams Update](#architecture-diagrams-update)
 
 # Overview
 
@@ -118,3 +119,13 @@ firehose.putRecord(params, function(err, data) {
 });
 
 ```
+
+## Architecture Diagrams Update
+
+Repository contains files `workspace.dsl` and `workspace.json` that defines [structurizr diagrams models](https://docs.structurizr.com/). In order to update architecture diagrams in the repository, do following steps:
+
+1. Install Java on the local machine
+2. Download `structurizr-lite.war` file from [https://github.com/structurizr/lite/releases](https://github.com/structurizr/lite/releases)
+3. Through the terminal execute command `java -jar structurizr-lite.war /path/to/repository/folder/with/workspace/files/you/want/to/update` to start application
+4. Open browser [http://localhost:8080/workspace/diagrams](http://localhost:8080/workspace/diagrams)
+5. When completed with diagram update, export new image and replace the previous one with it in the repository.
