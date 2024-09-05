@@ -1,0 +1,285 @@
+{
+  "configuration" : { },
+  "description" : "Description",
+  "documentation" : { },
+  "id" : 1,
+  "lastModifiedAgent" : "structurizr-javascript",
+  "lastModifiedDate" : "2024-09-05T01:46:20Z",
+  "model" : {
+    "people" : [ {
+      "description" : "Uses audit logs to detect suspicious activities, investigate security incidents, and respond to breaches.",
+      "id" : "1",
+      "location" : "Unspecified",
+      "name" : "Security Team",
+      "properties" : {
+        "structurizr.dsl.identifier" : "securityteam"
+      },
+      "relationships" : [ {
+        "description" : "Investigates security events",
+        "destinationId" : "4",
+        "id" : "11",
+        "properties" : {
+          "structurizr.dsl.identifier" : "8ce7b5b0-70b1-4150-b559-1f2fe6be1e58"
+        },
+        "sourceId" : "1",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Person"
+    }, {
+      "description" : "Reviews audit logs for regulatory compliance, ensures that data access and modification follow legal guidelines, and prepares for audits.",
+      "id" : "2",
+      "location" : "Unspecified",
+      "name" : "Compliance Officer",
+      "properties" : {
+        "structurizr.dsl.identifier" : "complianceofficer"
+      },
+      "relationships" : [ {
+        "description" : "Reviews logs and generates compliance reports",
+        "destinationId" : "5",
+        "id" : "12",
+        "properties" : {
+          "structurizr.dsl.identifier" : "2a557975-f240-42eb-9955-5d06dfb8c5ac"
+        },
+        "sourceId" : "2",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Person"
+    }, {
+      "description" : "Conducts independent reviews of the organization's operations and controls, using audit logs for verification.",
+      "id" : "3",
+      "location" : "Unspecified",
+      "name" : "External Auditor",
+      "properties" : {
+        "structurizr.dsl.identifier" : "externalauditor"
+      },
+      "relationships" : [ {
+        "description" : "Conducts audits and verifies system logs",
+        "destinationId" : "5",
+        "id" : "13",
+        "properties" : {
+          "structurizr.dsl.identifier" : "fea87a20-c9e9-4840-848c-6eec49549517"
+        },
+        "sourceId" : "3",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Person"
+    } ],
+    "softwareSystems" : [ {
+      "description" : "Allows security teams to track and manage security incidents.",
+      "documentation" : { },
+      "id" : "4",
+      "location" : "Unspecified",
+      "name" : "Security Incident Management System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "securityincidentmanagementsystem"
+      },
+      "relationships" : [ {
+        "description" : "Retrieves audit logs for incident investigation",
+        "destinationId" : "6",
+        "id" : "14",
+        "properties" : {
+          "structurizr.dsl.identifier" : "b7050d72-0be0-48fa-aaa6-89d52b7dd937"
+        },
+        "sourceId" : "4",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Software System"
+    }, {
+      "description" : "Enables compliance officers to generate reports and ensure regulatory compliance.",
+      "documentation" : { },
+      "id" : "5",
+      "location" : "Unspecified",
+      "name" : "Compliance Reporting Tool",
+      "properties" : {
+        "structurizr.dsl.identifier" : "compliancereportingtool"
+      },
+      "relationships" : [ {
+        "description" : "Fetches logs for compliance analysis",
+        "destinationId" : "6",
+        "id" : "15",
+        "properties" : {
+          "structurizr.dsl.identifier" : "7a17c935-87b6-42f0-a062-6604b221bc18"
+        },
+        "sourceId" : "5",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Software System"
+    }, {
+      "description" : "Provides audit logging, tracking, and reporting capabilities, ensuring that all actions and transactions within the organization are recorded in a secure and tamper-proof manner.",
+      "documentation" : { },
+      "id" : "6",
+      "location" : "Unspecified",
+      "name" : "Audit as a Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "auditasaservicesolution"
+      },
+      "tags" : "Element,Software System"
+    }, {
+      "description" : "Responsible for authentication and authorization of users accessing various systems.",
+      "documentation" : { },
+      "id" : "7",
+      "location" : "Unspecified",
+      "name" : "Authentication & Authorization Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "authservice"
+      },
+      "relationships" : [ {
+        "description" : "Logs authentication and authorization events",
+        "destinationId" : "6",
+        "id" : "16",
+        "properties" : {
+          "structurizr.dsl.identifier" : "02d9e01e-c2ee-4b0c-9eb5-d7a65e7e5f99"
+        },
+        "sourceId" : "7",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Software System"
+    }, {
+      "description" : "Manages documents uploaded by users or generated by systems (can contain regulated data)",
+      "documentation" : { },
+      "id" : "8",
+      "location" : "Unspecified",
+      "name" : "Documents Management Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "documentmanagementservice"
+      },
+      "relationships" : [ {
+        "description" : "Logs document management activities",
+        "destinationId" : "6",
+        "id" : "17",
+        "properties" : {
+          "structurizr.dsl.identifier" : "77d9e592-969c-4b56-8852-d287c9e1a6cc"
+        },
+        "sourceId" : "8",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Software System"
+    }, {
+      "description" : "Manages data, that should be audited",
+      "documentation" : { },
+      "id" : "9",
+      "location" : "Unspecified",
+      "name" : "Other Services with Audited Data",
+      "properties" : {
+        "structurizr.dsl.identifier" : "othersupportedauditedservices"
+      },
+      "relationships" : [ {
+        "description" : "Logs activities and data access",
+        "destinationId" : "6",
+        "id" : "18",
+        "properties" : {
+          "structurizr.dsl.identifier" : "d28a7367-a49e-4353-973a-2827efad556d"
+        },
+        "sourceId" : "9",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Software System"
+    }, {
+      "description" : "Handles billing transactions, possibly involving PCI-DSS compliance.",
+      "documentation" : { },
+      "id" : "10",
+      "location" : "Unspecified",
+      "name" : "Billing Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "billingservice"
+      },
+      "relationships" : [ {
+        "description" : "Logs billing transactions",
+        "destinationId" : "6",
+        "id" : "19",
+        "properties" : {
+          "structurizr.dsl.identifier" : "b6bb3e70-63fa-43f0-8b64-6f896745d1f5"
+        },
+        "sourceId" : "10",
+        "tags" : "Relationship"
+      } ],
+      "tags" : "Element,Software System"
+    } ]
+  },
+  "name" : "Name",
+  "properties" : {
+    "structurizr.dsl" : "d29ya3NwYWNlIHsKCiAgICBtb2RlbCB7CiAgICAgICAgLy8gVXNlcnMKICAgICAgICBzZWN1cml0eVRlYW0gPSBwZXJzb24gIlNlY3VyaXR5IFRlYW0iIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIlVzZXMgYXVkaXQgbG9ncyB0byBkZXRlY3Qgc3VzcGljaW91cyBhY3Rpdml0aWVzLCBpbnZlc3RpZ2F0ZSBzZWN1cml0eSBpbmNpZGVudHMsIGFuZCByZXNwb25kIHRvIGJyZWFjaGVzLiIKICAgICAgICB9CiAgICAgICAgY29tcGxpYW5jZU9mZmljZXIgPSBwZXJzb24gIkNvbXBsaWFuY2UgT2ZmaWNlciIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiUmV2aWV3cyBhdWRpdCBsb2dzIGZvciByZWd1bGF0b3J5IGNvbXBsaWFuY2UsIGVuc3VyZXMgdGhhdCBkYXRhIGFjY2VzcyBhbmQgbW9kaWZpY2F0aW9uIGZvbGxvdyBsZWdhbCBndWlkZWxpbmVzLCBhbmQgcHJlcGFyZXMgZm9yIGF1ZGl0cy4iCiAgICAgICAgfQogICAgICAgIGV4dGVybmFsQXVkaXRvciA9IHBlcnNvbiAiRXh0ZXJuYWwgQXVkaXRvciIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiQ29uZHVjdHMgaW5kZXBlbmRlbnQgcmV2aWV3cyBvZiB0aGUgb3JnYW5pemF0aW9uJ3Mgb3BlcmF0aW9ucyBhbmQgY29udHJvbHMsIHVzaW5nIGF1ZGl0IGxvZ3MgZm9yIHZlcmlmaWNhdGlvbi4iCiAgICAgICAgfQogICAgICAgIAogICAgICAgIC8vIDNyZC1wYXJ0eSBVSSBhcHBsaWNhdGlvbnMKICAgICAgICBzZWN1cml0eUluY2lkZW50TWFuYWdlbWVudFN5c3RlbSA9IHNvZnR3YXJlU3lzdGVtICJTZWN1cml0eSBJbmNpZGVudCBNYW5hZ2VtZW50IFN5c3RlbSIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiQWxsb3dzIHNlY3VyaXR5IHRlYW1zIHRvIHRyYWNrIGFuZCBtYW5hZ2Ugc2VjdXJpdHkgaW5jaWRlbnRzLiIKICAgICAgICB9CiAgICAgICAgY29tcGxpYW5jZVJlcG9ydGluZ1Rvb2wgPSBzb2Z0d2FyZVN5c3RlbSAiQ29tcGxpYW5jZSBSZXBvcnRpbmcgVG9vbCIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiRW5hYmxlcyBjb21wbGlhbmNlIG9mZmljZXJzIHRvIGdlbmVyYXRlIHJlcG9ydHMgYW5kIGVuc3VyZSByZWd1bGF0b3J5IGNvbXBsaWFuY2UuIgogICAgICAgIH0KICAgICAgICAKICAgICAgICAvLyBBdWRpdCBhcyBhIFNlcnZpY2UKICAgICAgICBhdWRpdEFzQVNlcnZpY2VTb2x1dGlvbiA9IHNvZnR3YXJlU3lzdGVtICJBdWRpdCBhcyBhIFNlcnZpY2UiIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIlByb3ZpZGVzIGF1ZGl0IGxvZ2dpbmcsIHRyYWNraW5nLCBhbmQgcmVwb3J0aW5nIGNhcGFiaWxpdGllcywgZW5zdXJpbmcgdGhhdCBhbGwgYWN0aW9ucyBhbmQgdHJhbnNhY3Rpb25zIHdpdGhpbiB0aGUgb3JnYW5pemF0aW9uIGFyZSByZWNvcmRlZCBpbiBhIHNlY3VyZSBhbmQgdGFtcGVyLXByb29mIG1hbm5lci4iCiAgICAgICAgfQoKICAgICAgICAvLyBBZGRpdGlvbmFsIFN5c3RlbXMKICAgICAgICBhdXRoU2VydmljZSA9IHNvZnR3YXJlU3lzdGVtICJBdXRoZW50aWNhdGlvbiAmIEF1dGhvcml6YXRpb24gU2VydmljZSIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiUmVzcG9uc2libGUgZm9yIGF1dGhlbnRpY2F0aW9uIGFuZCBhdXRob3JpemF0aW9uIG9mIHVzZXJzIGFjY2Vzc2luZyB2YXJpb3VzIHN5c3RlbXMuIgogICAgICAgIH0KICAgICAgICBkb2N1bWVudE1hbmFnZW1lbnRTZXJ2aWNlID0gc29mdHdhcmVTeXN0ZW0gIkRvY3VtZW50cyBNYW5hZ2VtZW50IFNlcnZpY2UiIHsKICAgICAgICAgICAgZGVzY3JpcHRpb24gIk1hbmFnZXMgZG9jdW1lbnRzIHVwbG9hZGVkIGJ5IHVzZXJzIG9yIGdlbmVyYXRlZCBieSBzeXN0ZW1zIChjYW4gY29udGFpbiByZWd1bGF0ZWQgZGF0YSkiCiAgICAgICAgfQogICAgICAgIG90aGVyU3VwcG9ydGVkQXVkaXRlZFNlcnZpY2VzID0gc29mdHdhcmVTeXN0ZW0gIk90aGVyIFNlcnZpY2VzIHdpdGggQXVkaXRlZCBEYXRhIiB7CiAgICAgICAgICAgIGRlc2NyaXB0aW9uICJNYW5hZ2VzIGRhdGEsIHRoYXQgc2hvdWxkIGJlIGF1ZGl0ZWQiCiAgICAgICAgfQogICAgICAgIGJpbGxpbmdTZXJ2aWNlID0gc29mdHdhcmVTeXN0ZW0gIkJpbGxpbmcgU2VydmljZSIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiSGFuZGxlcyBiaWxsaW5nIHRyYW5zYWN0aW9ucywgcG9zc2libHkgaW52b2x2aW5nIFBDSS1EU1MgY29tcGxpYW5jZS4iCiAgICAgICAgfQogICAgICAgIAogICAgICAgIC8vIFJlbGF0aW9uc2hpcHMKICAgICAgICBzZWN1cml0eVRlYW0gLT4gc2VjdXJpdHlJbmNpZGVudE1hbmFnZW1lbnRTeXN0ZW0gIkludmVzdGlnYXRlcyBzZWN1cml0eSBldmVudHMiCiAgICAgICAgY29tcGxpYW5jZU9mZmljZXIgLT4gY29tcGxpYW5jZVJlcG9ydGluZ1Rvb2wgIlJldmlld3MgbG9ncyBhbmQgZ2VuZXJhdGVzIGNvbXBsaWFuY2UgcmVwb3J0cyIKICAgICAgICBleHRlcm5hbEF1ZGl0b3IgLT4gY29tcGxpYW5jZVJlcG9ydGluZ1Rvb2wgIkNvbmR1Y3RzIGF1ZGl0cyBhbmQgdmVyaWZpZXMgc3lzdGVtIGxvZ3MiCgogICAgICAgIHNlY3VyaXR5SW5jaWRlbnRNYW5hZ2VtZW50U3lzdGVtIC0+IGF1ZGl0QXNBU2VydmljZVNvbHV0aW9uICJSZXRyaWV2ZXMgYXVkaXQgbG9ncyBmb3IgaW5jaWRlbnQgaW52ZXN0aWdhdGlvbiIKICAgICAgICBjb21wbGlhbmNlUmVwb3J0aW5nVG9vbCAtPiBhdWRpdEFzQVNlcnZpY2VTb2x1dGlvbiAiRmV0Y2hlcyBsb2dzIGZvciBjb21wbGlhbmNlIGFuYWx5c2lzIgoKICAgICAgICBhdXRoU2VydmljZSAtPiBhdWRpdEFzQVNlcnZpY2VTb2x1dGlvbiAiTG9ncyBhdXRoZW50aWNhdGlvbiBhbmQgYXV0aG9yaXphdGlvbiBldmVudHMiCiAgICAgICAgZG9jdW1lbnRNYW5hZ2VtZW50U2VydmljZSAtPiBhdWRpdEFzQVNlcnZpY2VTb2x1dGlvbiAiTG9ncyBkb2N1bWVudCBtYW5hZ2VtZW50IGFjdGl2aXRpZXMiCiAgICAgICAgb3RoZXJTdXBwb3J0ZWRBdWRpdGVkU2VydmljZXMgLT4gYXVkaXRBc0FTZXJ2aWNlU29sdXRpb24gIkxvZ3MgYWN0aXZpdGllcyBhbmQgZGF0YSBhY2Nlc3MiCiAgICAgICAgYmlsbGluZ1NlcnZpY2UgLT4gYXVkaXRBc0FTZXJ2aWNlU29sdXRpb24gIkxvZ3MgYmlsbGluZyB0cmFuc2FjdGlvbnMiCiAgICB9CgogICAgdmlld3MgewogICAgICAgIHN5c3RlbUNvbnRleHQgYXVkaXRBc0FTZXJ2aWNlU29sdXRpb24gewogICAgICAgICAgICBpbmNsdWRlIHNlY3VyaXR5VGVhbQogICAgICAgICAgICBpbmNsdWRlIGNvbXBsaWFuY2VPZmZpY2VyCiAgICAgICAgICAgIGluY2x1ZGUgZXh0ZXJuYWxBdWRpdG9yCiAgICAgICAgICAgIGluY2x1ZGUgc2VjdXJpdHlJbmNpZGVudE1hbmFnZW1lbnRTeXN0ZW0KICAgICAgICAgICAgaW5jbHVkZSBjb21wbGlhbmNlUmVwb3J0aW5nVG9vbAogICAgICAgICAgICBpbmNsdWRlIGF1ZGl0QXNBU2VydmljZVNvbHV0aW9uCiAgICAgICAgICAgIGluY2x1ZGUgYXV0aFNlcnZpY2UKICAgICAgICAgICAgaW5jbHVkZSBkb2N1bWVudE1hbmFnZW1lbnRTZXJ2aWNlCiAgICAgICAgICAgIGluY2x1ZGUgb3RoZXJTdXBwb3J0ZWRBdWRpdGVkU2VydmljZXMKICAgICAgICAgICAgaW5jbHVkZSBiaWxsaW5nU2VydmljZQogICAgICAgICAgICAKICAgICAgICB9CgogICAgICAgIHRoZW1lIGRlZmF1bHQKICAgIH0KfQo="
+  },
+  "views" : {
+    "configuration" : {
+      "branding" : { },
+      "lastSavedView" : "SystemContext-001",
+      "metadataSymbols" : "SquareBrackets",
+      "styles" : { },
+      "terminology" : { },
+      "themes" : [ "https://static.structurizr.com/themes/default/theme.json" ]
+    },
+    "systemContextViews" : [ {
+      "dimensions" : {
+        "height" : 2480,
+        "width" : 3508
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 145,
+        "y" : 1385
+      }, {
+        "id" : "2",
+        "x" : 145,
+        "y" : 215
+      }, {
+        "id" : "3",
+        "x" : 145,
+        "y" : 795
+      }, {
+        "id" : "4",
+        "x" : 815,
+        "y" : 1455
+      }, {
+        "id" : "5",
+        "x" : 1480,
+        "y" : 270
+      }, {
+        "id" : "6",
+        "x" : 1495,
+        "y" : 850
+      }, {
+        "id" : "7",
+        "x" : 2255,
+        "y" : 255
+      }, {
+        "id" : "8",
+        "x" : 2260,
+        "y" : 860
+      }, {
+        "id" : "9",
+        "x" : 2255,
+        "y" : 1455
+      }, {
+        "id" : "10",
+        "x" : 1495,
+        "y" : 1470
+      } ],
+      "enterpriseBoundaryVisible" : true,
+      "generatedKey" : true,
+      "key" : "SystemContext-001",
+      "order" : 1,
+      "paperSize" : "A4_Landscape",
+      "relationships" : [ {
+        "id" : "11"
+      }, {
+        "id" : "12"
+      }, {
+        "id" : "13"
+      }, {
+        "id" : "14"
+      }, {
+        "id" : "15"
+      }, {
+        "id" : "16"
+      }, {
+        "id" : "17"
+      }, {
+        "id" : "18"
+      }, {
+        "id" : "19"
+      } ],
+      "softwareSystemId" : "6"
+    } ]
+  }
+}
