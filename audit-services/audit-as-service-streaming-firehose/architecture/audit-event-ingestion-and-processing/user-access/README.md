@@ -4,12 +4,12 @@ Managing user access effectively is critical for maintaining security and ensuri
 
 ## OTP (One-Time Password)
 
-| Event Type | Description |
-|----------|----------|
-| OTP_GENERATED | Indicates that an OTP code was generated for a user action (e.g., registration, login, password change). **NOTE:** When you send this request, you have to record auditId next to OTP valye as audit of OTP_VALIDATION_SUCCESS and OTP_VALIDATION_FAILED will require to add reference of this event as a part of it’s payload.|
-| OTP_SENT | Indicates that the generated OTP code was sent to the user's email / phone. |
-| OTP_VALIDATION_SUCCESS | Indicates that the OTP code was successfully validated by the user. |
-| OTP_VALIDATION_FAILED | Indicates that the OTP code validation failed (e.g., incorrect OTP entered).|
+| Event Type | Description |Event Format|
+|----------|----------|----------|
+| OTP_GENERATED | Indicates that an OTP code was generated for a user action (e.g., registration, login, password change). **NOTE:** When you send this request, you have to record auditId next to OTP valye as audit of OTP_VALIDATION_SUCCESS and OTP_VALIDATION_FAILED will require to add reference of this event as a part of it’s payload.|[event](./supported-events/OTP_GENERATED.json)|
+| OTP_SENT | Indicates that the generated OTP code was sent to the user's email / phone. |[event](./supported-events/OTP_SENT.json)|
+| OTP_VALIDATION_SUCCESS | Indicates that the OTP code was successfully validated by the user. |[event](./supported-events/OTP_VALIDATION_SUCCESS.json)|
+| OTP_VALIDATION_FAILED | Indicates that the OTP code validation failed (e.g., incorrect OTP entered).|[event](./supported-events/OTP_VALIDATION_FAILED.json)|
 
 ## Login
 | Event Type | Description |
