@@ -60,6 +60,16 @@ This system is ideal for organizations looking to implement an automated, highly
 
 # Architecture
 
+For most large-scale Audit as a Service architectures, Firehose based solution is sufficient and more straightforward to use if/when:
+
+- If your primary goal is to store audit logs in S3, Elasticsearch, or Redshift for later analysis and you don’t need to process each event immediately. Firehose is designed for **near real-time data delivery**: it delivers data with a slight delay, typically ranging from seconds to minutes, rather than instantly. This is ideal for scenarios where data freshness is important but absolute real-time processing is not required.
+- When you need a straightforward, fully managed pipeline for moving audit logs from the ingestion point to a storage solution. Firehose is designed for data delivery with minimal configuration.
+
+In following cases, consider [Kinesis Data Stream solution](#) instead:
+
+- If your system needs to react in **real-time** to security or compliance events, such as triggering alerts or automated actions when specific types of audit events are detected.
+- When integrating with systems that require continuous real-time data flow, such as real-time dashboards or monitoring systems.
+
 Please refer to [Solution Architecture Document](./architecture/) for details.
 
 

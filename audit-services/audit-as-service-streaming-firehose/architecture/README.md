@@ -3,7 +3,6 @@
 - [Audit as a Service Solution with AWS Firehose](#audit-as-a-service-solution-with-aws-firehose)
 - [Overview](#overview)
 - [System Context Diagram](#system-context-diagram)
-- [Architecture Highlights](#architecture-highlights)
 - [Technology Stack](#technology-stack)
 - [Architecture Constrains](#architecture-constrains)
   - [Data Throughput and Limits](#data-throughput-and-limits)
@@ -21,18 +20,6 @@ Built to meet stringent industry standards and regulatory requirements, the solu
 The following System Context Diagram provides a high-level overview of how the solution interacts with external entities, including users, third-party services, and other systems within the organization.
 
 ![System Context Diagram](system-context-diagram.png)
-
-# Architecture Highlights
-
-For most large-scale Audit as a Service architectures, Firehose based solution is sufficient and more straightforward to use if/when:
-
-- If your primary goal is to store audit logs in S3, Elasticsearch, or Redshift for later analysis and you don’t need to process each event immediately. Firehose is designed for **near real-time data delivery**: it delivers data with a slight delay, typically ranging from seconds to minutes, rather than instantly. This is ideal for scenarios where data freshness is important but absolute real-time processing is not required.
-- When you need a straightforward, fully managed pipeline for moving audit logs from the ingestion point to a storage solution. Firehose is designed for near data delivery with minimal configuration.
-
-In following cases, consider [Kinesis solution](#):
-
-- If your system needs to react in **real-time** to security or compliance events, such as triggering alerts or automated actions when specific types of audit events are detected.
-- When integrating with systems that require continuous real-time data flow, such as real-time dashboards or monitoring systems.
 
 # Technology Stack
 
