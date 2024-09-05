@@ -1,10 +1,20 @@
 # Audit As a Service - Data Streaming Through Amazon Firehose
 
-## Overview
+- [Audit As a Service - Data Streaming Through Amazon Firehose](#audit-as-a-service---data-streaming-through-amazon-firehose)
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Advantages of Using Audit as a Service](#advantages-of-using-audit-as-a-service)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Deployment](#deployment)
+  - [Usage](#usage)
+
+# Overview
 
 The **Audit As a Service** (AAAS) system enables the efficient tracking, recording, and storage of audit events for various business operations. Leveraging [**Amazon Firehose**](https://aws.amazon.com/firehose/), this solution provides scalable and reliable data streaming capabilities, ensuring audit logs are processed and stored in real-time.
 
-## Key Features
+# Key Features
 - **Scalable Data Ingestion**: Seamlessly handles large volumes of audit logs from diverse sources, ensuring no data loss and minimal latency.
 - **Flexible Data Processing**: Stream audit events through Amazon Firehose, which can transform, format, and enrich the data before delivering it to the destination.
 - **Multiple Storage Options**: The system supports integration with Amazon S3 for long-term storage, Amazon Redshift for real-time analytics, and Amazon Elasticsearch for quick search and reporting.
@@ -13,7 +23,7 @@ The **Audit As a Service** (AAAS) system enables the efficient tracking, recordi
 
 This system is ideal for organizations looking to implement an automated, highly available, and cost-effective solution to meet compliance, reporting, and operational auditing requirements.
 
-## Why Standalone Service?
+# Advantages of Using Audit as a Service
 
 1. Centralized Audit Management:
     - **Consistency:** A centralized audit service ensures that audit logging is consistent across all modules. This can be crucial for maintaining compliance with healthcare regulations such as HIPAA or GDPR.
@@ -47,20 +57,20 @@ This system is ideal for organizations looking to implement an automated, highly
 
     - **Adaptability:** As auditing requirements evolve, such as needing to integrate with newer technologies or services, the AaaS can be updated to accommodate these changes without disrupting the other modules.
 
-## Architecture
+# Architecture
 
 Please refer to [Solution Architecture Document](./architecture/) for details.
 
 
-## Getting Started
+# Getting Started
 
-### Prerequisites
+## Prerequisites
 1. AWS Account
 2. AWS CLI configured
 3. Node.js installed
 4. AWS CDK installed
 
-### Deployment
+## Deployment
 1. Clone the repository:
      ```sh
      git clone https://github.com/daria-serkova/aws-cdk.git
@@ -76,7 +86,7 @@ Please refer to [Solution Architecture Document](./architecture/) for details.
      cdk deploy
      ```
 
-### Usage
+## Usage
 
 Configure data source application to send audit events into Audit as a Service:
 
