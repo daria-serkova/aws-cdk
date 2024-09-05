@@ -1,182 +1,110 @@
-# Audit As Service (Serverless Solution)
+# Audit As a Service - Data Streaming Through Amazon Firehose
 
-The AWS Serverless Audit Solution provides a scalable, automated, and real-time auditing framework designed to monitor, analyze, and report on various activities across an organization’s digital infrastructure. By leveraging AWS serverless technologies, this solution minimizes operational overhead while ensuring comprehensive coverage for security, compliance, and operational efficiency. It is adaptable to diverse business needs and can be tailored to fit various industry requirements.
+## Overview
 
-## Benefits
+The **Audit As a Service** (AAAS) system enables the efficient tracking, recording, and storage of audit events for various business operations. Leveraging [**Amazon Firehose**](https://aws.amazon.com/firehose/), this solution provides scalable and reliable data streaming capabilities, ensuring audit logs are processed and stored in real-time.
 
-### 1. Centralized Audit Management
+## Key Features
+- **Scalable Data Ingestion**: Seamlessly handles large volumes of audit logs from diverse sources, ensuring no data loss and minimal latency.
+- **Flexible Data Processing**: Stream audit events through Amazon Firehose, which can transform, format, and enrich the data before delivering it to the destination.
+- **Multiple Storage Options**: The system supports integration with Amazon S3 for long-term storage, Amazon Redshift for real-time analytics, and Amazon Elasticsearch for quick search and reporting.
+- **Real-Time Monitoring**: Leverages AWS CloudWatch for tracking the performance of data streams, ensuring high availability and operational efficiency.
+- **Customizable Audit Policies**: Offers flexibility to define audit triggers and customize how different audit events are processed based on business needs.
 
-- **Consistency:** A centralized audit service ensures that audit logging is consistent across all modules. This can be crucial for maintaining compliance with healthcare regulations such as HIPAA or GDPR.
-- **Ease of Maintenance:** Updates, enhancements, and bug fixes to the audit functionality need to be implemented only once in the AaaS, rather than in each module individually.
+This system is ideal for organizations looking to implement an automated, highly available, and cost-effective solution to meet compliance, reporting, and operational auditing requirements.
 
-### 2. Scalability
+## Why Standalone Service?
 
-- **Modular Growth:** As your platform grows, new modules can easily integrate with the existing audit service, reducing the time and effort needed to build auditing capabilities from scratch.
-- **Performance:** A dedicated service can be optimized specifically for handling audit logs, ensuring that it scales efficiently with the increasing volume of data.
+1. Centralized Audit Management:
+    - **Consistency:** A centralized audit service ensures that audit logging is consistent across all modules. This can be crucial for maintaining compliance with healthcare regulations such as HIPAA or GDPR.
+    - **Ease of Maintenance:** Updates, enhancements, and bug fixes to the audit functionality need to be implemented only once in the AaaS, rather than in each module individually.
 
-### 3. Separation of Concerns
+2. Scalability:
 
-- **Decoupling:** By separating audit logic from business logic, you can maintain a cleaner codebase. This makes your modules more focused on their core responsibilities.
-- **Flexibility:** Changes in auditing requirements (e.g., the level of detail needed in logs or changes in audit storage solutions) can be managed independently from the rest of your application.
+    - **Modular Growth:** As your platform grows, new modules can easily integrate with the existing audit service, reducing the time and effort needed to build auditing capabilities from scratch.
+    - **Performance:** A dedicated service can be optimized specifically for handling audit logs, ensuring that it scales efficiently with the increasing volume of data.
 
-### 4. Enhanced Security
+3. Separation of Concerns:
 
-- **Data Protection:** Centralizing audit data can make it easier to implement strict security measures, such as encryption, access control, and logging of access to audit logs.
-- **Compliance:** It simplifies compliance reporting by providing a single source of truth for all audit logs.
+    - **Decoupling:** By separating audit logic from business logic, you can maintain a cleaner codebase. This makes your modules more focused on their core responsibilities.
+    - **Flexibility:** Changes in auditing requirements (e.g., the level of detail needed in logs or changes in audit storage solutions) can be managed independently from the rest of your application.
 
-### 5. Advanced Analytics and Monitoring
+4. Enhanced Security:
 
-- **Insights:** A centralized audit service can provide a unified view for monitoring, analyzing, and reporting on activities across the entire platform, helping to identify patterns, anomalies, or potential security threats.
-- **Alerting:** You can implement alerting mechanisms within the audit service to trigger notifications or actions based on certain events or thresholds.
+    - **Data Protection:** Centralizing audit data can make it easier to implement strict security measures, such as encryption, access control, and logging of access to audit logs.
+    - **Compliance:** It simplifies compliance reporting by providing a single source of truth for all audit logs.
 
-### 6. Reuse Across Different Applications
+5. Advanced Analytics and Monitoring:
 
-- **Cross-Module Use:** If you have other applications or external systems that need auditing, they can leverage the same service, ensuring consistency across your entire ecosystem.
+    - **Insights:** A centralized audit service can provide a unified view for monitoring, analyzing, and reporting on activities across the entire platform, helping to identify patterns, anomalies, or potential security threats.
+    - **Alerting:** You can implement alerting mechanisms within the audit service to trigger notifications or actions based on certain events or thresholds.
 
-### 7. Future-Proofing
+6. Reuse Across Different Applications:
 
-- **Adaptability:** As auditing requirements evolve, such as needing to integrate with newer technologies or services, the AaaS can be updated to accommodate these changes without disrupting the other modules.
+    - **Cross-Module Use:** If you have other applications or external systems that need auditing, they can leverage the same service, ensuring consistency across your entire ecosystem.
 
-## Business Scenarios
+7. Future-Proofing:
 
-**Audit as a Service (AaaS)** provides a versatile framework for capturing, managing, and analyzing audit data across various business processes. Here are some common generic business scenarios where AaaS is applicable:
+    - **Adaptability:** As auditing requirements evolve, such as needing to integrate with newer technologies or services, the AaaS can be updated to accommodate these changes without disrupting the other modules.
 
-### 1. User Access and Activity Monitoring
+## Architecture
 
-**Scenario:** Tracking user logins, access to systems, and actions performed within applications.
-
-**Use Case:** Monitoring employee access to sensitive data, ensuring compliance with internal policies and regulatory requirements. Detecting unauthorized access or suspicious behavior.
-
-### 2. Financial Transactions and Compliance
-
-**Scenario:** Recording and auditing financial transactions, including payments, transfers, and adjustments.
-
-**Use Case:** Ensuring adherence to financial regulations (e.g., SOX, PCI DSS) by providing transparency and accountability for financial activities. Detecting discrepancies or fraudulent activities.
-
-### 3. Document Management
-
-**Scenario:** Tracking the creation, modification, and deletion of documents within document management systems.
-
-**Use Case:** Ensuring the integrity and traceability of important documents, such as contracts, legal files, or confidential reports. Compliance with document retention policies and legal requirements.
-
-### 4. System Configuration Changes
-
-**Scenario:** Auditing changes to system configurations, infrastructure, and application settings.
-
-**Use Case:** Maintaining a record of changes to prevent misconfigurations and ensure that changes are authorized and documented. Useful for troubleshooting and forensic analysis in case of incidents.
-
-### 5. Regulatory Compliance
-
-**Scenario:** Ensuring compliance with industry-specific regulations and standards, such as GDPR, HIPAA, or CCPA.
-
-**Use Case:** Providing an audit trail for data access, processing, and storage activities. Demonstrating compliance during audits and inspections by regulatory bodies.
-
-### 6. Incident Management and Forensics
-
-**Scenario:** Capturing data related to security incidents, including unauthorized access, data breaches, or system failures.
-
-**Use Case:** Investigating and analyzing security incidents to determine the cause and impact. Supporting incident response and remediation efforts with detailed audit logs.
-
-### 7. Operational Process Monitoring
-
-**Scenario:** Tracking key operational processes, such as order fulfillment, customer service interactions, and inventory management.
-
-**Use Case:** Enhancing operational efficiency and accountability by monitoring processes and identifying areas for improvement. Ensuring adherence to standard operating procedures (SOPs).
-
-### 8. Customer Interaction and Support
-
-**Scenario:** Logging interactions between customers and support teams, including support tickets, chat logs, and call records.
-
-**Use Case:** Improving customer service by analyzing support interactions and identifying trends. Ensuring that support activities meet service level agreements (SLAs) and quality standards.
-
-### 9. Access to Sensitive Data
-
-**Scenario:** Monitoring access to and manipulation of sensitive data, such as personal identifiable information (PII) or financial records.
-
-**Use Case:** Protecting sensitive data from unauthorized access and ensuring that data handling complies with privacy regulations. Providing detailed logs for data protection audits.
-
-### 10. Software Development and Deployment
-
-**Scenario:** Tracking changes in code repositories, deployments, and integration processes.
-
-**Use Case:** Ensuring that code changes are reviewed, tested, and deployed according to established processes. Providing an audit trail for code changes and deployment history.
-
-### 11. Vendor and Third-Party Interactions
-
-**Scenario:** Auditing interactions with third-party vendors and service providers, including contract management and performance monitoring.
-
-**Use Case:** Ensuring that vendor activities align with contractual obligations and performance metrics. Managing and auditing vendor relationships to ensure compliance and mitigate risks.
-
-### 12. Data Backup and Restoration
-
-**Scenario:** Tracking backup and restoration activities, including schedules, success rates, and any issues encountered.
-
-**Use Case:** Ensuring that data backup processes are functioning correctly and that data can be restored in case of a failure or data loss. Providing documentation for disaster recovery plans.
-
-### 13. Compliance with Internal Policies
-
-**Scenario:** Monitoring adherence to internal policies and procedures across various departments and processes.
-
-**Use Case:** Enforcing organizational policies and ensuring that employees follow established guidelines. Supporting internal audits and policy enforcement activities.
-
-### 14. Employee/Users Onboarding and Offboarding
-
-**Scenario:** Tracking activities related to the onboarding and offboarding of employees, including account creation, role assignments, and access revocations.
-
-**Use Case:** Ensuring that employee accounts are created, modified, and deactivated according to company policies. Providing an audit trail for HR and IT departments.
-
-### 15. Operational Audits and Performance Reviews
-
-**Scenario:** Conducting periodic audits of operational processes and performance metrics.
-
-**Use Case:** Evaluating the effectiveness and efficiency of business processes. Identifying areas for improvement and ensuring that operations are aligned with organizational goals.
-
-
-## Architectural Design (AWS Serverless)
-
-![PlantUML Diagram](https://github.com/daria-serkova/aws-cdk/blob/main/audit-services/audit-as-service/architecture/architecture-overview.png)
-
-Description:
-
-- **API Gateway:** Receives audit events from various modules and triggers the Lambda function.
-- **AWS Lambda:** Processes incoming audit events, performs transformations, and routes them to DynamoDB or Kinesis.
-- **Amazon DynamoDB:** Stores the processed audit events with quick access.
-- **Amazon Kinesis Data Firehose:** Streams audit events to S3 or other destinations for long-term storage and analytics.
-- **Amazon S3:** Stores raw or aggregated audit logs for archival and compliance.
-- **Amazon CloudWatch:** Monitors the health and performance of the Lambda function and other components, and provides alerts.
-- **AWS Step Functions:** Coordinates complex workflows involving multiple steps or conditions.
-- **Amazon EventBridge:** Facilitates event-driven workflows based on audit events.
-- **Amazon Athena:** Queries and analyzes audit logs stored in S3 using SQL.
-- **Amazon SNS:** Sends notifications for critical audit events.
+Please refer to [Solution Architecture Document](./architecture/) for details.
 
 
 ## Getting Started
 
-1. **Prerequisites**
-   - AWS Account
-   - AWS CLI configured
-   - Node.js installed
-   - AWS CDK installed
+### Prerequisites
+1. AWS Account
+2. AWS CLI configured
+3. Node.js installed
+4. AWS CDK installed
 
-2. **Deployment**
-   - Clone the repository:
+### Deployment
+1. Clone the repository:
      ```sh
      git clone https://github.com/daria-serkova/aws-cdk.git
-     cd audit-services/audit-as-service
+     cd audit-services/audit-as-service-streaming-firehose
      ```
-   - Install dependencies:
+2. Install dependencies:
      ```sh
      npm install
      ```
-   - Deploy the stack using CDK:
+3. Copy file `sample-env.txt` to `.env` and update with project specific values
+4. Deploy the stack using CDK:
      ```sh
      cdk deploy
      ```
 
-3. **Usage**
-   - Configure the solution according to your specific project needs.
-   - Use the provided APIs for recording and view audit events .
+### Usage
 
-## License
+Configure data source application to send audit events into Audit as a Service:
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+1. Install AWS SDK for your programming language (e.g., JavaScript, Python, or Java).
+2. Configure AWS credentials in your data source application to allow access to the Amazon Firehose service. Use an IAM role with appropriate permissions to write to the Firehose delivery stream.
+3. Send Audit Event data. Sample:
+
+```
+const AWS = require('aws-sdk');
+const firehose = new AWS.Firehose();
+
+const auditEvent = {
+  "eventType": "USER_LOGIN",
+  "eventTimestamp": "2024-09-04T12:00:00Z",
+  "userId": "12345",
+  "deviceType": "Mobile",
+  "ipAddress": "192.168.1.1"
+}
+const params = {
+  DeliveryStreamName: 'audit-events-firehose',
+  Record: {
+    Data: JSON.stringify(auditEvent) + '\n' // Audit event JSON
+  }
+};
+
+firehose.putRecord(params, function(err, data) {
+  if (err) console.log(err, err.stack); // Log errors
+  else console.log('Audit event sent:', data); // Success response
+});
+
+```
