@@ -1,10 +1,30 @@
 # Cloud Serverless Audit Solutions
 
-## Overview
+- [Cloud Serverless Audit Solutions](#cloud-serverless-audit-solutions)
+- [Overview](#overview)
+- [Benefits](#benefits)
+- [Business Scenarios](#business-scenarios)
+  - [#1: Financial Services Compliance Monitoring](#1-financial-services-compliance-monitoring)
+  - [#2: Healthcare Data Access Auditing](#2-healthcare-data-access-auditing)
+  - [#3: Cloud Infrastructure Security Monitoring](#3-cloud-infrastructure-security-monitoring)
+  - [#4: Application Performance and Usage Auditing](#4-application-performance-and-usage-auditing)
+  - [#5: Regulatory Compliance for Data Privacy](#5-regulatory-compliance-for-data-privacy)
+  - [#6: Operational Auditing for IT Environments](#6-operational-auditing-for-it-environments)
+  - [#7: Supply Chain and Logistics Monitoring](#7-supply-chain-and-logistics-monitoring)
+  - [#8: User Activity and Access Control Auditing](#8-user-activity-and-access-control-auditing)
+  - [#9: Incident Response and Forensics](#9-incident-response-and-forensics)
+  - [#10: Operational Efficiency and Cost Management](#10-operational-efficiency-and-cost-management)
+  - [#11: Customer Data Management and Security](#11-customer-data-management-and-security)
+  - [#12: Data Backup and Recovery Auditing](#12-data-backup-and-recovery-auditing)
+- [Solutions](#solutions)
+  - [Which solution to choose?](#which-solution-to-choose)
+  - [Summary](#summary)
+
+# Overview
 
 The Cloud Serverless Audit Solutions offer a scalable, automated, and real-time framework designed to monitor, analyze, and report on activities across an organization’s digital infrastructure. This solution minimizes operational overhead while ensuring comprehensive coverage for security, compliance, and operational efficiency. It is adaptable to diverse business needs and can be customized to meet various industry requirements.
 
-## Benefits
+# Benefits
 
 1. **Scalability**: Easily handles large volumes of audit data without the need to manage server infrastructure.
 2. **Real-Time Monitoring**: Provides immediate insights and alerts for suspicious activities and compliance breaches.
@@ -12,10 +32,10 @@ The Cloud Serverless Audit Solutions offer a scalable, automated, and real-time 
 4. **Centralized Reporting**: Offers a unified view of audit data across various systems and services, facilitating easier analysis and compliance reporting.
 5. **Cost-Efficiency**: Utilizes serverless architecture to reduce costs associated with infrastructure management and scaling.
 
-## Business Scenarios
+# Business Scenarios
 Below are several business scenarios where Cloud Serverless Audit Solutions can be effectively applied, highlighting the benefits and use cases for each.
 
-### #1: Financial Services Compliance Monitoring
+## #1: Financial Services Compliance Monitoring
 **Scenario**: Banks and financial institutions must monitor and audit transactions and account activities to comply with regulations such as SOX (Sarbanes-Oxley) or AML (Anti-Money Laundering).
 
 ![Scenario #1 Context Diagram](./readme-images/scenario-1-financial-data-compliance-monitoring.svg)
@@ -31,7 +51,7 @@ Below are several business scenarios where Cloud Serverless Audit Solutions can 
 8. Supports ongoing regulatory compliance.
 9. Detects and mitigates potential fraud risks efficiently.
 
-### #2: Healthcare Data Access Auditing
+## #2: Healthcare Data Access Auditing
 **Scenario**: Healthcare providers need to audit access to electronic health records (EHRs) to comply with HIPAA (Health Insurance Portability and Accountability Act).
 
 ![Scenario #2 Context Diagram](./readme-images/scenario-2-healthcare-data-access-auditing.svg)
@@ -48,7 +68,7 @@ Below are several business scenarios where Cloud Serverless Audit Solutions can 
 9. Integrates with existing EHR systems to provide a seamless compliance solution.
 10. Reduces administrative overhead and operational costs with automated auditing solutions.
 
-### #3: Cloud Infrastructure Security Monitoring
+## #3: Cloud Infrastructure Security Monitoring
 **Scenario**: Organizations using cloud services need to monitor and audit access to cloud resources such as S3 buckets, EC2 instances, and databases to ensure security.
 
 ![Scenario #3 Context Diagram](#)
@@ -65,7 +85,7 @@ Enhances visibility into cloud resource usage and access patterns.
 8. Integrates seamlessly with existing cloud infrastructure for a unified security approach.
 9. Scales with client's cloud environment to monitor an increasing number of resources efficiently.
 
-### #4: Application Performance and Usage Auditing
+## #4: Application Performance and Usage Auditing
 **Scenario**: SaaS providers need to audit application usage and performance to ensure service level agreements (SLAs) and optimize performance.
 
 ![Scenario #4 Context Diagram](#)
@@ -82,7 +102,7 @@ Enhances visibility into cloud resource usage and access patterns.
 9. Integrates with existing tools and platforms to streamline performance and usage auditing.
 10. Scales with application growth to ensure consistent monitoring and performance management.
 
-### #5: Regulatory Compliance for Data Privacy
+## #5: Regulatory Compliance for Data Privacy
 **Scenario**: Organizations in various sectors need to ensure compliance with data privacy regulations such as GDPR (General Data Protection Regulation) or CCPA (California Consumer Privacy Act).
 
 ![Scenario #5 Context Diagram](#)
@@ -99,7 +119,7 @@ Enhances visibility into cloud resource usage and access patterns.
 9. Integrates with existing data management systems to provide a unified compliance approach.
 10. Scales with organizational growth to maintain consistent data privacy oversight.
 
-### #6: Operational Auditing for IT Environments
+## #6: Operational Auditing for IT Environments
 **Scenario**: IT departments need to audit changes and configurations in infrastructure, including software deployments and system updates.
 
 ![Scenario #6 Context Diagram](#)
@@ -116,7 +136,7 @@ Enhances visibility into cloud resource usage and access patterns.
 9. Integrates with existing IT management tools for a streamlined auditing approach.
 10. Scales with IT infrastructure growth to maintain consistent operational oversight.
 
-### #7: Supply Chain and Logistics Monitoring
+## #7: Supply Chain and Logistics Monitoring
 **Scenario**: Retail and manufacturing companies need to audit supply chain activities, including inventory management and supplier interactions.
 
 ![Scenario #7 Context Diagram](#)
@@ -133,7 +153,7 @@ Enhances visibility into cloud resource usage and access patterns.
 9. Integrates with existing supply chain management systems for a unified monitoring approach.
 10. Scales with supply chain complexity to ensure consistent monitoring as operations grow.
 
-### #8: User Activity and Access Control Auditing
+## #8: User Activity and Access Control Auditing
 **Scenario**: Organizations need to audit user activity and access control to ensure adherence to internal policies and security practices.
 
 ![Scenario #8 Context Diagram](#)
@@ -150,7 +170,7 @@ Enhances visibility into cloud resource usage and access patterns.
 9. Integrates with existing access control systems for a seamless auditing experience.
 10. Scales with organizational growth to maintain consistent monitoring of user activity.
 
-### #9: Incident Response and Forensics
+## #9: Incident Response and Forensics
 **Scenario**: Security teams need to investigate security incidents, such as data breaches or cyberattacks.
 
 ![Scenario #9 Context Diagram](#)
@@ -167,7 +187,7 @@ Enhances visibility into cloud resource usage and access patterns.
 9. Scales with the complexity of incidents to ensure robust investigation capabilities.
 10. Enhances overall security posture by identifying root causes and mitigating future risks.
 
-### #10: Operational Efficiency and Cost Management
+## #10: Operational Efficiency and Cost Management
 **Scenario**: Organizations need to audit cloud resource usage and operational costs to optimize spending.
 
 ![Scenario #10 Context Diagram](#)
@@ -184,7 +204,7 @@ Enhances visibility into cloud resource usage and access patterns.
 9. Scales with organizational growth to ensure consistent oversight of expanding cloud resources.
 10. Improves overall cost efficiency by identifying and addressing inefficiencies in cloud resource usage.
 
-### #11: Customer Data Management and Security
+## #11: Customer Data Management and Security
 **Scenario**: E-commerce and customer-focused businesses need to audit customer data management practices to ensure data security.
 
 ![Scenario #11 Context Diagram](#)
@@ -201,7 +221,7 @@ Enhances visibility into cloud resource usage and access patterns.
 9. Scales with business growth to maintain consistent oversight as customer data volumes increase.
 10. Improves overall data security posture by identifying and addressing vulnerabilities.
 
-### #12: Data Backup and Recovery Auditing
+## #12: Data Backup and Recovery Auditing
 **Scenario**: Organizations need to audit data backup and recovery processes to ensure data integrity and availability.
 
 ![Scenario #12 Context Diagram](#)
@@ -218,7 +238,7 @@ Enhances visibility into cloud resource usage and access patterns.
 9. Scales with organizational data growth to maintain consistent monitoring of backup and recovery processes.
 10. Improves overall data protection strategy by identifying and addressing potential weaknesses.
 
-## Solutions
+# Solutions
 
 This repository focuses on implementing Cloud Serverless Audit Solutions using the **AWS** technology stack. It provides a detailed architecture and code examples tailored for AWS services, enabling scalable, automated, and real-time auditing across various business scenarios.
 
