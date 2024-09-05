@@ -12,17 +12,52 @@ workspace {
             description "Conducts independent reviews of the organization's operations and controls, using audit logs for verification."
         }
         
-        // 3rd-party UI applications
         securityIncidentManagementSystem = softwareSystem "Security Incident Management System" {
             description "Allows security teams to track and manage security incidents."
         }
         complianceReportingTool = softwareSystem "Compliance Reporting Tool" {
             description "Enables compliance officers to generate reports and ensure regulatory compliance."
         }
-        
-        // Audit as a Service
+
+        // Audit as a Service System and Internal Containers
         auditAsAServiceSolution = softwareSystem "Audit as a Service" {
             description "Provides audit logging, tracking, and reporting capabilities, ensuring that all actions and transactions within the organization are recorded in a secure and tamper-proof manner."
+
+            // Internal containers for the audit system
+            firehose = container "Amazon Kinesis Firehose" {
+                description "Captures incoming audit logs and streams them to the data lake."
+                technology "AWS Kinesis Firehose"
+            }
+
+            transformationLambda = container "AWS Lambda" {
+                description "Transforms and enriches the audit logs before storage."
+                technology "AWS Lambda"
+            }
+
+            auditLogStorage = container "S3 Audit Logs Bucket" {
+                description "Stores audit logs in an encrypted S3 bucket for later retrieval."
+                technology "Amazon S3"
+            }
+
+            athena = container "AWS Athena" {
+                description "Queries the audit logs for reports and investigations."
+                technology "AWS Athena"
+            }
+
+            cloudwatch = container "CloudWatch Logs" {
+                description "Used for monitoring and real-time alerting of suspicious activities."
+                technology "AWS CloudWatch Logs"
+            }
+
+            iam = container "AWS IAM Roles" {
+                description "Manages the access control and permissions for the audit system."
+                technology "AWS IAM"
+            }
+
+            glue = container "AWS Glue" {
+                description "Performs data cataloging and prepares data for analysis."
+                technology "AWS Glue"
+            }
         }
 
         // Additional Systems
@@ -38,7 +73,10 @@ workspace {
         billingService = softwareSystem "Billing Service" {
             description "Handles billing transactions, possibly involving PCI-DSS compliance."
         }
-        
+        auditDataSource = softwareSystem "Any Audit Data Source" {
+            description "Manages data, that should be audited"
+        }
+
         // Relationships
         securityTeam -> securityIncidentManagementSystem "Investigates security events"
         complianceOfficer -> complianceReportingTool "Reviews logs and generates compliance reports"
@@ -51,6 +89,21 @@ workspace {
         documentManagementService -> auditAsAServiceSolution "Logs document management activities"
         otherSupportedAuditedServices -> auditAsAServiceSolution "Logs activities and data access"
         billingService -> auditAsAServiceSolution "Logs billing transactions"
+
+        auditDataSource -> firehose "Sends audit events"
+        // Internal relationships within Audit as a Service
+        firehose -> transformationLambda "Streams audit logs for transformation"
+        transformationLambda -> auditLogStorage "Stores transformed logs"
+        auditLogStorage -> athena "Makes logs available for querying"
+        cloudwatch -> transformationLambda "Monitors and alerts on Lambda"
+        glue -> athena "Prepares data for analysis"
+
+        // IAM manages access for all components
+        iam -> firehose "Controls access"
+        iam -> transformationLambda "Controls access"
+        iam -> auditLogStorage "Controls access"
+        iam -> athena "Controls access"
+        iam -> glue "Controls access"
     }
 
     views {
@@ -65,7 +118,17 @@ workspace {
             include documentManagementService
             include otherSupportedAuditedServices
             include billingService
-            
+        }
+
+        container auditAsAServiceSolution {
+            include auditDataSource
+            include firehose
+            include transformationLambda
+            include auditLogStorage
+            include athena
+            include cloudwatch
+            include glue
+            include iam
         }
 
         theme default

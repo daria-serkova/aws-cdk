@@ -7,15 +7,9 @@ Built to meet stringent industry standards and regulatory requirements, the solu
 ## System Context Diagram
 The following System Context Diagram provides a high-level overview of how the solution interacts with external entities, including users, third-party services, and other systems within the organization.
 
-![System Context Diagram](./system-context-diagram.png)
+![System Context Diagram](system-context-diagram.png)
 
-
-## Container Diagram
-The Container Diagram provides a detailed view of the Audit As a Service Solution's architecture at the container level. It illustrates how various components within the system interact with each other to capture, store, and analyze audit events.
-
-![Containers Diagram](./containers-view.svg)
-
-## Architecture Highlights:
+## Architecture Highlights
 
 For most large-scale Audit as a Service architectures, Firehose based solution is sufficient and more straightforward to use if/when:
 
@@ -27,26 +21,61 @@ In following cases, consider [Kinesis solution](#):
 - If your system needs to react in **real-time** to security or compliance events, such as triggering alerts or automated actions when specific types of audit events are detected.
 - When integrating with systems that require continuous real-time data flow, such as real-time dashboards or monitoring systems.
 
+## Technology Stack
+
+This project leverages a range of AWS services and related technologies to deliver a robust, serverless Audit as a Service solution. The following sections describe the primary components of the architecture:
+
+![Containers Diagram](container-diagram.png)
 
 
-### Technology Stack
+1. **Amazon Kinesis Firehose**
+   - **Purpose**: Ingests and streams audit logs into the system.
+   - **Functionality**: Firehose captures log data in real-time and streams it to an S3 bucket for further processing, ensuring all audit events are efficiently collected.
+   - **Why It's Used**: Provides a scalable, fully managed data streaming service, ideal for ingesting high-volume audit data.
 
-1. **API Gateway:** Acts as the front door for all audit-related API requests, handling request validation, authorization, and routing to the appropriate backend services.
-2. **Audit Storage:** Utilizes AWS DynamoDB to store audit events securely. The database is optimized for quick retrieval and querying based on various attributes like timestamps, event types, and user identifiers.
-3. **Lambda Functions:** Executes specific tasks such as ingesting audit data, processing audit logs, and triggering alerts for anomalous activities.
-4. **CloudWatch:** Provides real-time monitoring and logging of audit events, enabling administrators to gain insights into system activity and identify potential issues.
-5. **S3 (Simple Storage Service):** Provides long-term storage for audit logs. S3 ensures durability and scalability for storing large volumes of audit data over extended periods, with configurable lifecycle policies for cost-effective management.
-6. **KMS (Key Management Service):** Secures audit data by managing encryption keys, ensuring that sensitive information is protected both in transit and at rest.
+2. **AWS Lambda**
+   - **Purpose**: Handles transformation and enrichment of audit logs.
+   - **Functionality**: Lambda functions are triggered to process logs in real-time. They handle tasks like formatting, data validation, and enrichment before the logs are stored.
+   - **Why It's Used**: Enables real-time, serverless compute without the need to manage infrastructure, allowing for efficient log processing at scale.
 
-## Processes Documentation
-1. [Audit Event Ingestion and Processing](https://github.com/daria-serkova/aws-cdk/tree/main/audit-services/audit-as-service/architecture/audit-event-ingestion)
-2. [Audit Data Storage and Retrieval](#)
-3. [Audit Reporting and Analysis](#)
-4. [Audit Data Security and Compliance](#)
-5. [Audit Event Search and Indexing](#)
-6. [Audit Alerts and Notifications](#)
-7. [Audit Backup and Disaster Recovery](#)
-8. [Audit Data Integration with Other Systems](#)
-9. [Postman collection location](#)
+3. **Amazon S3**
+   - **Purpose**: Secure storage of audit logs.
+   - **Functionality**: Logs are stored in S3 in an encrypted and durable manner. S3 is also integrated with lifecycle policies to manage long-term storage and retention of audit logs.
+   - **Why It's Used**: Provides scalable, secure, and cost-effective storage for audit logs, ensuring durability and availability.
+
+4. **AWS Glue**
+   - **Purpose**: Catalogs and prepares audit logs for analysis.
+   - **Functionality**: Glue automatically catalogs logs stored in S3 and enables advanced data processing and ETL (Extract, Transform, Load) operations to prepare logs for querying.
+   - **Why It's Used**: Simplifies data cataloging and ETL processes, making audit logs queryable and usable for compliance and incident investigations.
+
+5. **AWS Athena**
+   - **Purpose**: On-demand querying of audit logs.
+   - **Functionality**: Athena uses the Glue Data Catalog to run SQL queries against the stored audit logs without the need for infrastructure management.
+   - **Why It's Used**: Provides a scalable, serverless query service that allows security and compliance teams to quickly analyze audit data.
+
+6. **Amazon CloudWatch**
+   - **Purpose**: Real-time monitoring and alerting.
+   - **Functionality**: CloudWatch tracks metrics and logs, and it is used to set up alarms and notifications for suspicious activities or anomalies detected in audit logs.
+   - **Why It's Used**: Delivers monitoring capabilities to ensure system health and security, providing timely alerts for incident management.
+
+7. **AWS IAM (Identity and Access Management)**
+   - **Purpose**: Manages access control and security.
+   - **Functionality**: IAM roles and policies govern access to different components of the system, ensuring secure interaction between services and users.
+   - **Why It's Used**: Enforces the principle of least privilege, ensuring that only authorized services and users can access sensitive audit data.
+
+## Supported Processes
+1. [Audit Event Ingestion and Processing](./audit-event-ingestion-and-processing/)
 
 Please refer to the respective documents and diagrams within this folder for details.
+
+## Cost Calculation
+The cost of running an audit solution with such architecture for a application that adheres to HIPAA, PII and PCI-DSS regulations (for example healthcare platform, where almsot all events should be audited) depends on the frequency of audit events generated and the use of AWS services for ingestion, processing, storage, and querying. Below is a sample cost breakdown based on the following use case:
+
+**Use Case Assumptions**:
+
+1. 10,000 healthcare providers and 10,000 patients use the system regularly.
+2. Each user generates an average of 20 audit events per day (e.g., logging in, uploading documents, viewing medical records, scheduling appointments).
+3. Size of the audit event JSON is maximum 1 KB max. 
+4. This results in 400,000 audit events per day and 12 million audit events per month.
+
+The estimated monthly cost for running this healthcare application with audit events for every single action (due to HIPAA and PII regulations) is **~$17/month**. Detailed breakdown is documented in the [cost-estimate.xlsx](cost-estimate.xlsx) file.
