@@ -21,16 +21,16 @@ Managing user access effectively is critical for maintaining security and ensuri
 |UNUSUAL_LOGIN_LOCATION| Logs when a login is detected from an unusual or new location, often flagged for security review.|[event](./supported-events/UNUSUAL_LOGIN_LOCATION.json)|
 
 ## Logout
-| Event Type | Description |
-|----------|----------|
+| Event Type | Description | Event Format |
+|----------|----------|----------|
 |LOGOUT_ATTEMPT|Captures when a user initiates a logout request. This helps in correlating with LOGOUT_SUCCESSFUL or LOGOUT_UNSUCCESSFUL events to track the entire logout process.|
 |LOGOUT_SUCCESSFUL|Indicates that a user successfully logged out of the system.|
 |LOGOUT_UNSUCCESSFUL|Logs when a logout attempt fails, which can be a security risk if the session is not properly terminated.|
 |FORCED_LOGOUT|Logs when a user is forcibly logged out by the system, which could occur due to an admin action, security policy enforcement, or the detection of suspicious activity.|
 
 ## Session Management
-| Event Type | Description |
-|----------|----------|
+| Event Type | Description | Event Format |
+|----------|----------|----------|
 |SESSION_CREATION_ATTEMPT|Logs when an attempt is made to create a session, whether successful or not. This helps in tracking failed session creation attempts, which could indicate issues like system errors or unauthorized access attempts.|
 |SESSION_CREATED|Logs when a session is successfully created after a successful login, useful for session management and tracking user activity.|
 |SESSION_TERMINATED|Indicates when a user manually logs out or when a session is terminated, either by the user or the system (e.g., due to inactivity).|
@@ -39,8 +39,8 @@ Managing user access effectively is critical for maintaining security and ensuri
 |SESSION_RESTORED|Indicates when a session is restored from a previous state, such as after a page reload or browser restart. This is important for tracking continuity in user activity.|
 
 ## Password Management
-| Event Type | Description |
-|----------|----------|
+| Event Type | Description | Event Format |
+|----------|----------|----------|
 |PASSWORD_CHANGE_REQUESTED|Indicates a start of password reset request.|
 |PASSWORD_CHANGE_SUCCESSFULL|Indicates a successful change of a user password.|
 |PASSWORD_CHANGE_FAILED|Indicates a failed attempt to change a user password.|
