@@ -1,5 +1,18 @@
 # Audit as a Service Solution with AWS Firehose
 
+- [Audit as a Service Solution with AWS Firehose](#audit-as-a-service-solution-with-aws-firehose)
+  - [Overview](#overview)
+  - [System Context Diagram](#system-context-diagram)
+  - [Architecture Highlights](#architecture-highlights)
+  - [Technology Stack](#technology-stack)
+  - [Architecture Constrains](#architecture-constrains)
+    - [Data Throughput and Limits](#data-throughput-and-limits)
+    - [Data Transformation](#data-transformation)
+    - [Data Storage](#data-storage)
+  - [Cost Calculation](#cost-calculation)
+  - [Supported Processes](#supported-processes)
+
+## Overview
 The Audit as a Service Solution (AAAS) with AWS Firehose is a powerful and scalable system designed to efficiently ingest, store, and analyze audit events across an organization. This solution leverages AWS Firehose for seamless data streaming and ingestion, ensuring that all actions and transactions are securely captured and delivered to storage or analytics platforms in near real-time.
 
 Built to meet stringent industry standards and regulatory requirements, the solution provides comprehensive audit logging, tracking, and reporting capabilities. It guarantees that all critical events are recorded in a tamper-proof manner, providing valuable insights into system activity and supporting compliance efforts. The AWS Firehose-based approach enhances data reliability, scalability, and processing efficiency, making it ideal for organizations requiring robust audit management and real-time data streaming capabilities.
