@@ -30,7 +30,9 @@ The [utils.ts file (SupportedInitiatorSystemCodes)](./../../helpers/utils.ts) is
 ## Required Configuration
 Project team will need to add their source application to the [supported list](./../../helpers/utils.ts) before starting to send ingestion requests to Audit Service.
 
-**NOTE:** initiatorSystemCode is used as a dynamic partition key and will represent folder within Audit S3 bucket. If value is not provided or is not from the supported list - ingestion of the event will be rejected by the service.
+**NOTE:** initiatorSystemCode is used as a dynamic partition key and will represent top level folder within Audit S3 bucket. If value is not provided or is not from the supported list - ingestion of the event will be rejected by the service.
+
+![S3 Top Level Folders](s3-top-level-structure.png)
 
 ## Integration Approach
 

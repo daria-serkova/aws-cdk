@@ -16,6 +16,12 @@ import { metadataTables, ResourceName, verificationTables } from '../resource-re
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 
 const lambdaFilesLocation = '../../functions';
+const envSettings = {
+    REGION: process.env.AWS_REGION || '',
+    AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
+    TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
+    AUDIT_EVENTS_DATA_STREAM: process.env.AUDIT_EVENTS_DATA_STREAM || ''
+}
 
 /**
  * Lambdas, related to Documents operations functionality
@@ -104,11 +110,7 @@ const configureLambdaS3UploadListener = (scope: Construct, logGroup: LogGroup): 
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/documents/s3-update-listener.ts`),
         logGroup: logGroup,
         role: iamRole,
-        environment: {
-            REGION: process.env.AWS_REGION || '',
-            AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
-            TAG_ENVIRONMENT: process.env.TAG_ENVIRONMENT || '',
-        },
+        environment: envSettings,
         ...defaultLambdaSettings
     });
     return lambda;   
