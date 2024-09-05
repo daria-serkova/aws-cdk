@@ -7,7 +7,7 @@ Built to meet stringent industry standards and regulatory requirements, the solu
 ## System Context Diagram
 The following System Context Diagram provides a high-level overview of how the solution interacts with external entities, including users, third-party services, and other systems within the organization.
 
-![System Context Diagram](./system-context-diagram.svg)
+![System Context Diagram](./system-context-diagram.png)
 
 
 ## Container Diagram
