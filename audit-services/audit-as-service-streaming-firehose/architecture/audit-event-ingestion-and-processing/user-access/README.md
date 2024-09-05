@@ -4,7 +4,7 @@ Managing user access effectively is critical for maintaining security and ensuri
 
 ## OTP (One-Time Password)
 
-| Event Type | Description |Event Format|
+| Event Type | Description | Event Format |
 |----------|----------|----------|
 | OTP_GENERATED | Indicates that an OTP code was generated for a user action (e.g., registration, login, password change). **NOTE:** When you send this request, you have to record auditId next to OTP value as audit of OTP_VALIDATION_SUCCESS and OTP_VALIDATION_FAILED will require to add reference of this event as a part of it’s payload.|[event](./supported-events/OTP_GENERATED.json)|
 | OTP_SENT | Indicates that the generated OTP code was sent to the user's email / phone. |[event](./supported-events/OTP_SENT.json)|
@@ -12,13 +12,13 @@ Managing user access effectively is critical for maintaining security and ensuri
 | OTP_VALIDATION_FAILED | Indicates that the OTP code validation failed (e.g., incorrect OTP entered).|[event](./supported-events/OTP_VALIDATION_FAILED.json)|
 
 ## Login
-| Event Type | Description |
-|----------|----------|
-|LOGIN_ATTEMPT|Logs every login attempt, regardless of success or failure. This is useful for tracking all access attempts and can be correlated with other events like LOGIN_SUCCESSFUL and LOGIN_FAILED.|
-|LOGIN_SUCCESSFUL | Indicates a successful login to systems.|
-|LOGIN_FAILED | Indicates a failed login attempt.|
-|MULTIPLE_LOGIN_FAILED | Indicates multiple consecutive failed login attempts.|
-|UNUSUAL_LOGIN_LOCATION| Logs when a login is detected from an unusual or new location, often flagged for security review.|
+| Event Type | Description | Event Format |
+|----------|----------|----------|
+|LOGIN_ATTEMPT|Logs every login attempt, regardless of success or failure. This is useful for tracking all access attempts and can be correlated with other events like LOGIN_SUCCESSFUL and LOGIN_FAILED.|[event](./supported-events/LOGIN_ATTEMPT.json)|
+|LOGIN_SUCCESSFUL | Indicates a successful login to systems.|[event](./supported-events/LOGIN_SUCCESSFUL.json)|
+|LOGIN_FAILED | Indicates a failed login attempt.|[event](./supported-events/LOGIN_FAILED.json)|
+|MULTIPLE_LOGIN_FAILED | Indicates multiple consecutive failed login attempts.|[event](./supported-events/MULTIPLE_LOGIN_FAILED.json)|
+|UNUSUAL_LOGIN_LOCATION| Logs when a login is detected from an unusual or new location, often flagged for security review.|[event](./supported-events/UNUSUAL_LOGIN_LOCATION.json)|
 
 ## Logout
 | Event Type | Description |
