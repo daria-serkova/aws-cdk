@@ -1,0 +1,160 @@
+{
+  "configuration" : { },
+  "description" : "Description",
+  "documentation" : { },
+  "id" : 1,
+  "lastModifiedAgent" : "structurizr-javascript",
+  "lastModifiedDate" : "2024-09-05T18:19:32Z",
+  "model" : {
+    "softwareSystems" : [ {
+      "containers" : [ {
+        "description" : "Data ingestion, buffering and batching, compression and encryption, delivery to destination",
+        "documentation" : { },
+        "id" : "2",
+        "name" : "Amazon Firehose",
+        "properties" : {
+          "structurizr.dsl.identifier" : "firehose"
+        },
+        "relationships" : [ {
+          "description" : "Triggers for event transformation",
+          "destinationId" : "3",
+          "id" : "6",
+          "properties" : {
+            "structurizr.dsl.identifier" : "9df8fadf-d073-4aa6-a33f-ba7adaa318a7"
+          },
+          "sourceId" : "2",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Saves transformed and partitioned events",
+          "destinationId" : "4",
+          "id" : "8",
+          "properties" : {
+            "structurizr.dsl.identifier" : "d6d0f9c2-f7a8-47f7-b5d5-e0e22f9be659"
+          },
+          "sourceId" : "2",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Amazon Firehose"
+      }, {
+        "description" : "Data validation, data cleaning, data enrichment, format conversion, partition key extraction, error handling",
+        "documentation" : { },
+        "id" : "3",
+        "name" : "Transformation Lambda",
+        "properties" : {
+          "structurizr.dsl.identifier" : "transformationlambda"
+        },
+        "relationships" : [ {
+          "description" : "Returns transformed data",
+          "destinationId" : "2",
+          "id" : "7",
+          "properties" : {
+            "structurizr.dsl.identifier" : "50ffdea3-8613-4d3d-884e-15d4f2c164b2"
+          },
+          "sourceId" : "3",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Sends error logs",
+          "destinationId" : "5",
+          "id" : "9",
+          "properties" : {
+            "structurizr.dsl.identifier" : "e970c385-4687-4567-bb10-2fe142a7a16c"
+          },
+          "sourceId" : "3",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Amazon Lambda"
+      }, {
+        "description" : "Stores the transformed and partitioned audit log files in a secure manner.",
+        "documentation" : { },
+        "id" : "4",
+        "name" : "S3 Bucket",
+        "properties" : {
+          "structurizr.dsl.identifier" : "s3bucket"
+        },
+        "tags" : "Element,Container",
+        "technology" : "Amazon S3"
+      }, {
+        "description" : "Collects logs, metrics, and errors from the Transformation Lambda.",
+        "documentation" : { },
+        "id" : "5",
+        "name" : "CloudWatch",
+        "properties" : {
+          "structurizr.dsl.identifier" : "cloudwatch"
+        },
+        "tags" : "Element,Container",
+        "technology" : "Amazon CloudWatch"
+      } ],
+      "description" : "Provides audit logging, tracking, and reporting capabilities, ensuring that all actions and transactions within the organization are recorded in a secure and tamper-proof manner.",
+      "documentation" : { },
+      "id" : "1",
+      "location" : "Unspecified",
+      "name" : "Data Ingestion Workflow",
+      "properties" : {
+        "structurizr.dsl.identifier" : "dataingestionworkflow"
+      },
+      "tags" : "Element,Software System"
+    } ]
+  },
+  "name" : "Name",
+  "properties" : {
+    "structurizr.dsl" : "d29ya3NwYWNlIHsKCiAgICBtb2RlbCB7CiAgICAgICAgLy8gQXVkaXQgYXMgYSBTZXJ2aWNlIFN5c3RlbSBhbmQgSW50ZXJuYWwgQ29udGFpbmVycwogICAgICAgIGRhdGFJbmdlc3Rpb25Xb3JrZmxvdyA9IHNvZnR3YXJlU3lzdGVtICJEYXRhIEluZ2VzdGlvbiBXb3JrZmxvdyIgewogICAgICAgICAgICBkZXNjcmlwdGlvbiAiUHJvdmlkZXMgYXVkaXQgbG9nZ2luZywgdHJhY2tpbmcsIGFuZCByZXBvcnRpbmcgY2FwYWJpbGl0aWVzLCBlbnN1cmluZyB0aGF0IGFsbCBhY3Rpb25zIGFuZCB0cmFuc2FjdGlvbnMgd2l0aGluIHRoZSBvcmdhbml6YXRpb24gYXJlIHJlY29yZGVkIGluIGEgc2VjdXJlIGFuZCB0YW1wZXItcHJvb2YgbWFubmVyLiIKICAgICAgICAgICAgCiAgICAgICAgICAgIGZpcmVob3NlID0gY29udGFpbmVyICJBbWF6b24gRmlyZWhvc2UiIHsKICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJEYXRhIGluZ2VzdGlvbiwgYnVmZmVyaW5nIGFuZCBiYXRjaGluZywgY29tcHJlc3Npb24gYW5kIGVuY3J5cHRpb24sIGRlbGl2ZXJ5IHRvIGRlc3RpbmF0aW9uIgogICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQW1hem9uIEZpcmVob3NlIgogICAgICAgICAgICB9CgogICAgICAgICAgICB0cmFuc2Zvcm1hdGlvbkxhbWJkYSA9IGNvbnRhaW5lciAiVHJhbnNmb3JtYXRpb24gTGFtYmRhIiB7CiAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiRGF0YSB2YWxpZGF0aW9uLCBkYXRhIGNsZWFuaW5nLCBkYXRhIGVucmljaG1lbnQsIGZvcm1hdCBjb252ZXJzaW9uLCBwYXJ0aXRpb24ga2V5IGV4dHJhY3Rpb24sIGVycm9yIGhhbmRsaW5nIgogICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQW1hem9uIExhbWJkYSIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgczNCdWNrZXQgPSBjb250YWluZXIgIlMzIEJ1Y2tldCIgewogICAgICAgICAgICAgICAgZGVzY3JpcHRpb24gIlN0b3JlcyB0aGUgdHJhbnNmb3JtZWQgYW5kIHBhcnRpdGlvbmVkIGF1ZGl0IGxvZyBmaWxlcyBpbiBhIHNlY3VyZSBtYW5uZXIuIgogICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQW1hem9uIFMzIgogICAgICAgICAgICB9CgogICAgICAgICAgICBjbG91ZFdhdGNoID0gY29udGFpbmVyICJDbG91ZFdhdGNoIiB7CiAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiQ29sbGVjdHMgbG9ncywgbWV0cmljcywgYW5kIGVycm9ycyBmcm9tIHRoZSBUcmFuc2Zvcm1hdGlvbiBMYW1iZGEuIgogICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQW1hem9uIENsb3VkV2F0Y2giCiAgICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIC8vIFJlbGF0aW9uc2hpcHMKICAgICAgICBmaXJlaG9zZSAtPiB0cmFuc2Zvcm1hdGlvbkxhbWJkYSAiVHJpZ2dlcnMgZm9yIGV2ZW50IHRyYW5zZm9ybWF0aW9uIgogICAgICAgIHRyYW5zZm9ybWF0aW9uTGFtYmRhIC0+IGZpcmVob3NlICJSZXR1cm5zIHRyYW5zZm9ybWVkIGRhdGEiCiAgICAgICAgZmlyZWhvc2UgLT4gczNCdWNrZXQgIlNhdmVzIHRyYW5zZm9ybWVkIGFuZCBwYXJ0aXRpb25lZCBldmVudHMiCiAgICAgICAgdHJhbnNmb3JtYXRpb25MYW1iZGEgLT4gY2xvdWRXYXRjaCAiU2VuZHMgZXJyb3IgbG9ncyIKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgLy8gQ29udGFpbmVyIFZpZXcgZm9yIHRoZSBBdWRpdCBhcyBhIFNlcnZpY2Ugd29ya2Zsb3cKICAgICAgICBjb250YWluZXIgZGF0YUluZ2VzdGlvbldvcmtmbG93IHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgfQoKICAgICAgICB0aGVtZSBkZWZhdWx0CiAgICB9Cn0K"
+  },
+  "views" : {
+    "configuration" : {
+      "branding" : { },
+      "lastSavedView" : "Container-001",
+      "metadataSymbols" : "SquareBrackets",
+      "styles" : { },
+      "terminology" : { },
+      "themes" : [ "https://static.structurizr.com/themes/default/theme.json" ]
+    },
+    "containerViews" : [ {
+      "dimensions" : {
+        "height" : 1748,
+        "width" : 2480
+      },
+      "elements" : [ {
+        "id" : "2",
+        "x" : 85,
+        "y" : 425
+      }, {
+        "id" : "3",
+        "x" : 900,
+        "y" : 430
+      }, {
+        "id" : "4",
+        "x" : 95,
+        "y" : 1020
+      }, {
+        "id" : "5",
+        "x" : 910,
+        "y" : 1010
+      } ],
+      "externalSoftwareSystemBoundariesVisible" : false,
+      "generatedKey" : true,
+      "key" : "Container-001",
+      "order" : 1,
+      "paperSize" : "A5_Landscape",
+      "relationships" : [ {
+        "id" : "6",
+        "vertices" : [ {
+          "x" : 690,
+          "y" : 470
+        } ]
+      }, {
+        "id" : "7",
+        "vertices" : [ {
+          "x" : 710,
+          "y" : 705
+        } ]
+      }, {
+        "id" : "8"
+      }, {
+        "id" : "9"
+      } ],
+      "softwareSystemId" : "1"
+    } ]
+  }
+}

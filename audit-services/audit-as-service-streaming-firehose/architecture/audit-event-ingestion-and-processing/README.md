@@ -8,10 +8,12 @@
   - [Required Configuration](#required-configuration)
   - [Integration Approach](#integration-approach)
 - [Events Stream Ingestion](#events-stream-ingestion)
-  - [Event Stream Processing](#event-stream-processing)
-    - [Validation and Filtering](#validation-and-filtering)
-  - [Event Stream Post-Processing](#event-stream-post-processing)
-  - [Events Types](#events-types)
+  - [Workflow](#workflow)
+  - [Firehose Configuration](#firehose-configuration)
+  - [Data Transformation Flow](#data-transformation-flow)
+- [Events Stream Storage](#events-stream-storage)
+  - [S3 configuration](#s3-configuration)
+- [Supported Events Types](#supported-events-types)
 
 # Overview
 Audit Events Ingestion is the foundational process within an Audit As a Service (AaaS) solution that captures and records events from various systems, applications, and services within an organization. This process ensures that all relevant activities and transactions are logged in a structured and consistent manner, enabling comprehensive auditing, monitoring, and compliance management.
@@ -73,28 +75,23 @@ const record = { // Ensure JSON match allowed schema, otherwise ingestion of the
         console.error('Error adding record to Firehose:', err);
     }
 ```
-
-
-
-
-
-
-
 # Events Stream Ingestion
 
 The ingestion layer for the Audit as a Service solution utilizes AWS Firehose to handle and process large volumes of audit events from distributed agents and various data sources. AWS Firehose provides a reliable and scalable way to stream data into AWS, ensuring that audit events are ingested, transformed, and delivered with minimal latency.
 
-Firehose configuration:
+## Workflow
+
+![Data Ingestion Process](data-ingestion-process.png))
+
+## Firehose Configuration
 
 TBD
 
-## Event Stream Processing
-
+## Data Transformation Flow
+TBD
 Once events are ingested, they pass through a processing pipeline where they are validated, enriched and categorized. This pipeline includes:
 
-### Validation and Filtering
-
-Events are validated against predefined schema to ensure they contain the required fields and meet the format standards. 
+1. **Validation and Filtering:** Events are validated against predefined schema to ensure they contain the required fields and meet the format standards. 
 
 ```
 JSON
@@ -102,18 +99,18 @@ JSON
 
 Invalid or incomplete events are flagged for further inspection (moved to errors folder within S3 bucket).
 
-
-
-
 2. **Enrichment:** Additional contextual information, such as user metadata, geolocation data, or organizational hierarchy, is added to events to provide richer context during analysis.
 3. **Transformation:** Events may be transformed into a more suitable format for storage and analysis. For instance, JSON logs might be transformed into a columnar format for efficient querying in a data warehouse.
 4. **Routing:** Based on event type, severity, or source, events are routed to different destinations, such as databases, alerting systems, or long-term storage.
+# Events Stream Storage
+TBD
+## S3 configuration
+TBD
 
-## Event Stream Post-Processing
 
 
 
-## Events Types
+# Supported Events Types
 
 This audit service supports following types of audit events out-of-the-box:
 
