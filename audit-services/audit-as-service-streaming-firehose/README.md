@@ -126,6 +126,7 @@ Repository contains files `workspace.dsl` and `workspace.json` that defines [str
 
 1. Install Java on the local machine
 2. Download `structurizr-lite.war` file from [https://github.com/structurizr/lite/releases](https://github.com/structurizr/lite/releases)
-3. Through the terminal execute command `java -jar structurizr-lite.war /path/to/repository/folder/with/workspace/files/you/want/to/update` to start application
-4. Open browser [http://localhost:8080/workspace/diagrams](http://localhost:8080/workspace/diagrams)
-5. When completed with diagram update, export new image and replace the previous one with it in the repository.
+3. Start the application through the terminal by executing command `java -jar structurizr-lite.war /path/to/repository/folder/with/workspace/files/you/want/to/update`
+4. Open browser [http://localhost:8080/workspace/diagrams](http://localhost:8080/workspace/diagrams) to render diagram code.
+5. Update `workspace.dsl` file and check rendering through the browser. You can drag and drop elements for proper layout. It automatically will regenerate `workspace.json` file with new coordinates.
+6. When completed with diagram update, export new image and replace the previous one with it in the repository.
