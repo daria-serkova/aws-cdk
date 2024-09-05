@@ -1,15 +1,24 @@
 # Audit As a Service - Data Streaming Through Amazon Firehose
 
+
 - [Audit As a Service - Data Streaming Through Amazon Firehose](#audit-as-a-service---data-streaming-through-amazon-firehose)
 - [Overview](#overview)
 - [Key Features](#key-features)
 - [Advantages of Using Audit as a Service](#advantages-of-using-audit-as-a-service)
 - [Architecture](#architecture)
+- [Cost Estimation](#cost-estimation)
+  - [Assumptions](#assumptions)
+  - [AWS Pricing](#aws-pricing)
+  - [Cost Estimation Table](#cost-estimation-table)
+  - [Monthly Cost Breakdown](#monthly-cost-breakdown)
+  - [Key Insights](#key-insights)
+  - [Conclusion](#conclusion)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Deployment](#deployment)
   - [Usage](#usage)
   - [Architecture Diagrams Update](#architecture-diagrams-update)
+
 
 # Overview
 
@@ -71,6 +80,43 @@ In following cases, consider [Kinesis Data Stream solution](#) instead:
 - When integrating with systems that require continuous real-time data flow, such as real-time dashboards or monitoring systems.
 
 Please refer to [Solution Architecture Document](./architecture/) for details.
+
+# Cost Estimation
+Cost estimation table for the **Firehose-only solution**, including the costs for **Lambda transformation** and **Amazon S3 storage**:
+## Assumptions
+- **Data Volume**: Each user generates 10 audit events per day, with each event being 1 KB in size.
+- **Lambda Invocations for Transformation**: Each event triggers one Lambda invocation (to process each event before delivery to S3).
+- **S3 Storage**: Data is delivered to **Amazon S3** after Lambda transformation.
+  - **Compression**: Assume a 50% reduction in data size due to compression (GZIP).
+  - **S3 Standard** storage pricing is **$0.023/GB** per month.
+## AWS Pricing
+- **Firehose ingestion and delivery**: $0.029 per GB ingested.
+- **Lambda transformation**: $0.20 per 1 million invocations and 1 GB-second of compute time.
+- **S3 Standard** storage: $0.023 per GB stored per month.
+
+## Cost Estimation Table
+
+| **Users**         | **Audit Events/Day**  | **Data/Day (Uncompressed)** | **Firehose Cost (Ingestion + Delivery)** | **Lambda Invocations** | **Lambda Cost**                         | **S3 Storage (Compressed 50%)** | **S3 Storage Cost/Month**         |
+|-------------------|-----------------------|-----------------------------|------------------------------------------|-------------------------|-----------------------------------------|---------------------------------|-----------------------------------|
+| **100 users**     | 1,000 events/day      | 1 MB/day                    | 1 MB/day × $0.029/GB = **$0.00087/day**  | 1,000/day               | 1,000/day × $0.20/million = **$0.0002/day** | 15 MB/month (compressed)         | 15 MB × $0.023/GB = **$0.00035** |
+| **10,000 users**  | 100,000 events/day    | 100 MB/day                  | 100 MB/day × $0.029/GB = **$0.087/day**  | 100,000/day             | 100,000/day × $0.20/million = **$0.02/day** | 1.5 GB/month (compressed)        | 1.5 GB × $0.023/GB = **$0.0345** |
+| **100,000 users** | 1,000,000 events/day  | 1 GB/day                    | 1 GB/day × $0.029/GB = **$0.29/day**     | 1,000,000/day           | 1,000,000/day × $0.20/million = **$0.20/day** | 15 GB/month (compressed)         | 15 GB × $0.023/GB = **$0.345**   |
+
+## Monthly Cost Breakdown
+
+| **Users**         | **Firehose Cost/Month**  | **Lambda Cost/Month** | **S3 Storage Cost/Month**  | **Total Monthly Cost**        |
+|-------------------|--------------------------|-----------------------|----------------------------|-------------------------------|
+| **100 users**     | $0.00087 × 30 = **$0.026** | $0.0002 × 30 = **$0.006** | **$0.00035**                 | **$0.03235/month**            |
+| **10,000 users**  | $0.087 × 30 = **$2.61**   | $0.02 × 30 = **$0.60**  | **$0.0345**                  | **$3.2445/month**             |
+| **100,000 users** | $0.29 × 30 = **$8.70**    | $0.20 × 30 = **$6.00**  | **$0.345**                   | **$15.045/month**             |
+
+## Key Insights
+- **Firehose** remains the dominant cost component at larger scales, but it's still significantly cheaper than using Kinesis Data Streams or API Gateway.
+- **Lambda transformation** costs are minimal, especially for smaller user bases. However, they can scale up with higher event volumes.
+- **S3 storage** is also a minimal cost, especially if you use compression (50% reduction is assumed here, though it could vary).
+
+## Conclusion
+By using **Firehose** with **Lambda transformation** and **S3 storage**, you can create a cost-effective audit ingestion pipeline, even at large scales. For **100,000 users**, the total monthly cost remains just over $15, making this architecture both affordable and scalable.
 
 
 # Getting Started
