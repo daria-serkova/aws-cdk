@@ -1,5 +1,4 @@
 import { Firehose } from 'aws-sdk';
-import { ResourceName } from '../lib/resource-reference';
 const firehose = new Firehose({ region: process.env.REGION });
 
 interface AuditEventData {
@@ -23,7 +22,7 @@ export const sendUploadEvent = async (event) => {
 export const sendEvent = async (event: any) => {
     const record = {
         Data: JSON.stringify({
-            initiatorsystemcode: "ABC_DE_WEB",
+            initiatorsystemcode: "CRM_WEB",
             eventtype: "LOGIN_SUCCESSFUL",
             requestorid: "user123",
             requestorip: "192.168.1.10",
@@ -40,7 +39,7 @@ export const sendEvent = async (event: any) => {
         }),
     };
     const params = {
-        DeliveryStreamName: ResourceName.auditDataStream,
+        DeliveryStreamName: process.env.AUDIT_EVENTS_DATA_STREAM,
         Record: record,
     };
 

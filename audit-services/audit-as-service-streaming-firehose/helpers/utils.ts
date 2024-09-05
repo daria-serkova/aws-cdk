@@ -1,7 +1,6 @@
 import { config } from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 import Ajv from 'ajv';
-import { ResourceName } from '../lib/resource-reference';
 config(); 
 
 // Identifies envrironment of the deployment to minimize AWS cost for non-production environments.
@@ -23,6 +22,10 @@ export enum SupportedInitiatorSystemCodes {
     CRM_MBL_APPLICATION = 'CRM_MBL',
 }
 export const SupportedInitiatorSystemCodesValues: string[] = Object.values(SupportedInitiatorSystemCodes);
+
+
+
+
 
 export enum SupportedEventTypes {
     /* === OTP Related Activities === */
