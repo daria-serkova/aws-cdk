@@ -4,6 +4,7 @@ import configureDataStreamingResources from './resources/data-streaming';
 import configureS3Resources from './resources/s3';
 import configureCloudWatchResources from './resources/cloud-watch';
 import configureLambdaResources from './resources/lambdas';
+import configureKMSResources from './resources/kms';
 
 /**
  * Defines an AWS CDK stack that sets up the necessary AWS resources for the Audit as a Service application.
@@ -15,6 +16,7 @@ import configureLambdaResources from './resources/lambdas';
 export class AuditAsServiceStreamingFirehoseStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+    configureKMSResources(this);
     configureCloudWatchResources(this);
     configureLambdaResources(this);
     configureS3Resources(this);

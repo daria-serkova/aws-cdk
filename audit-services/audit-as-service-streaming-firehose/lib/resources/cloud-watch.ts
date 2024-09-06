@@ -10,7 +10,7 @@ export const firehoseDataStreamLogGroup = () => firehoseDataStreamLogGroupInstan
  * Function creates and configure CloudWatch resources
  */
  export default function configureCloudWatchResources(scope: Construct) {
-    const name = ResourceName.cloudWatch.KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM_LG;
+    const name = ResourceName.cloudWatch.AUDIT_EVENTS_FIREHOSE_STREAM_LG;
     firehoseDataStreamLogGroupInstance = new LogGroup(scope, name, {
         logGroupName:name,
         removalPolicy: isProduction ? RemovalPolicy.RETAIN : RemovalPolicy.DESTROY,
@@ -18,7 +18,7 @@ export const firehoseDataStreamLogGroup = () => firehoseDataStreamLogGroupInstan
     });
 
     // Create a Log Stream within the Log Group
-    const logStreamName = ResourceName.cloudWatch.KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM_LS;
+    const logStreamName = ResourceName.cloudWatch.AUDIT_EVENTS_FIREHOSE_STREAM_LS;
     const firehoseDataStreamLogStream = new LogStream(scope, logStreamName, {
         logGroup: firehoseDataStreamLogGroupInstance,
         logStreamName: logStreamName,

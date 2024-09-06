@@ -9,10 +9,10 @@
   - [Integration Approach](#integration-approach)
 - [Events Stream Ingestion](#events-stream-ingestion)
   - [Workflow](#workflow)
-  - [Firehose Configuration](#firehose-configuration)
-  - [Data Transformation Flow](#data-transformation-flow)
-- [Events Stream Storage](#events-stream-storage)
-  - [S3 configuration](#s3-configuration)
+  - [Amazon Firehose Configuration](#amazon-firehose-configuration)
+  - [Amazon Lambda Configuration](#amazon-lambda-configuration)
+  - [Amazon S3 Configuration](#amazon-s3-configuration)
+  - [Amazon CloudWatch Configuration](#amazon-cloudwatch-configuration)
 - [Supported Events Types](#supported-events-types)
 
 # Overview
@@ -81,30 +81,33 @@ The ingestion layer for the Audit as a Service solution utilizes AWS Firehose to
 
 ## Workflow
 
-![Data Ingestion Process](data-ingestion-process.png))
+![Data Ingestion Process](data-ingestion-process.png)
 
-## Firehose Configuration
+## Amazon Firehose Configuration
+
+In this solution, Firehose serves as the backbone for data ingestion, ensuring that incoming audit events are buffered and batched for optimal delivery to the storage destination.
+
+Firehose is configured to handle several critical tasks:
+
+| # | Task | Description | Configuration |
+|---|------|-------------|---------------|
+| 1 | Data Ingestion | Streams audit event data in real-time from various sources into the system.  | 1. **Source:** Direct PUT,</br> 2. **Data format:** [JSON](#supported-events-types). Only JSONs, that match [provided schema](./../../helpers/utils.ts) will be processed,</br> 3. **Retry Duration:** 300 seconds (5 minutes). Ensures that data isn't immediately discarded if a transient error (network issues,resource contention, throttling, etc) occurs during dynamic partitioning. |
+| 2 | Buffering and Batching | Buffers and batches data to optimize performance and reduce write frequency. | 1. **Buffer Size:** 64 MB (minimum required config for dynamic partition),</br> 2. **Buffer Interval:** 300 seconds (5 minutes)</br>|
+| 3 | Compression | Compresses data before storing to reduce storage costs and enhance performance. | **Compression Format:** GZIP |
+| 4 | Encryption | Ensures that data is encrypted in transit and at rest for security purposes. | 1. **At-rest Encryption:** AWS KMS (Key Management Service),</br> 2. **In-transit Encryption:** TLS 1.2. Firehose automatically encrypts data in transit using TLS 1.2. This ensures that data sent from the producer to Firehose is encrypted.|
+| 5 | Delivery to Destination  | Delivers transformed and enriched data to a designated storage destination.  | **Destination:** Amazon S3, **Backup Mode:** Disabled (unless failure scenarios require it), **Prefix:** `initiatorsystemcode/eventtype/year=2024/month=09/day=05` |
+
+This format ensures clarity on each task Firehose performs and provides the standard configuration that is usually recommended for an audit logging service.
+
+## Amazon Lambda Configuration
+
+TBD
+## Amazon S3 Configuration
 
 TBD
 
-## Data Transformation Flow
-TBD
-Once events are ingested, they pass through a processing pipeline where they are validated, enriched and categorized. This pipeline includes:
+## Amazon CloudWatch Configuration
 
-1. **Validation and Filtering:** Events are validated against predefined schema to ensure they contain the required fields and meet the format standards. 
-
-```
-JSON
-```
-
-Invalid or incomplete events are flagged for further inspection (moved to errors folder within S3 bucket).
-
-2. **Enrichment:** Additional contextual information, such as user metadata, geolocation data, or organizational hierarchy, is added to events to provide richer context during analysis.
-3. **Transformation:** Events may be transformed into a more suitable format for storage and analysis. For instance, JSON logs might be transformed into a columnar format for efficient querying in a data warehouse.
-4. **Routing:** Based on event type, severity, or source, events are routed to different destinations, such as databases, alerting systems, or long-term storage.
-# Events Stream Storage
-TBD
-## S3 configuration
 TBD
 
 

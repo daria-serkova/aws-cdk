@@ -17,11 +17,11 @@ const AWS_RESOURCES_NAMING_CONVENTION : string = `${process.env.AWS_RESOURCES_NA
  */
 export const ResourceName = {
     cloudWatch: {
-        KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM_LG: resourceName('audit-events-firehose-stream-lg'),
-        KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM_LS: resourceName('audit-events-firehose-stream-ls'),
+        AUDIT_EVENTS_FIREHOSE_STREAM_LG: resourceName('audit-events-firehose-stream-lg'),
+        AUDIT_EVENTS_FIREHOSE_STREAM_LS: resourceName('audit-events-firehose-stream-ls'),
     },
     iam: {
-        KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM: resourceName('audit-events-firehose-stream-role'),
+        AUDIT_EVENTS_FIREHOSE_STREAM: resourceName('audit-events-firehose-stream-role'),
         DATA_STREAM_TRANSFORMATION_LAMBDA: resourceName('data-stream-transformation-lbd-role'),
     },
     lambda: {
@@ -29,9 +29,13 @@ export const ResourceName = {
         
     },
     streaming: {
-        KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM: resourceName('audit-events-firehose-stream'),
+        AUDIT_EVENTS_FIREHOSE_STREAM: resourceName('audit-events-firehose-stream'),
     },
     s3: {
         AUDIT_EVENTS_STORAGE: resourceName('audit-events-storage').toLowerCase(),
     },
+    kms: {
+        KMS_KEY:  resourceName('kms'),
+    }
+
 };

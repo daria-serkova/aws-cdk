@@ -9,27 +9,28 @@ import {
 } from "./iam";
 
 export default function configureDataStreamingResources(scope: Construct) {
-  const iamRole = createKinesisFirehoseRole(scope, ResourceName.iam.KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM);
+  const iamRole = createKinesisFirehoseRole(scope, ResourceName.iam.AUDIT_EVENTS_FIREHOSE_STREAM);
   addS3WritePolicy(iamRole, ResourceName.s3.AUDIT_EVENTS_STORAGE);
-  addCloudWatchPutPolicy(iamRole, ResourceName.cloudWatch.KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM_LG);
+  addCloudWatchPutPolicy(iamRole, ResourceName.cloudWatch.AUDIT_EVENTS_FIREHOSE_STREAM_LG);
   addLambdaInvokePolicy(iamRole, ResourceName.lambda.DATA_STREAM_TRANSFORMATION_LAMBDA);
 
   const cloudWatchLoggingOptions: firehose.CfnDeliveryStream.CloudWatchLoggingOptionsProperty = {
     enabled: true,
-    logGroupName: ResourceName.cloudWatch.KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM_LG,
-    logStreamName: ResourceName.cloudWatch.KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM_LS
+    logGroupName: ResourceName.cloudWatch.AUDIT_EVENTS_FIREHOSE_STREAM_LG,
+    logStreamName: ResourceName.cloudWatch.AUDIT_EVENTS_FIREHOSE_STREAM_LS
 };
   const stream = new firehose.CfnDeliveryStream(scope, 
-    ResourceName.streaming.KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM, {
-    deliveryStreamName: ResourceName.streaming.KINESIS_AUDIT_EVENTS_FIREHOSE_STREAM,
+    ResourceName.streaming.AUDIT_EVENTS_FIREHOSE_STREAM, {
+    deliveryStreamName: ResourceName.streaming.AUDIT_EVENTS_FIREHOSE_STREAM,
+    deliveryStreamType: 'DirectPut',
     extendedS3DestinationConfiguration: {
       bucketArn: `arn:aws:s3:::${ResourceName.s3.AUDIT_EVENTS_STORAGE}`,
       roleArn: iamRole.roleArn,
-      compressionFormat: 'UNCOMPRESSED',
       bufferingHints: {
-        intervalInSeconds: 60, // Ensure data is delivered every 60 seconds
+        intervalInSeconds: 300, // Ensure data is delivered every 5 mins
         sizeInMBs: 64           // Minimum required for dynamic partition
       },
+      compressionFormat: 'GZIP',
       cloudWatchLoggingOptions: cloudWatchLoggingOptions,
       processingConfiguration: {
         enabled: true,

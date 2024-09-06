@@ -5,6 +5,9 @@ config();
 
 // Identifies envrironment of the deployment to minimize AWS cost for non-production environments.
 export const isProduction : boolean = process.env.TAG_ENVIRONMENT === 'production';
+
+// Extracts prefix from env to add to the descriptions of the resources in unified way.
+export const solutionName : string = process.env.TAG_SOLUTION || '';
 /*
  * Generates a unique UUID value.
  * @returns {string} - A UUID string representing a unique identifier for the dynamoDB record or for S3 object.

@@ -3,8 +3,7 @@
   "description" : "Description",
   "documentation" : { },
   "id" : 1,
-  "lastModifiedAgent" : "structurizr-javascript",
-  "lastModifiedDate" : "2024-09-05T18:19:32Z",
+  "lastModifiedDate" : "2024-09-06T15:49:50Z",
   "model" : {
     "softwareSystems" : [ {
       "containers" : [ {
@@ -20,7 +19,7 @@
           "destinationId" : "3",
           "id" : "6",
           "properties" : {
-            "structurizr.dsl.identifier" : "9df8fadf-d073-4aa6-a33f-ba7adaa318a7"
+            "structurizr.dsl.identifier" : "eb5e9108-8639-467b-958d-47bf44cd4a96"
           },
           "sourceId" : "2",
           "tags" : "Relationship"
@@ -29,7 +28,7 @@
           "destinationId" : "4",
           "id" : "8",
           "properties" : {
-            "structurizr.dsl.identifier" : "d6d0f9c2-f7a8-47f7-b5d5-e0e22f9be659"
+            "structurizr.dsl.identifier" : "07bde0fa-cca1-49be-9c71-dcac0df9ed98"
           },
           "sourceId" : "2",
           "tags" : "Relationship"
@@ -49,7 +48,7 @@
           "destinationId" : "2",
           "id" : "7",
           "properties" : {
-            "structurizr.dsl.identifier" : "50ffdea3-8613-4d3d-884e-15d4f2c164b2"
+            "structurizr.dsl.identifier" : "f2c5bf38-15a2-49a2-a8b8-97c86f504a2a"
           },
           "sourceId" : "3",
           "tags" : "Relationship"
@@ -58,7 +57,7 @@
           "destinationId" : "5",
           "id" : "9",
           "properties" : {
-            "structurizr.dsl.identifier" : "e970c385-4687-4567-bb10-2fe142a7a16c"
+            "structurizr.dsl.identifier" : "1ece900b-8def-4e08-bf2a-02995ece5ddf"
           },
           "sourceId" : "3",
           "tags" : "Relationship"
@@ -105,7 +104,6 @@
     "configuration" : {
       "branding" : { },
       "lastSavedView" : "Container-001",
-      "metadataSymbols" : "SquareBrackets",
       "styles" : { },
       "terminology" : { },
       "themes" : [ "https://static.structurizr.com/themes/default/theme.json" ]
