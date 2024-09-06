@@ -34,6 +34,26 @@ export const addS3WritePolicy = (role: Role, bucketName: string) => {
     });
     role.attachInlinePolicy(policy);
 }
+export const addKMSPolicy = (role: Role, kmsKey: string) => {
+    const policyName = `${kmsKey}-policy`.toLowerCase();
+    const policy = new Policy(role.stack, policyName, {
+        policyName: policyName,
+        statements: [
+            new PolicyStatement({
+                actions: [
+                    'kms:Encrypt',
+                    'kms:Decrypt',
+                    'kms:ReEncrypt*',
+                    'kms:GenerateDataKey*'
+                ],
+                resources: [
+                    `arn:aws:kms:${process.env.AWS_REGION}:${process.env.AWS_ACCOUNT}:key/${kmsKey}`
+                ],
+            }),
+        ],
+    });
+    role.attachInlinePolicy(policy);
+}
 export const addCloudWatchPutPolicy = (role: Role, logGroupName: string) => {
     const policyName = `${logGroupName}-write-policy-${generateUUID()}`.toLowerCase();
     const policy = new Policy(role.stack, policyName, {

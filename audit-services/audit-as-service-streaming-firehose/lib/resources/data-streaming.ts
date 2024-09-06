@@ -27,7 +27,7 @@ export default function configureDataStreamingResources(scope: Construct) {
       bucketArn: `arn:aws:s3:::${ResourceName.s3.AUDIT_EVENTS_STORAGE}`,
       roleArn: iamRole.roleArn,
       bufferingHints: {
-        intervalInSeconds: 300, // Ensure data is delivered every 5 mins
+        intervalInSeconds: 60, // Ensure data is delivered every 5 mins - TBD - Change to 300
         sizeInMBs: 64           // Minimum required for dynamic partition
       },
       compressionFormat: 'GZIP',
@@ -47,9 +47,7 @@ export default function configureDataStreamingResources(scope: Construct) {
         ],
       },
       prefix: "!{partitionKeyFromLambda:initiatorsystemcode}/!{partitionKeyFromLambda:eventtype}/!{partitionKeyFromLambda:year}/!{partitionKeyFromLambda:month}/!{partitionKeyFromLambda:day}/",
-       // Specify the ErrorOutputPrefix
-  errorOutputPrefix: "errors/!{firehose:error-output-type}/!{timestamp:yyyy/MM/dd/HH}/",
-
+      errorOutputPrefix: "errors/!{firehose:error-output-type}/!{timestamp:yyyy/MM/dd/HH}/",
       dynamicPartitioningConfiguration: {
         enabled: true,
         retryOptions: {
@@ -57,7 +55,5 @@ export default function configureDataStreamingResources(scope: Construct) {
         },
       },
     },
-    
-    
   });
 }
