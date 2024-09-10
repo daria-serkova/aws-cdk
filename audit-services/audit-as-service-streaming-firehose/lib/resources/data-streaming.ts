@@ -54,6 +54,7 @@ export default function configureDataStreamingResources(scope: Construct) {
           durationInSeconds: 300,
         },
       },
+      // s3BackupMode: 'Enabled'
     },
   });
 }
