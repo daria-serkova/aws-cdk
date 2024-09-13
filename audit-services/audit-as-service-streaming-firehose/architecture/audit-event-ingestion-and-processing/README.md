@@ -10,7 +10,7 @@
 - [Events Stream Ingestion](#events-stream-ingestion)
   - [Workflow](#workflow)
   - [Amazon Firehose Configuration](#amazon-firehose-configuration)
-  - [Amazon Lambda Configuration](#amazon-lambda-configuration)
+  - [Amazon Lambda Transformation Configuration](#amazon-lambda-transformation-configuration)
   - [Amazon S3 Configuration](#amazon-s3-configuration)
   - [Amazon CloudWatch Configuration](#amazon-cloudwatch-configuration)
 - [Supported Events Types](#supported-events-types)
@@ -99,9 +99,28 @@ Firehose is configured to handle several critical tasks:
 
 This format ensures clarity on each task Firehose performs and provides the standard configuration that is usually recommended for an audit logging service.
 
-## Amazon Lambda Configuration
+## Amazon Lambda Transformation Configuration
 
-TBD
+In this solution, the Lambda function is responsible for processing and transforming incoming audit event data before it is delivered to the final storage destination (Amazon S3). The transformation Lambda ensures data quality, enriches it with additional information, and prepares it for dynamic partitioning and storage.
+
+The Lambda function handles several critical tasks:
+
+| # | Task | Description | Configuration |
+|---|------|-------------|---------------|
+|1|Data Validation|Validates incoming audit event data to ensure it matches the expected JSON schema.||
+|2|Data Cleaning|Cleans the incoming data by removing unnecessary or malformed fields, ensuring it meets downstream processing requirements.||
+|3|Data Enrichment|Adds additional metadata or information to the event data to enhance its usability and provide better context for analysis.||
+|4|Format Conversion|Converts the format of incoming data to a standard, uniform structure that can be efficiently stored and analyzed.||
+|5|Partition Key Extraction|Extracts partition keys from the data for optimized storage and retrieval in Amazon S3, facilitating the dynamic partitioning configured in Firehose.||
+|6|Error Handling|Manages error conditions that arise during transformation, ensuring that bad data is handled gracefully and without impacting valid records.||
+
+Additional Lambda Configuration:
+1. **[Concurrency](https://docs.aws.amazon.com/lambda/latest/dg/lambda-concurrency.html):** The Lambda function is configured with an number of in-flight requests that AWS Lambda function is handling at the same time = **50** to handle the expected throughput of audit events, ensuring timely processing without overwhelming downstream services.
+Timeout: The function is given sufficient timeout settings (e.g., 60 seconds) to handle complex transformations while balancing performance requirements.
+Memory: The memory allocation for the Lambda function is tuned based on the data payload size, ensuring the transformation process is efficient and cost-effective.
+Logging: CloudWatch logging is enabled to capture both successful transformations and errors, providing full visibility into the transformation pipeline.
+
+
 ## Amazon S3 Configuration
 
 TBD

@@ -31,13 +31,13 @@ export default function configureLambdaResources(scope: Construct) {
 const configureDdataStreamTransformationLambda = (scope: Construct): NodejsFunction => {
     const iamRole = createLambdaRole(scope, ResourceName.iam.DATA_STREAM_TRANSFORMATION_LAMBDA);
     addCloudWatchPutPolicy(iamRole, ResourceName.cloudWatch.AUDIT_EVENTS_FIREHOSE_STREAM_LG)
-    //addCloudWatchGeneralPutPolicy(iamRole);
     const lambda = new NodejsFunction(scope, ResourceName.lambda.DATA_STREAM_TRANSFORMATION_LAMBDA, {
         functionName: ResourceName.lambda.DATA_STREAM_TRANSFORMATION_LAMBDA,
         description: 'Stores audit events in the DynamoDB',
         entry: resolve(dirname(__filename), `${lambdaFilesLocation}/data-transformation.ts`),
         role: iamRole,
         logGroup: firehoseDataStreamLogGroup(),
+        reservedConcurrentExecutions: 50,
         environment: {
             REGION: process.env.AWS_REGION || '',
             AWS_RESOURCES_NAME_PREFIX: process.env.AWS_RESOURCES_NAME_PREFIX || '',
