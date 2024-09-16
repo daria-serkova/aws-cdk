@@ -49,9 +49,11 @@ Here’s a list of advantages for implementing a documents management solution a
 15. **Reduced Complexity:** Simplifies the architectural landscape by consolidating document storage into a single service, reducing the need to manage multiple storage systems.
 
 # Architecture Highlights
+
+Below is a high-level overview of the architecture supporting this CDK stack. For more details on how the various modules interact with each other or how different elements are configured, please refer to the [Solution Architecture Document](./architecture/).
 ## Technology Stack
 
-Architecture of this solution is based on following technology stack:
+The architecture of this solution is built on the following technology stack::
 1. [AWS IAM](https://docs.aws.amazon.com/iam/)
 2. [AWS API Gateway](https://docs.aws.amazon.com/apigateway/)
 3. [AWS Lambdas](https://docs.aws.amazon.com/lambda/) or [AWS Step Functions](https://docs.aws.amazon.com/step-functions/) based on the workflow
@@ -60,7 +62,6 @@ Architecture of this solution is based on following technology stack:
 6. [CloudWatch](https://docs.aws.amazon.com/cloudwatch/)
 7. [AWS SQS](https://docs.aws.amazon.com/sqs/)
 
-Please refer to the [Solution Architecture Document](./architecture/) for more details how different modules interact with each other.
 ## Documents Ingestion
 In this solution, following documents ingestion mechanisms are supported:
 
