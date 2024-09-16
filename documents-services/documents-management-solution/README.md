@@ -1,123 +1,70 @@
 # AWS Serverless Document Management Solution
 
-The AWS Serverless Document Management Solution provides a comprehensive, scalable, and secure platform for managing documents in various business scenarios. Leveraging AWS serverless technologies, this solution offers robust features such as document storage, retrieval, collaboration, approval workflows, and compliance management. The architecture is designed to be cost-effective, highly available, and easy to integrate with other business systems.
+- [AWS Serverless Document Management Solution](#aws-serverless-document-management-solution)
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Advantages](#advantages)
+- [Architecture Highlights](#architecture-highlights)
+  - [Technology Stack](#technology-stack)
+  - [Documents Ingestion](#documents-ingestion)
+
+# Overview
+The AWS Serverless Document Management Solution provides a comprehensive, scalable, and secure platform for managing documents in various business scenarios. Leveraging AWS serverless technologies (such as [API Gateway](https://aws.amazon.com/api-gateway/), [Lambdas](https://aws.amazon.com/pm/lambda/), [Step Functions](https://aws.amazon.com/step-functions/), [S3](https://aws.amazon.com/pm/serv-s3), [DynamoDB](https://aws.amazon.com/pm/dynamodb/) and more), this solution offers robust features such as document storage, retrieval, collaboration, approval workflows, and compliance management. The architecture is designed to be cost-effective, highly available, and easy to integrate with other business systems.
 
 
-## Benefits
+# Key Features
 
-1. **Scalability**: Automatically scales with the volume of documents and users, ensuring consistent performance.
-2. **Cost-Effective**: Pay-as-you-go pricing model reduces costs, especially during periods of low usage.
-3. **Security**: Advanced security features including encryption, access control, and audit logging.
-4. **Integration**: Easily integrates with other AWS services and third-party applications.
-5. **Flexibility**: Supports a wide range of document types and business processes.
-6. **Compliance**: Helps meet regulatory requirements with detailed logging and data management policies.
-7. **Automation**: Automates document workflows, reducing manual effort and errors.
+1. **Scalable Document Uploads:** Efficiently handles large volumes of documents from multiple providers, ensuring smooth uploads and processing with minimal latency.
+2. **Automated Document Verification:** Streamlines the document review process by integrating AWS Step Functions to automate verification workflows, assigning tasks to verification teams, and tracking status updates in real-time.
+3. **Secure Storage Options:** Offers secure and scalable storage in Amazon S3 for storing documents, with support for lifecycle policies to manage archival and retention, including integration with S3 Glacier for cost-effective long-term storage.
+4. **Real-Time Document Metadata Management:** Leverages DynamoDB for real-time document metadata storage and retrieval, enabling quick access to document status, owner, and verification history.
+5. **Audit and Compliance Tracking:** Ensures full auditability by capturing and storing all document-related actions in CloudWatch and DynamoDB, including uploads, modifications, and verification outcomes.
+6. **Customizable Document Policies:** Allows administrators to define custom rules and workflows for document types, statuses, and retention periods based on specific regulatory and business requirements.
+7. **Integration with Notification Services:** Automatically triggers email or SMS notifications when key actions, such as document submission, verification approval, or rejection, occur.
 
-## Business Scenarios
+This system is ideal for organizations managing healthcare, legal, or regulatory documents, providing a secure, scalable, and highly automated solution to streamline document management, compliance, and operational workflows.
 
-This solution is designed to address a variety of real-world business scenarios, including:
+# Advantages
 
-### [1. Document Storage and Retrieval](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-storage-and-retrieval)
+Here’s a list of advantages for implementing a documents management solution as a separate microservice, focusing on both the general benefits of microservice architecture and the specific advantages of a unified document management solution:
 
-- Secure and scalable storage for any types of documents (contracts, invoices, claims, HR files, etc).
-- Metadata tagging for efficient organization and retrieval.
+1. **Unified Document Repository:**
+   - Centralizes all documents into a single repository, streamlining access, management, and retrieval.
+   - Simplifies integration with various applications and systems within the organization.
+2. **Modular Architecture:** Creates a modular system where the document storage service can be developed, deployed, and scaled independently.
+3. **Scalability:** Allows for independent scaling of the document storage service based on specific needs, optimizing resource allocation.
+4. **Consistency in Management:** Ensures all documents adhere to the same storage policies, retention rules, and security measures, simplifying compliance and governance.
+5. **Enhanced Security and Compliance:**
+   - Applies uniform security policies, access controls, and encryption practices across all documents.
+   - Facilitates easier compliance with regulatory requirements.
+6. **Optimized Storage Costs:** Leverages cost-effective storage solutions like Amazon S3 with lifecycle policies to manage different storage tiers efficiently.
+7. **Efficient Search and Retrieval:** Integrates with indexing and search services like Amazon Elasticsearch for consistent and efficient document search.
+8. **Streamlined Backup and Disaster Recovery:** Simplifies backup and disaster recovery processes with a single storage service, ensuring comprehensive protection.
+9. **Improved Monitoring and Auditing:** Provides centralized monitoring and auditing of document-related activities, with consistent logging and alerting mechanisms.
+10. **Flexibility in Technology Stack:** Allows for optimization of the technology stack specifically for document handling, storage, and processing.
+11. **Customizable Document Policies:** Defines custom rules and workflows for document types, statuses, and retention periods based on specific regulatory and business needs.
+12. **Fault Isolation:** Reduces the impact of potential failures by isolating document storage into its own service, minimizing disruptions to other services.
+13. **Streamlined Deployment and CI/CD:** Facilitates easier deployment and continuous integration/continuous deployment (CI/CD) processes with a separate CDK stack.
+14. **Clear Ownership and Accountability:** Clarifies ownership and responsibility for the document storage service, allowing focused optimization and enhancement.
+15. **Reduced Complexity:** Simplifies the architectural landscape by consolidating document storage into a single service, reducing the need to manage multiple storage systems.
 
-### 2. Document Sharing and Collaboration
-
-- Version control and history tracking for collaborative editing.
-- Access controls to manage viewing and editing permissions.
-
-### 3. Document Approval Workflows
-
-- Automated workflows for approval processes such as expense reports, purchase orders, and legal contracts.
-- Role-based access control audit trails.
-
-### 4. Document Security and Compliance
-
-- Encryption at rest and in transit to protect sensitive documents.
-- Detailed access logs and compliance with regulations like GDPR and HIPAA.
-
-### 5. Document Generation and Templates
-
-- Template management and automated document generation for invoices, reports, and letters.
-- Support for various formats (PDF, DOCX, etc.).
-
-### [6. Document Archiving and Retention](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-archiving-and-retention)
-
-- Automated archiving and retention policies for long-term storage.
-- Cost-effective storage options like S3 Glacier.
-
-### 7. Document Indexing and Search
-
-- Full-text search capabilities and metadata indexing for efficient document retrieval.
-- OCR for scanning and indexing physical documents.
-
-### 8. Documents Scanning and Text Extraction
-
-- **Optical Character Recognition (OCR) Integration:** Utilize OCR technology to scan documents and extract text content, enabling searchable and editable text from scanned images or PDFs.
-- **Text Extraction from Structured Forms:** Implement tools to extract structured data from forms and tables within scanned documents, facilitating automated data entry and processing.
-
-### [9. Document Auditing and Reporting](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-audit)
-
-- Detailed audit logs and reporting tools for compliance and management review.
-- Integration with BI tools for customizable dashboards and alerts.
-
-
-### [10. Document Backup and Disaster Recovery](https://github.com/daria-serkova/aws-cdk/tree/main/documents-services/documents-management-solution/architecture/documents-backup-and-recovery)
-
-- Automated backup processes and disaster recovery plans.
-- Cross-region replication and regular testing of backup procedures.
-
-### 11. Document Integration with Other Systems
-
-- APIs for seamless integration with CRM, ERP, HR systems, and more.
-- Event-driven architecture for real-time updates and data synchronization.
-
+# Architecture Highlights
 ## Technology Stack
 
-The following technologies are used in this solution:
+Architecture of this solution is based on following technology stack:
+1. [AWS IAM](https://docs.aws.amazon.com/iam/)
+2. [AWS API Gateway](https://docs.aws.amazon.com/apigateway/)
+3. [AWS Lambdas](https://docs.aws.amazon.com/lambda/) or [AWS Step Functions](https://docs.aws.amazon.com/step-functions/) based on the workflow
+4. [AWS S3](https://docs.aws.amazon.com/s3/)
+5. [AWS DynamoDB](https://docs.aws.amazon.com/dynamodb)
+6. [CloudWatch](https://docs.aws.amazon.com/cloudwatch/)
+7. [AWS SQS](https://docs.aws.amazon.com/sqs/)
 
-- **AWS CloudFormation / AWS CDK:** Infrastructure as Code (IaC) for deploying the solution.
-- **TypeScript:** Programming language.
-- **Node.js:** The runtime environment for executing TypeScript code on AWS Lambda.
-- **Amazon S3**: For scalable and secure document storage.
-- **AWS Lambda**: To execute backend logic such as document processing and workflow automation.
-- **Amazon DynamoDB**: For storing metadata, document indices, and workflow states.
-- **Amazon API Gateway**: To expose APIs for document operations like upload, download, and search.
-- **AWS Step Functions**: To orchestrate complex workflows and approval processes.
-- **TBD: Amazon Elasticsearch Service (Amazon OpenSearch Service)**: For implementing search functionality.
-- **AWS Identity and Access Management (IAM)**: To manage access controls and permissions.
-- **AWS CloudTrail and CloudWatch**: For logging, monitoring, and auditing activities.
-- **AWS Simple Notification Service (SNS) and Simple Queue Service (SQS)**: For notifications and asynchronous processing.
-- **AWS Key Management Service (KMS)**: For managing encryption keys.
+Please refer to the [Solution Architecture Document](./architecture/) for more details how different modules interact with each other.
+## Documents Ingestion
+In this solution, following documents ingestion mechanisms are supported:
 
-## Getting Started
-
-1. **Prerequisites**
-   - AWS Account
-   - AWS CLI configured
-   - Node.js installed
-   - AWS CDK installed
-
-2. **Deployment**
-   - Clone the repository:
-     ```sh
-     git clone https://github.com/daria-serkova/aws-cdk.git
-     cd documents-services/documents-management-solution
-     ```
-   - Install dependencies:
-     ```sh
-     npm install
-     ```
-   - Deploy the stack using CDK:
-     ```sh
-     cdk deploy
-     ```
-
-3. **Usage**
-   - Configure the solution according to your specific project needs (supported types, categories, folders paths, tables names).
-   - Use the provided APIs and dashboards to manage documents.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+|Approach|Description|Use Case|
+|--------|-----------|--------|
+|API Gateway through pre-signed URL|Users can upload documents directly to Amazon S3 by obtaining a pre-signed URL via API Gateway. The serverless backend (Lambda) generates a pre-signed URL, which is then used by clients to upload documents.|Ideal for enabling client-side uploads without exposing credentials or direct access to S3.|
+|Amazon SFTP (Transfer Family)|Users can upload documents via secure FTP using AWS Transfer Family, which integrates with S3 for backend storage. This allows organizations to use traditional file transfer methods (SFTP, FTPS, FTP).|Suitable for legacy systems or partners who rely on traditional file transfer protocols.|
