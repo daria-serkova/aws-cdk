@@ -67,5 +67,5 @@ In this solution, following documents ingestion mechanisms are supported:
 
 |Approach|Description|Use Case|
 |--------|-----------|--------|
-|API Gateway through pre-signed URL|Users can upload documents directly to Amazon S3 by obtaining a pre-signed URL via API Gateway. The serverless backend (Lambda) generates a pre-signed URL, which is then used by clients to upload documents.|Ideal for enabling client-side uploads without exposing credentials or direct access to S3.|
+|API Gateway through pre-signed URL|Users can upload documents directly to Amazon S3 by obtaining a pre-signed URL via API Gateway. The serverless backend (Lambda) generates a pre-signed URL, valid for N number of minutes, which is then used by clients to upload documents.|Ideal for enabling client-side uploads without exposing credentials or direct access to S3.|
 |Amazon SFTP (Transfer Family)|Users can upload documents via secure FTP using AWS Transfer Family, which integrates with S3 for backend storage. This allows organizations to use traditional file transfer methods (SFTP, FTPS, FTP).|Suitable for legacy systems or partners who rely on traditional file transfer protocols.|
