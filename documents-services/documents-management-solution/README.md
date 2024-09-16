@@ -7,6 +7,8 @@
 - [Architecture Highlights](#architecture-highlights)
   - [Technology Stack](#technology-stack)
   - [Documents Ingestion](#documents-ingestion)
+  - [Cost Aspects](#cost-aspects)
+  - [Cost Estimation](#cost-estimation)
 
 # Overview
 The AWS Serverless Document Management Solution provides a comprehensive, scalable, and secure platform for managing documents in various business scenarios. Leveraging AWS serverless technologies (such as [API Gateway](https://aws.amazon.com/api-gateway/), [Lambdas](https://aws.amazon.com/pm/lambda/), [Step Functions](https://aws.amazon.com/step-functions/), [S3](https://aws.amazon.com/pm/serv-s3), [DynamoDB](https://aws.amazon.com/pm/dynamodb/) and more), this solution offers robust features such as document storage, retrieval, collaboration, approval workflows, and compliance management. The architecture is designed to be cost-effective, highly available, and easy to integrate with other business systems.
@@ -69,3 +71,17 @@ In this solution, following documents ingestion mechanisms are supported:
 |--------|-----------|--------|
 |API Gateway through pre-signed URL|Users can upload documents directly to Amazon S3 by obtaining a pre-signed URL via API Gateway. The serverless backend (Lambda) generates a pre-signed URL, valid for N number of minutes, which is then used by clients to upload documents.|Ideal for enabling client-side uploads without exposing credentials or direct access to S3.|
 |Amazon SFTP (Transfer Family)|Users can upload documents via secure FTP using AWS Transfer Family, which integrates with S3 for backend storage. This allows organizations to use traditional file transfer methods (SFTP, FTPS, FTP).|Suitable for legacy systems or partners who rely on traditional file transfer protocols.|
+
+## Cost Aspects
+Here’s a comprehensive list of methods, that are used in this implementations to reduce the cost of an AWS Serverless Document Management Solution:
+
+|Category|Description|
+|--------|-----------|
+|Leverage S3 Storage Classes and Lifecycles|Automatically transition objects to cheaper storage ([S3 Glacier](https://aws.amazon.com/pm/s3-glacier/) and [S3 Glacier Deep Archive](https://aws.amazon.com/blogs/aws/new-amazon-s3-storage-class-glacier-deep-archive/)) classes after a set period or delete objects after they are no longer needed.|
+|||
+|||
+|||
+|||
+
+## Cost Estimation
+
